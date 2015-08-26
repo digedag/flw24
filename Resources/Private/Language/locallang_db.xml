@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for more4t3sports</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_cfcleague_games_newspreview2">Match preview 2</label>
+			<label index="tx_cfcleague_games_newsreport2">Match report 2</label>
+
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tx_cfcleague_games_newspreview2">Vorbericht 2</label>
+			<label index="tx_cfcleague_games_newsreport2">Spielbericht 2</label>
+
+		</languageKey>
+	</data>
+</T3locallang>

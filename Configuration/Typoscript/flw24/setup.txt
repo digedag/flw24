@@ -1,0 +1,13 @@
+
+lib.t3sports.match {
+
+	newsreport2 =< lib.t3sports.ttnews
+	newsreport2 {
+		_template.subpartName = ###NEWSREPORT2###
+	}
+	newspreview2 =< lib.t3sports.ttnews
+	newspreview2 {
+		_template.subpartName = ###NEWSPREVIEW2###
+	}
+
+}
