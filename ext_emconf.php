@@ -37,7 +37,7 @@ $EM_CONF[$_EXTKEY] = array(
 			'php' => '5.3.7-5.6.99',
 			'rn_base' => '0.15.0-0.0.0',
 			'cfc_league' => '1.0.2-0.0.0',
-			'more4t3sports' => '1.0.2-0.0.0',
+			'more4t3sports' => '0.3.0-0.0.0',
 			'tt_news' => '3.6.0-0.0.0',
 		),
 		'conflicts' => array(
