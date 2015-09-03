@@ -8,20 +8,10 @@
 		<languageKey index="default" type="array">
 			<label index="tx_cfcleague_games_newspreview2">Match preview 2</label>
 			<label index="tx_cfcleague_games_newsreport2">Match report 2</label>
-			<label index="tx_cfcleague_games_newsreportauthor">Author of Match report</label>
-			<label index="tx_cfcleague_games_newsreportauthor2">Author of Match report 2</label>
-			<label index="tx_cfcleague_games_newspreviewauthor">Author of Match preview</label>
-			<label index="tx_cfcleague_games_newspreviewauthor2">Author of Match preview 2</label>
-
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_cfcleague_games_newspreview2">Vorbericht 2</label>
 			<label index="tx_cfcleague_games_newsreport2">Spielbericht 2</label>
-			<label index="tx_cfcleague_games_newsreportauthor">Autor vom Spielbericht</label>
-			<label index="tx_cfcleague_games_newsreportauthor2">Autor vom Spielbericht 2</label>
-			<label index="tx_cfcleague_games_newspreviewauthor">Autor vom Vorbericht</label>
-			<label index="tx_cfcleague_games_newspreviewauthor2">Autor vom Vorbericht 2</label>
-
 		</languageKey>
 	</data>
 </T3locallang>
