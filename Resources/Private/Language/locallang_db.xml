@@ -8,10 +8,12 @@
 		<languageKey index="default" type="array">
 			<label index="tx_cfcleague_games_newspreview2">Match preview 2</label>
 			<label index="tx_cfcleague_games_newsreport2">Match report 2</label>
+			<label index="tx_cfcleague_club_feusers">FE Users</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_cfcleague_games_newspreview2">Vorbericht 2</label>
 			<label index="tx_cfcleague_games_newsreport2">Spielbericht 2</label>
+			<label index="tx_cfcleague_club_feusers">FE Users</label>
 		</languageKey>
 	</data>
 </T3locallang>
