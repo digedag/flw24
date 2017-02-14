@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Livetickertemplate for T3sports</title>
+</head>
+<body>
+
+###MATCHTABLE###
+###MATCHS###
+
+<table class="table table-striped table-condensed">
+###MATCH###
+<tr class="cfcleague-matchtable-row###MATCH_ROLL###">
+<td colspan="11">###MATCH_DATE### (###MATCH_COMPETITION_LOGO######MATCH_COMPETITION_SHORT_NAME###)(###MATCH_UID###)</td>
+</tr>
+<tr class="cfcleague-matchtable-row###MATCH_ROLL###">
+<td>###MATCH_ROUND_NAME###</td>
+<td>###MATCH_HOME_LOGO### ###MATCH_HOME_SHOWTEAMLINK######MATCH_HOME_NAME######MATCH_HOME_SHOWTEAMLINK###</td>
+<td>-</td>
+<td>###MATCH_GUEST_SHOWTEAMLINK######MATCH_GUEST_NAME######MATCH_GUEST_SHOWTEAMLINK### ###MATCH_GUEST_LOGO###</td>
+<td class="cfcleague-matchtable-result">
+
+<!-- ###RESULT_STATUS_0### Ergebnis vor dem Spiel -->
+-&nbsp;:&nbsp;-
+<!-- ###RESULT_STATUS_0### Ergebnis vor dem Spiel -->
+
+<!-- ###RESULT_STATUS_-10### Ergebnis bei Spielverlegung -->
+###LABEL_MATCHSTATUS_POSTPONED###
+<!-- ###RESULT_STATUS_-10### Ergebnis bei Spielverlegung -->
+
+<!-- ###RESULT_STATUS_-1### Ergebnis bei ungültig -->
+###LABEL_MATCHSTATUS_INVALID###
+<!-- ###RESULT_STATUS_-1### Ergebnis bei ungültig -->
+
+<!-- ###RESULT_STATUS_1### Ergebnis während des Spiels -->
+###MATCH_GOALS_HOME###&nbsp;:&nbsp;###MATCH_GOALS_GUEST###
+<!-- ###RESULT_STATUS_1### Ergebnis während des Spiels -->
+
+<!-- ###RESULT_STATUS_2### Ergebnis nach Spielende -->
+###MATCH_REPORTLINK######MATCH_GOALS_HOME###&nbsp;:&nbsp;###MATCH_GOALS_GUEST### ###MATCH_DCRESULTSUFFIX######MATCH_REPORTLINK###
+<!-- ###RESULT_STATUS_2### Ergebnis nach Spielende -->
+<br />###MATCH_ADDINFO###
+###MATCH_SETRESULTS###
+<h3>###LABEL_SETS###</h3>
+<ul>
+###MATCH_SETRESULT###
+<li>###MATCH_SETRESULT_SET###.###LABEL_SET###: ###MATCH_SETRESULT_POINTSHOME### : ###MATCH_SETRESULT_POINTSGUEST###</li>
+###MATCH_SETRESULT###
+</ul>
+###MATCH_SETRESULTS###
+
+</td>
+
+<td>###MATCH_TICKERFORMLINK###Ticker###MATCH_TICKERFORMLINK###</td>
+</tr>
+
+
+<!-- ###MATCH_FREE### Team hat spielfrei -->
+<tr class="cfcleague-matchtable-row###MATCH_ROLL### cfcleague-matchtable-rowinfo">
+<td colspan="10">###MATCH_DATE### Spielfrei (###MATCH_COMPETITION_NAME###)</td>
+</tr>
+<tr class="cfcleague-matchtable-row###MATCH_ROLL### cfcleague-matchtable-rowmatch">
+<td>###MATCH_ROUND_NAME###</td>
+<td>
+###MATCH_HOME_LOGO### ###MATCH_HOME_SHOWTEAMLINK######MATCH_HOME_NAME######MATCH_HOME_SHOWTEAMLINK### 
+###MATCH_GUEST_SHOWTEAMLINK######MATCH_GUEST_NAME######MATCH_GUEST_SHOWTEAMLINK### ###MATCH_GUEST_LOGO###</td>
+<td>-</td>
+<td>spielfrei</td>
+<td class="cfcleague-matchtable-result">&nbsp;</td>
+</tr>
+<!-- ###MATCH_FREE### Team hat spielfrei -->
+
+###MATCH###
+</table>
+
+<!-- ### INCLUDE_TEMPLATE EXT:cfc_league_fe/Resources/Private/Templates/partials.html@DEFAULTPAGEBROWSER ### -->
+
+###MATCHCOUNT### Spiele gefunden.
+###MATCHS###
+
+###MATCHTABLE###
+
+
+
+
+
+
+###LIVETICKERFORM###
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Liveticker ###MATCH_HOME_NAME### - ###MATCH_GUEST_NAME###</h3>
+  </div>
+  <div class="panel-body">
+Ticker
+  </div>
+</div>
+###LIVETICKERFORM###
+
+
+
+</body>
+</html>

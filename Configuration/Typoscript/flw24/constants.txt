@@ -1,0 +1,8 @@
+
+plugin.tx_flw24_base {
+	# cat=FLW24 (pages)/tickerformPage; type=int+;label=PID of page for liveticker form
+	tickerformPage = 0
+
+	# cat=FLW24 (templates)/tickerformTemplate; type=string;label=Template for liveticker form
+	tickerformTemplate = EXT:flw24/Resources/Private/Templates/liveticker.html
+}
