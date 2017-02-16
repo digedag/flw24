@@ -20,3 +20,8 @@ CREATE TABLE tx_cfcleague_club2feusers_mm (
 	KEY uid_local (uid_local),
 	KEY uid_foreign (uid_foreign)
 );
+
+
+CREATE TABLE tx_cfcleague_match_notes (
+	crfeuser int(11) DEFAULT '0' NOT NULL
+);

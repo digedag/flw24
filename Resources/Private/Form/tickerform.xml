@@ -1,0 +1,149 @@
+<formidable version="2.0.296">
+	<meta>
+		<name>Blank Formidable XML</name>
+		<form formid="ticker" />
+		<displaylabels>true</displaylabels>
+		<debug>false</debug>
+		<codeBehind name="tickerphp" type="php" path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Ticker" />
+		<codeBehind name="tickerjs" type="js" path="EXT:flw24/Resources/Public/js/ticker.js:tickerCB" />
+	</meta>
+	<control>
+		<datahandler:RAW>
+			<record><userobj extension="System25\Flw24\Form\Ticker" method="fillMatchForm" /></record>
+		</datahandler:RAW>
+	</control>
+	<elements>
+		<renderlet:BOX name="error">
+		</renderlet:BOX>
+
+		<renderlet:BOX name="box_base">
+			<childs>
+				<template
+					path="TS:templates.box.tickerdata.file"
+					subpart="TS:templates.box.tickerdata.subpart"
+				/>
+				<renderlet:TEXT name="minute" label="label_flw24_ticker_minute" inputtype="number">
+					<custom>min="-1"</custom>
+					<validators>
+						<validator:STANDARD>
+							<required>
+								<value>true</value>
+								<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required</message>
+							</required>
+						</validator:STANDARD>
+					</validators>
+				</renderlet:TEXT>
+				<renderlet:TEXT name="extra_time" inputtype="number">
+					<custom>min="0"</custom>
+				</renderlet:TEXT>
+
+				<renderlet:LISTBOX name="type" label="label_flw24_ticker_type">
+						<onchange runat="js" exec="tickerjs.cbTickerTypeChanged()" />
+					<data>
+						<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes" />
+					</data>
+					<validators>
+						<validator:STANDARD>
+							<custom message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
+								<userobj extension="System25\Flw24\Form\Ticker" method="validatePlayer" />
+							</custom>
+						</validator:STANDARD>
+					</validators>
+				</renderlet:LISTBOX>
+
+				<renderlet:BOX name="box_players">
+					<childs>
+
+						<renderlet:LISTBOX name="player_home" label="label_flw24_ticker_playerHome">
+ 							<onchange runat="js" exec="tickerjs.cbPlayerHomeChanged()" />
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+									<params>
+										<param name="team" value="home" />
+									</params>
+								</userobj>
+							</data>
+						</renderlet:LISTBOX>
+						<renderlet:LISTBOX name="player_guest" label="label_flw24_ticker_playerGuest">
+ 							<onchange runat="js" exec="tickerjs.cbPlayerGuestChanged()" />
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+									<params>
+										<param name="team" value="guest" />
+									</params>
+								</userobj>
+							</data>
+						</renderlet:LISTBOX>
+					</childs>
+				</renderlet:BOX>
+
+				<renderlet:TEXTAREA name="comment" label="label_flw24_ticker_comment">
+						<custom>cols="50" rows="5"</custom>
+				</renderlet:TEXTAREA>
+
+				<renderlet:BUTTON name="btn_submit" label="Submit" >
+				   <onclick
+				      runat="ajax"
+				      params="box_base__*"
+				      cache="false"
+				      validate="error"
+				      exec="tickerphp.cbTickerSubmitClick()"
+				   />
+				</renderlet:BUTTON>
+
+			</childs>
+		</renderlet:BOX>
+
+		<renderlet:BOX name="box_matchdata">
+			<childs>
+				<template
+					path="TS:templates.box.matchdata.file"
+					subpart="TS:templates.box.matchdata.subpart"
+				/>
+
+				<renderlet:TEXT name="goals_home_2" inputtype="number">
+					<custom>min="0"</custom>
+				</renderlet:TEXT>
+				<renderlet:TEXT name="goals_guest_2" inputtype="number">
+					<custom>min="0"</custom>
+				</renderlet:TEXT>
+
+				<renderlet:TEXT name="goals_home_1" inputtype="number">
+					<custom>min="0"</custom>
+				</renderlet:TEXT>
+				<renderlet:TEXT name="goals_guest_1" inputtype="number">
+					<custom>min="0"</custom>
+				</renderlet:TEXT>
+
+				<renderlet:TEXT name="visitors" inputtype="number" label="label_flw24_match_visitors">
+					<custom>min="0"</custom>
+				</renderlet:TEXT>
+
+				<renderlet:CHECKSINGLE name="link_ticker" label="label_flw24_match_linkticker" />
+
+				<renderlet:LISTBOX name="status" label="label_flw24_match_status">
+					<data>
+						<items>
+							<item caption="label_flw24_match_status_scheduled" value="0"/>
+							<item caption="label_flw24_match_status_running" value="1"/>
+							<item caption="label_flw24_match_status_finished" value="2"/>
+						</items>
+					</data>
+				</renderlet:LISTBOX>
+
+				<renderlet:BUTTON name="btn_submit" label="Submit" >
+				   <onclick
+				      runat="ajax"
+				      params="box_matchdata__*"
+				      cache="false"
+				      validate="error"
+				      exec="tickerphp.cbMatchSubmitClick()"
+				   />
+				</renderlet:BUTTON>
+
+			</childs>
+		</renderlet:BOX>
+
+
+	</elements>
+</formidable>

@@ -1,6 +1,8 @@
 <?php
 namespace System25\Flw24\Action;
 
+use System25\Flw24\Utility\Errors;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -24,10 +26,12 @@ namespace System25\Flw24\Action;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-\tx_rnbase::load('tx_rnbase_action_BaseIOC');
+\tx_rnbase::load('tx_mkforms_action_FormBase');
+\tx_rnbase::load('tx_t3users_models_feuser');
 
 
-class TickerForm extends \tx_rnbase_action_BaseIOC {
+class TickerForm extends \tx_mkforms_action_FormBase {
+	private $item;
 
 	/**
 	 * handle request
@@ -39,17 +43,42 @@ class TickerForm extends \tx_rnbase_action_BaseIOC {
 	 */
 	public function handleRequest(&$parameters, &$configurations, &$viewData) {
 		$matchId = intval($parameters->offsetGet('matchId'));
-		if($matchId == 0)
+		if($matchId == 0) {
 			return 'No matchId found!';
-		// Das Spiel laden
-		$match = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_match', $matchId);
-		$viewData->offsetSet('item', $match);
-		$matchReport = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_matchreport', $matchId, $configurations);
-		$viewData->offsetSet('matchReport', $matchReport); // Den Spielreport für den View bereitstellen
+		}
 
-		return '';
+		$feuser = \tx_t3users_models_feuser::getCurrent();
+		if(!$feuser || !$feuser->isValid()) {
+			throw new \Exception("Login please!", Errors::CODE_NOT_LOGGED_IN);
+		}
+
+		// Das Spiel laden
+		$item = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchId);
+		$viewData->offsetSet('item', $item);
+//		$matchReport = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_matchreport', $matchId, $configurations);
+//		$viewData->offsetSet('matchReport', $matchReport); // Den Spielreport für den View bereitstellen
+
+		$this->item = $item;
+
+		$items = array();
+		$items['match'] = $item;
+		$viewData->offsetSet('items', $items);
+		$data = array('item' => $item->getProperty());
+		$viewData->offsetSet('formData', $data);
+		return parent::handleRequest($parameters, $configurations, $viewData);
+
+	}
+	/**
+	 *
+	 * @return \tx_cfcleague_models_Match
+	 */
+	public function getItem() {
+		return $this->item;
 	}
 
+	public function getConfId() {
+		return $this->getTemplateName().'.';
+	}
 	public function getTemplateName() {return 'tickerform';}
 
 	public function getViewClassName() { return 'System25\Flw24\View\TickerForm'; }

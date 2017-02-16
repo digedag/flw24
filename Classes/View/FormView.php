@@ -24,33 +24,33 @@ namespace System25\Flw24\View;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-\tx_rnbase::load('tx_rnbase_view_Base');
+\tx_rnbase::load('tx_mkforms_view_Form');
 \tx_rnbase::load('tx_rnbase_util_Templates');
 \tx_rnbase::load('tx_rnbase_view_List');
 
 
-class TickerForm extends \tx_rnbase_view_Base {
+class FormView extends \tx_mkforms_view_Form {
 
-	public function createOutput($template, &$viewData, &$configurations, &$formatter) {
-
+	public function createOutput($template, &$viewData, &$configurations, &$formatter, $redirectToLogin = false) {
+		$template = parent::createOutput($template, $viewData, $configurations, $formatter, $redirectToLogin);
+		$items = $viewData->offsetGet('items');
 		$confId = $this->getController()->getConfId();
 
-		$item = $viewData->offsetGet('item');
-		$marker = \tx_rnbase::makeInstance('tx_cfcleaguefe_util_MatchMarker');
+		$out = $this->parseItems($items, $confId, $formatter, $template, $viewData);
+		return $out;
+	}
 
-		$template = $marker->parseTemplate($template, $item, $formatter, $confId.'match.', 'MATCH');
-
-
-// 		$markerData = $viewData->offsetGet(\tx_rnbase_view_List::VIEWDATA_MARKER);
-// 		$markerArray = $formatter->getItemMarkerArrayWrapped($markerData, $confId.'markers.');
-// 		$subpartArray = array();
-// 		$template = \tx_rnbase_util_Templates::substituteMarkerArrayCached($template, $markerArray, $subpartArray); //, $wrappedSubpartArray);
-
+	protected function parseItems($items, $confId, $formatter, $template, $viewdata) {
+		if(is_array($items))
+			foreach ($items As $key => $item) {
+				$markerClass = 'tx_rnbase_util_SimpleMarker';
+				if($item instanceof \tx_cfcleague_models_Match)
+					$markerClass = 'tx_cfcleaguefe_util_MatchMarker';
+				$marker = \tx_rnbase::makeInstance($markerClass);
+				$template = $marker->parseTemplate($template, $item, $formatter, $confId.$key.'.', strtoupper($key));
+			}
 		return $template;
 	}
-	public function getMainSubpart(&$viewData) {
-		$subpart = $this->getController()->getConfigurations()->get($this->getController()->getConfId().'subpart');
-		return $subpart ? $subpart : '###LIVETICKERFORM###';
-	}
+
 }
 

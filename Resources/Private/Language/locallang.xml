@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for flw24</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="label_flw24_ticker_type">Type</label>
+			<label index="label_flw24_ticker_minute">Minute</label>
+			<label index="label_flw24_ticker_comment">Comment</label>
+			<label index="label_flw24_ticker_player_unknown">Unknown player</label>
+			<label index="label_flw24_ticker_playerHome">Player Home</label>
+			<label index="label_flw24_ticker_playerGuest">Player Guest</label>
+
+			<label index="label_flw24_match_status">Status</label>
+			<label index="label_flw24_match_status_scheduled">Scheduled</label>
+			<label index="label_flw24_match_status_running">Running</label>
+			<label index="label_flw24_match_status_finished">Finished</label>
+			<label index="label_flw24_match_visitors">Visitors</label>
+			<label index="label_flw24_match_result">Score</label>
+			<label index="label_flw24_match_result1">Halftime</label>
+			<label index="label_flw24_match_linkticker">Liveticker active</label>
+
+			<label index="label_msg_minute_required">Minute is required</label>
+			<label index="label_msg_player_not_set">Set one player for this message type</label>
+			
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="label_flw24_ticker_type">Typ</label>
+			<label index="label_flw24_ticker_minute">Minute</label>
+			<label index="label_flw24_ticker_comment">Kommentar</label>
+			<label index="label_flw24_ticker_player_unknown">Unbekannter Spieler</label>
+			<label index="label_flw24_ticker_playerHome">Spieler Heim</label>
+			<label index="label_flw24_ticker_playerGuest">Spieler Gast</label>
+
+			<label index="label_flw24_match_status">Status</label>
+			<label index="label_flw24_match_status_scheduled">Angesetzt</label>
+			<label index="label_flw24_match_status_running">Spiel läuft</label>
+			<label index="label_flw24_match_status_finished">Beendet</label>
+			<label index="label_flw24_match_visitors">Zuschauer</label>
+			<label index="label_flw24_match_result">Endstand</label>
+			<label index="label_flw24_match_result1">Halbzeit</label>
+			<label index="label_flw24_match_linkticker">Liveticker aktiv</label>
+
+			<label index="label_msg_minute_required">Es muss eine Spielminute angegeben werden</label>
+			<label index="label_msg_player_not_set">Für diese Tickermeldung muss genau ein Spieler angegeben werden.</label>
+			
+		</languageKey>
+	</data>
+</T3locallang>

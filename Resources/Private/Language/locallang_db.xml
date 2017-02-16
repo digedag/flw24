@@ -2,13 +2,14 @@
 <T3locallang>
 	<meta type="array">
 		<type>database</type>
-		<description>Language labels for more4t3sports</description>
+		<description>Language labels for flw24</description>
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="tx_cfcleague_games_newspreview2">Match preview 2</label>
 			<label index="tx_cfcleague_games_newsreport2">Match report 2</label>
 			<label index="tx_cfcleague_club_feusers">FE Users</label>
+			<label index="tx_cfcleague_matchnote_crfeuser">FE User</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_cfcleague_games_newspreview2">Vorbericht 2</label>
