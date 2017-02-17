@@ -28,9 +28,9 @@ plugin.tx_cfcleaguefe_report {
     viewClassName = System25\Flw24\View\FormView
     xml = EXT:flw24/Resources/Private/Form/tickerform.xml
     mainSubpart = ###TICKERFORM###
-    formconfig.templates.box.matchdata.file = EXT:flw24/Resources/Private/Form/Html/tickerform.html
+    formconfig.templates.box.matchdata.file = {$plugin.tx_flw24_base.tickerform}
     formconfig.templates.box.matchdata.subpart = ###MATCHDATA###
-    formconfig.templates.box.tickerdata.file = EXT:flw24/Resources/Private/Form/Html/tickerform.html
+    formconfig.templates.box.tickerdata.file = {$plugin.tx_flw24_base.tickerform}
     formconfig.templates.box.tickerdata.subpart = ###TICKERDATA###
 		
 	}
