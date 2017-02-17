@@ -35,13 +35,13 @@ class Ticker {
 	 */
 	public function cbTickerSubmitClick($params, $form) {
 		\tx_rnbase::load('tx_t3users_models_feuser');
-		$fields = ['minute', 'extra_time', 'type', 'player_home', 'player_guest', 'comment'];
 		// Die Match-UID wird im DataHandler persistiert
 		$uid = $form->getDataHandler()->getStoredData('uid');
 		$record = [
 			'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
 			'game' => $uid,
 		];
+		$fields = ['minute', 'extra_time', 'type', 'player_home', 'player_guest', 'comment'];
 		foreach ($fields As $fieldName) {
 			$record[$fieldName] = $form->getWidget($fieldName)->getValue();
 		}
@@ -52,10 +52,56 @@ class Ticker {
 		$repo->persist($model);
 
 		return array(
-				$form->majixDebug(['params'=>$params, 'record' => $model]),
-				$form->getWidget('box_base')->majixClearValue(),
+			$form->getWidget('box_base')->majixClearValue(),
+			$form->getWidget('matchnotes')->majixRepaint(),
 		);
 	}
+
+	/**
+	 * @param array $params
+	 * @param \tx_mkforms_forms_Base $form
+	 * @return []
+	 */
+	public function cbUpdateMatchNote($params, $form) {
+
+		$matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
+		if(!$matchNote->isValid()) {
+			return [$form->majixDebug('Sorry, update failed')];
+		}
+		$prefix = 'matchnotes__';
+		$fields = ['minute', 'extra_time', 'type', 'player_home', 'player_guest', 'comment'];
+		foreach ($fields As $fieldName) {
+			if(isset($params[$prefix.$fieldName])) {
+				$matchNote->setProperty($fieldName, $params[$prefix.$fieldName]);
+			}
+		}
+
+		/* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
+		$repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
+		$repo->persist($matchNote);
+
+		return [
+			$form->getWidget('matchnotes')->majixRepaint(),
+		];
+	}
+	/**
+	 * @param array $params
+	 * @param \tx_mkforms_forms_Base $form
+	 * @return []
+	 */
+	public function cbDeleteMatchNote($params, $form) {
+		$matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
+		if(!$matchNote->isValid()) {
+			return [$form->majixDebug('Sorry, update failed')];
+		}
+		/* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
+		$repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
+		$repo->handleDelete($matchNote);
+		return [
+			$form->getWidget('matchnotes')->majixRepaint(),
+		];
+	}
+
 	/**
 	 * @param array $params
 	 * @param \tx_mkforms_forms_Base $form
@@ -74,6 +120,17 @@ class Ticker {
 		return array(
 		);
 	}
+
+	public function getMatchNoteSql($params, $form) {
+		$options = [
+			'sqlonly' => 1,
+//			'orderby' => 'minute desc, extra_time desc',
+		];
+
+
+		return \Tx_Rnbase_Database_Connection::getInstance()->doSelect('*', 'tx_cfcleague_match_notes', $options);
+	}
+
 	/**
 	 * @param array $params
 	 * @param \tx_mkforms_forms_Base $form
@@ -116,7 +173,8 @@ class Ticker {
 	}
 	public function getPlayers($params, \tx_mkforms_forms_IForm $form) {
 		/* @var $match \tx_cfcleague_models_Match */
-		$match = $form->getParent()->getItem();
+		$uid = $form->getDataHandler()->getStoredData('uid');
+		$match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
 
 		$data = $this->getPlayerNames($match, $params['team']);
 		return $data;

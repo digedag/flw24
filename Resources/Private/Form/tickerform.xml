@@ -11,6 +11,13 @@
 		<datahandler:RAW>
 			<record><userobj extension="System25\Flw24\Form\Ticker" method="fillMatchForm" /></record>
 		</datahandler:RAW>
+		<datasources>
+			<datasource:DB name="dsMatchNotes">
+				<sql>
+					<userobj extension="System25\Flw24\Form\Ticker" method="getMatchNoteSql" />
+				</sql>
+			</datasource:DB>
+		</datasources>
 	</control>
 	<elements>
 		<renderlet:BOX name="error">
@@ -144,6 +151,52 @@
 			</childs>
 		</renderlet:BOX>
 
+		<renderlet:LISTER name="matchnotes" uidColumn="uid" ajaxLister="true">
+			<dataSource use="dsMatchNotes" />
+			<pager><sort column="minute" direction="desc" /></pager>
+			<columns>
+				<column name="uid" type="renderlet:HIDDEN" activelistable="true"/>
+				<column name="minute" type="renderlet:TEXT" listHeader="label_flw24_ticker_minute"/>
+				<column name="type" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_type" >
+					<data>
+						<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes">
+							<params>
+								<param get="rowData::uid" />
+							</params>
+						</userobj>
+					</data>
+				</column>
+				<column name="player_home" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_playerHome" activelistable="true">
+					<data>
+						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+							<params>
+								<param name="team" value="home" />
+							</params>
+						</userobj>
+					</data>
+				</column>
+				<column name="player_guest" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_playerGuest" activelistable="true">
+					<data>
+						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+							<params>
+								<param name="team" value="guest" />
+							</params>
+						</userobj>
+					</data>
+				</column>
+
+				<column name="comment" type="renderlet:TEXT" listHeader="label_flw24_ticker_comment" activelistable="true" />
+
+				<column name="save" label="label_btn_save" type="renderlet:BUTTON" listHeader="">
+					<onclick runat="ajax" cache="false" exec="tickerphp.cbUpdateMatchNote()" 
+							params="rowData::uid,rowInput::matchnotes__comment,rowInput::matchnotes__player_home,rowInput::matchnotes__player_guest">
+					</onclick>
+				</column>
+				<column name="delete" label="label_btn_delete" type="renderlet:BUTTON" listHeader="">
+					<onclick runat="ajax" cache="false" exec="tickerphp.cbDeleteMatchNote()" params="rowData::uid"></onclick>
+				</column>
+			</columns>
+		</renderlet:LISTER>
 
 	</elements>
 </formidable>

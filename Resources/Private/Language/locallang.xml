@@ -22,6 +22,9 @@
 			<label index="label_flw24_match_result1">Halftime</label>
 			<label index="label_flw24_match_linkticker">Liveticker active</label>
 
+
+			<label index="label_btn_save">Save</label>
+			<label index="label_btn_delete">Delete</label>
 			<label index="label_msg_minute_required">Minute is required</label>
 			<label index="label_msg_player_not_set">Set one player for this message type</label>
 			
@@ -42,6 +45,9 @@
 			<label index="label_flw24_match_result">Endstand</label>
 			<label index="label_flw24_match_result1">Halbzeit</label>
 			<label index="label_flw24_match_linkticker">Liveticker aktiv</label>
+
+			<label index="label_btn_save">Speichern</label>
+			<label index="label_btn_delete">Löschen</label>
 
 			<label index="label_msg_minute_required">Es muss eine Spielminute angegeben werden</label>
 			<label index="label_msg_player_not_set">Für diese Tickermeldung muss genau ein Spieler angegeben werden.</label>
