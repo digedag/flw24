@@ -122,8 +122,10 @@ class Ticker {
 	}
 
 	public function getMatchNoteSql($params, $form) {
+		$uid = (int) $form->getDataHandler()->getStoredData('uid');
 		$options = [
 			'sqlonly' => 1,
+			'where' => 'game='.$uid,
 //			'orderby' => 'minute desc, extra_time desc',
 		];
 

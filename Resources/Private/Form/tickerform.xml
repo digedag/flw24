@@ -152,6 +152,7 @@
 		</renderlet:BOX>
 
 		<renderlet:LISTER name="matchnotes" uidColumn="uid" ajaxLister="true">
+			<ifEmpty message="No data" />
 			<dataSource use="dsMatchNotes" />
 			<pager><sort column="minute" direction="desc" /></pager>
 			<columns>
