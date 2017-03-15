@@ -50,13 +50,69 @@ class Ticker {
 		$repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
 		$model = $repo->createNewModel($record);
 		$repo->persist($model);
-
-		return array(
-			$form->getWidget('box_base')->majixClearValue(),
-			$form->getWidget('matchnotes')->majixRepaint(),
+		$ret = array(
+				$form->getWidget('box_base')->majixClearValue(),
+				$form->getWidget('box_players')->majixDisplayNone(),
+				$form->getWidget('matchnotes')->majixRepaint(),
 		);
+
+		// Spielticker ggf. aktivieren, wenn das Spiel nicht in Vergangenheit liegt
+		/* @var $match \tx_cfcleague_models_Match */
+		$match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+		if ($this->ensureTickerActive($match, $form) ) {
+			$ret[] = $form->getWidget('link_ticker')->majixSetValue($match->getProperty('link_ticker'));
+			$ret[] = $form->getWidget('status')->majixSetValue($match->getProperty('status'));
+		}
+		if ($this->ensureScore($model, $match, $form) ) {
+			$ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
+			$ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
+		}
+
+		return $ret;
 	}
 
+	/**
+	 *
+	 * @param tx_cfcleague_models_MatchNote $ticker
+	 * @param tx_cfcleague_models_Match $match
+	 * @param \tx_mkforms_forms_Base $form
+	 */
+	protected function ensureScore($ticker, $match, \tx_mkforms_forms_Base $form) {
+		if(!$ticker->isGoal()) {
+			return false;
+		}
+		\tx_rnbase::load('tx_cfcleaguefe_util_MatchTicker');
+		$tickerArr = \tx_cfcleaguefe_util_MatchTicker::getTicker4Match($match);
+		// im letzten Eintrag steht der aktuelle Spielstand
+		$lastTicker = end($tickerArr);
+		if($lastTicker) {
+			$match->setProperty('goals_home_2', $lastTicker->getProperty('goals_home'));
+			$match->setProperty('goals_guest_2', $lastTicker->getProperty('goals_guest'));
+			\tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+		}
+
+		return true;
+	}
+	/**
+	 * Spiel- und Tickerstatus automatisch setzen
+	 * @param tx_cfcleague_models_Match $match
+	 */
+	protected function ensureTickerActive($match, \tx_mkforms_forms_Base $form) {
+		\tx_rnbase::load('tx_rnbase_util_Dates');
+		if(($match->isTicker() && $match->isRunning()) || $match->isFinished()) {
+			return false;
+		}
+		// Liegt das Spiel in der Vergangenheit
+		$kickoff = \tx_rnbase_util_Dates::date_tstamp2mysql($match->getDate());
+		$kickoff = \tx_rnbase_util_Dates::date_mysql2int($match->getDate());
+		if (\tx_rnbase_util_Dates::getTodayDateString() > $kickoff) {
+			return false;
+		}
+		$match->setProperty('link_ticker', 1);
+		$match->setProperty('status', \tx_cfcleague_models_Match::MATCH_STATUS_RUNNING);
+		\tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+		return true;
+	}
 	/**
 	 * @param array $params
 	 * @param \tx_mkforms_forms_Base $form
@@ -80,9 +136,18 @@ class Ticker {
 		$repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
 		$repo->persist($matchNote);
 
-		return [
-			$form->getWidget('matchnotes')->majixRepaint(),
+		$ret = [
+				$form->getWidget('matchnotes')->majixRepaint(),
 		];
+
+		/* @var $match \tx_cfcleague_models_Match */
+		$match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchNote->getProperty('game'));
+		if ($this->ensureScore($matchNote, $match, $form) ) {
+			$ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
+			$ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
+		}
+
+		return $ret;
 	}
 	/**
 	 * @param array $params
@@ -90,16 +155,29 @@ class Ticker {
 	 * @return []
 	 */
 	public function cbDeleteMatchNote($params, $form) {
+		/* @var $matchNote \tx_cfcleague_models_MatchNote */
 		$matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
 		if(!$matchNote->isValid()) {
 			return [$form->majixDebug('Sorry, update failed')];
 		}
+
+		/* @var $match \tx_cfcleague_models_Match */
+		$match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchNote->getProperty('game'));
+		$matchNoteClone = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $matchNote->getProperty());
+
 		/* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
 		$repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
 		$repo->handleDelete($matchNote);
-		return [
-			$form->getWidget('matchnotes')->majixRepaint(),
+
+		$ret = [
+				$form->getWidget('matchnotes')->majixRepaint(),
 		];
+
+		if ($this->ensureScore($matchNoteClone, $match, $form) ) {
+			$ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
+			$ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
+		}
+		return $ret;
 	}
 
 	/**
