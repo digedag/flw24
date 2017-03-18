@@ -59,7 +59,7 @@ class Ticker {
 		// Spielticker ggf. aktivieren, wenn das Spiel nicht in Vergangenheit liegt
 		/* @var $match \tx_cfcleague_models_Match */
 		$match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
-		if ($this->ensureTickerActive($match, $form) ) {
+		if ($this->ensureTickerActive($match, $form, $model->getMinute()) ) {
 			$ret[] = $form->getWidget('link_ticker')->majixSetValue($match->getProperty('link_ticker'));
 			$ret[] = $form->getWidget('status')->majixSetValue($match->getProperty('status'));
 		}
@@ -97,7 +97,7 @@ class Ticker {
 	 * Spiel- und Tickerstatus automatisch setzen
 	 * @param tx_cfcleague_models_Match $match
 	 */
-	protected function ensureTickerActive($match, \tx_mkforms_forms_Base $form) {
+	protected function ensureTickerActive($match, \tx_mkforms_forms_Base $form, $minute) {
 		\tx_rnbase::load('tx_rnbase_util_Dates');
 		if(($match->isTicker() && $match->isRunning()) || $match->isFinished()) {
 			return false;
@@ -109,7 +109,9 @@ class Ticker {
 			return false;
 		}
 		$match->setProperty('link_ticker', 1);
-		$match->setProperty('status', \tx_cfcleague_models_Match::MATCH_STATUS_RUNNING);
+		if(((int)$minute) > 0) {
+			$match->setProperty('status', \tx_cfcleague_models_Match::MATCH_STATUS_RUNNING);
+		}
 		\tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
 		return true;
 	}
