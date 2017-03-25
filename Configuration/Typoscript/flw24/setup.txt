@@ -13,25 +13,25 @@ lib.t3sports.match {
 	newspreview2 {
 		_template.subpartName = ###NEWSPREVIEW2###
 	}
-
 }
 
 
 plugin.tx_cfcleaguefe_report {
-  locallangFilename.100 = EXT:flw24/Resources/Private/Language/locallang.xml
-  tickerformTemplate = {$plugin.tx_flw24_base.tickerformTemplate}
+	locallangFilename.100 = EXT:flw24/Resources/Private/Language/locallang.xml
+	tickerformTemplate = {$plugin.tx_flw24_base.tickerformTemplate}
 
-  tickerform =< lib.mkforms.formbase
-  tickerform {
-    item =< lib.t3sports.match
+	tickerform =< lib.mkforms.formbase
+	tickerform {
+		item =< lib.t3sports.match
 
-    viewClassName = System25\Flw24\View\FormView
-    xml = EXT:flw24/Resources/Private/Form/tickerform.xml
-    mainSubpart = ###TICKERFORM###
-    formconfig.templates.box.matchdata.file = {$plugin.tx_flw24_base.tickerform}
-    formconfig.templates.box.matchdata.subpart = ###MATCHDATA###
-    formconfig.templates.box.tickerdata.file = {$plugin.tx_flw24_base.tickerform}
-    formconfig.templates.box.tickerdata.subpart = ###TICKERDATA###
-		
+		viewClassName = System25\Flw24\View\FormView
+		xml = EXT:flw24/Resources/Private/Form/tickerform.xml
+		mainSubpart = ###TICKERFORM###
+		formconfig.templates.box.matchdata.file = {$plugin.tx_flw24_base.tickerform}
+		formconfig.templates.box.matchdata.subpart = ###MATCHDATA###
+		formconfig.templates.box.tickerdata.file = {$plugin.tx_flw24_base.tickerform}
+		formconfig.templates.box.tickerdata.subpart = ###TICKERDATA###
+		formconfig.templates.box.watch.file = {$plugin.tx_flw24_base.tickerform}
+		formconfig.templates.box.watch.subpart = ###WATCH###
 	}
 }

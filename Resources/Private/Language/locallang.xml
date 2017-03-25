@@ -6,6 +6,8 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="label_flw24_watch">Watch</label>
+			<label index="label_flw24_watch_offset">Offset</label>
 			<label index="label_flw24_ticker_type">Type</label>
 			<label index="label_flw24_ticker_minute">Minute</label>
 			<label index="label_flw24_ticker_comment">Comment</label>
@@ -13,6 +15,7 @@
 			<label index="label_flw24_ticker_playerHome">Player Home</label>
 			<label index="label_flw24_ticker_playerGuest">Player Guest</label>
 
+			<label index="label_flw24_event_matchend">Match end</label>
 			<label index="label_flw24_match_status">Status</label>
 			<label index="label_flw24_match_status_scheduled">Scheduled</label>
 			<label index="label_flw24_match_status_running">Running</label>
@@ -30,6 +33,8 @@
 			
 		</languageKey>
 		<languageKey index="de" type="array">
+			<label index="label_flw24_watch">Spielzeit</label>
+			<label index="label_flw24_watch_offset">Offset</label>
 			<label index="label_flw24_ticker_type">Typ</label>
 			<label index="label_flw24_ticker_minute">Minute</label>
 			<label index="label_flw24_ticker_comment">Kommentar</label>
@@ -37,6 +42,7 @@
 			<label index="label_flw24_ticker_playerHome">Spieler Heim</label>
 			<label index="label_flw24_ticker_playerGuest">Spieler Gast</label>
 
+			<label index="label_flw24_event_matchend">Spielende</label>
 			<label index="label_flw24_match_status">Status</label>
 			<label index="label_flw24_match_status_scheduled">Angesetzt</label>
 			<label index="label_flw24_match_status_running">Spiel läuft</label>

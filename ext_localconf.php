@@ -16,4 +16,4 @@ $GLOBALS ['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getJoins_
 
 \tx_cfcleague_util_Misc::removeMatchNote('11');
 \tx_cfcleague_util_Misc::removeMatchNote('12');
-//\tx_cfcleague_util_Misc::registerMatchNote('Mein Ereignis','1000');
+\tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_matchend','1000');

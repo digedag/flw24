@@ -67,6 +67,9 @@ class Ticker {
 			$ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
 			$ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
 		}
+		if ($this->ensureStatus($model, $match, $form) ) {
+			$ret[] = $form->getWidget('status')->majixSetValue($match->getStatus());
+		}
 
 		return $ret;
 	}
@@ -77,10 +80,25 @@ class Ticker {
 	 * @param tx_cfcleague_models_Match $match
 	 * @param \tx_mkforms_forms_Base $form
 	 */
+	protected function ensureStatus($ticker, $match, \tx_mkforms_forms_Base $form) {
+		if($ticker->getType() != 1000) {
+			return false;
+		}
+		$match->setProperty('status', 2);
+		\tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+		return true;
+	}
+	/**
+	 *
+	 * @param tx_cfcleague_models_MatchNote $ticker
+	 * @param tx_cfcleague_models_Match $match
+	 * @param \tx_mkforms_forms_Base $form
+	 */
 	protected function ensureScore($ticker, $match, \tx_mkforms_forms_Base $form) {
 		if(!$ticker->isGoal()) {
 			return false;
 		}
+
 		\tx_rnbase::load('tx_cfcleaguefe_util_MatchTicker');
 		$tickerArr = \tx_cfcleaguefe_util_MatchTicker::getTicker4Match($match);
 		// im letzten Eintrag steht der aktuelle Spielstand
@@ -124,7 +142,7 @@ class Ticker {
 
 		$matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
 		if(!$matchNote->isValid()) {
-			return [$form->majixDebug('Sorry, update failed')];
+			return [];
 		}
 		$prefix = 'matchnotes__';
 		$fields = ['minute', 'extra_time', 'type', 'player_home', 'player_guest', 'comment'];
@@ -160,7 +178,7 @@ class Ticker {
 		/* @var $matchNote \tx_cfcleague_models_MatchNote */
 		$matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
 		if(!$matchNote->isValid()) {
-			return [$form->majixDebug('Sorry, update failed')];
+			return [];
 		}
 
 		/* @var $match \tx_cfcleague_models_Match */
@@ -200,7 +218,56 @@ class Ticker {
 		return array(
 		);
 	}
+	/** Enthält die aktuelle Client-Zeit */
+	const FIELD_TICKER_LOCALTIME = 'watch_localtime';
+	/** Enthält den Zeitpunkt des Start-Klicks */
+	const FIELD_TICKER_STARTTIME = 'watch_starttime';
+	/** Enhält einen optionalen Offset */
+	const FIELD_TICKER_OFFSET = 'watch_offset';
+	/**
+	 *
+	 * @param array $params
+	 * @param \tx_mkforms_forms_Base $form
+	 * @return []
+	 */
+	public function cbWatchToggleClick($params, $form) {
+		// Startzeit auf dem Client wird gesichert
+		$starttime = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_STARTTIME, 'flw24');
+		$ret = [];
+		if($starttime) {
+			// Ausschalten
+			$starttime = 0;
+			\tx_t3users_util_ServiceRegistry::getFeUserService()->removeSessionValue(self::FIELD_TICKER_STARTTIME, 'flw24');
+			$ret[] = $form->getWidget('btn_watch_start')->majixDisplayDefault();
+			$ret[] = $form->getWidget('btn_watch_stop')->majixDisplayNone();
+			$ret[] = $form->getWidget('watch_minute')->majixSetValue('0');
+			$ret[] = $form->getWidget('watch')->majixSetValue('');
+		}
+		else {
+			$starttime = $form->getWidget(self::FIELD_TICKER_LOCALTIME)->getValue();;
+			\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_STARTTIME, $starttime, 'flw24');
+			$ret[] = $form->getWidget('btn_watch_start')->majixDisplayNone();
+			$ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
+		}
+		$GLOBALS['TSFE']->storeSessionData();
 
+		$ret[] = $form->getWidget(self::FIELD_TICKER_STARTTIME)->majixSetValue($starttime);
+		return $ret;
+	}
+
+	/**
+	 * Offset wurde geändert und muss gespeichert werden
+	 *
+	 * @param array $params
+	 * @param \tx_mkforms_forms_Base $form
+	 * @return []
+	 */
+	public function cbWatchOffset($params, $form) {
+		$offset = $form->getWidget(self::FIELD_TICKER_OFFSET)->getValue();;
+		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_OFFSET, $offset, 'flw24');
+		$GLOBALS['TSFE']->storeSessionData();
+		return [];
+	}
 	public function getMatchNoteSql($params, $form) {
 		$uid = (int) $form->getDataHandler()->getStoredData('uid');
 		$options = [
@@ -222,7 +289,7 @@ class Ticker {
 		$home = $form->getWidget('player_home')->getValue();
 		$guest = $form->getWidget('player_guest')->getValue();
 		$type = $form->getWidget('type')->getValue();
-		if($type == 100) {
+		if($type == 100 || $type == 1000) {
 			// Hier ist der Spieler egal
 			return true;
 		}
@@ -236,6 +303,17 @@ class Ticker {
 	}
 	public function fillMatchForm($params, \tx_mkforms_forms_IForm $form) {
 		$match = $form->getParent()->getItem();
+
+		$starttime = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_STARTTIME, 'flw24');
+		if($starttime) {
+			$match->setProperty(self::FIELD_TICKER_STARTTIME, $starttime);
+		}
+		$offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_OFFSET, 'flw24');
+		if($starttime) {
+			$match->setProperty(self::FIELD_TICKER_OFFSET, $offset);
+		}
+
+
 		return $match->getProperty();
 	}
 	/**

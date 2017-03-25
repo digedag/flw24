@@ -23,6 +23,47 @@
 		<renderlet:BOX name="error">
 		</renderlet:BOX>
 
+		<renderlet:BOX name="box_watch">
+			<childs>
+				<template
+					path="TS:templates.box.watch.file"
+					subpart="TS:templates.box.watch.subpart"
+				/>
+				<renderlet:TEXT name="watch" label="label_flw24_watch" />
+				<renderlet:TEXT name="watch_offset" label="label_flw24_watch_offset" inputtype="number">
+						<onchange
+				      runat="ajax"
+				      params="box_watch__*"
+				      cache="false"
+				      validate="error"
+				      exec="tickerphp.cbWatchOffset()"
+						 />
+				</renderlet:TEXT>
+				<renderlet:HIDDEN name="watch_starttime" />
+				<renderlet:HIDDEN name="watch_localtime" />
+				<renderlet:HIDDEN name="watch_minute" />
+				<renderlet:BUTTON name="btn_watch_start" label="Start">
+						<onclick
+				      runat="ajax"
+				      params="box_watch__*"
+				      cache="false"
+				      validate="error"
+				      exec="tickerphp.cbWatchToggleClick()"
+						 />
+				</renderlet:BUTTON>
+				<renderlet:BUTTON name="btn_watch_stop" label="Stop" style="display:none">
+						<onclick
+				      runat="ajax"
+				      params="box_watch__*"
+				      cache="false"
+				      validate="error"
+				      exec="tickerphp.cbWatchToggleClick()"
+						 />
+				</renderlet:BUTTON>
+			</childs>
+		</renderlet:BOX>
+
+
 		<renderlet:BOX name="box_base">
 			<childs>
 				<template
@@ -43,6 +84,7 @@
 				<renderlet:TEXT name="extra_time" inputtype="number">
 					<custom>min="0"</custom>
 				</renderlet:TEXT>
+
 
 				<renderlet:LISTBOX name="type" label="label_flw24_ticker_type">
 						<onchange runat="js" exec="tickerjs.cbTickerTypeChanged()" />
@@ -85,7 +127,11 @@
 				</renderlet:BOX>
 
 				<renderlet:TEXTAREA name="comment" label="label_flw24_ticker_comment">
-						<custom>cols="50" rows="5"</custom>
+					<custom>cols="50" rows="5"</custom>
+					<onclick
+				      runat="js"
+				      exec="tickerjs.cbSetMinute()"
+					/>
 				</renderlet:TEXTAREA>
 
 				<renderlet:BUTTON name="btn_submit" label="Submit" >
@@ -126,17 +172,17 @@
 					<custom>min="0"</custom>
 				</renderlet:TEXT>
 
-				<renderlet:CHECKSINGLE name="link_ticker" label="label_flw24_match_linkticker" />
+				<renderlet:HIDDEN name="link_ticker" label="label_flw24_match_linkticker" />
 
-				<renderlet:LISTBOX name="status" label="label_flw24_match_status">
-					<data>
+				<renderlet:HIDDEN name="status" label="label_flw24_match_status">
+					<!--data>
 						<items>
 							<item caption="label_flw24_match_status_scheduled" value="0"/>
 							<item caption="label_flw24_match_status_running" value="1"/>
 							<item caption="label_flw24_match_status_finished" value="2"/>
 						</items>
-					</data>
-				</renderlet:LISTBOX>
+					</data-->
+				</renderlet:HIDDEN>
 
 				<renderlet:BUTTON name="btn_submit" label="Submit" >
 				   <onclick
