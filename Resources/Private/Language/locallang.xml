@@ -8,6 +8,12 @@
 		<languageKey index="default" type="array">
 			<label index="label_flw24_watch">Watch</label>
 			<label index="label_flw24_watch_offset">Offset</label>
+			<label index="label_flw24_watch_matchpart">Match part</label>
+			<label index="label_flw24_watch_matchpart_1">1. Half</label>
+			<label index="label_flw24_watch_matchpart_2">2. Half</label>
+			<label index="label_flw24_watch_matchpart_3">Extra 1. Half</label>
+			<label index="label_flw24_watch_matchpart_4">Extra 2. Half</label>
+
 			<label index="label_flw24_ticker_type">Type</label>
 			<label index="label_flw24_ticker_minute">Minute</label>
 			<label index="label_flw24_ticker_comment">Comment</label>
@@ -34,7 +40,13 @@
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="label_flw24_watch">Spielzeit</label>
-			<label index="label_flw24_watch_offset">Offset</label>
+			<label index="label_flw24_watch_offset">Korrektur</label>
+			<label index="label_flw24_watch_matchpart">Spielabschnitt</label>
+			<label index="label_flw24_watch_matchpart_1">1. HZ</label>
+			<label index="label_flw24_watch_matchpart_2">2. HZ</label>
+			<label index="label_flw24_watch_matchpart_3">Verl. 1. HZ</label>
+			<label index="label_flw24_watch_matchpart_4">Verl. 2. HZ</label>
+
 			<label index="label_flw24_ticker_type">Typ</label>
 			<label index="label_flw24_ticker_minute">Minute</label>
 			<label index="label_flw24_ticker_comment">Kommentar</label>

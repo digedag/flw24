@@ -4,12 +4,16 @@
 		<form formid="ticker" />
 		<displaylabels>true</displaylabels>
 		<debug>false</debug>
-		<codeBehind name="tickerphp" type="php" path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Ticker" />
-		<codeBehind name="tickerjs" type="js" path="EXT:flw24/Resources/Public/js/ticker.js:tickerCB" />
+		<codeBehind name="tickerphp" type="php"
+			path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Ticker" />
+		<codeBehind name="tickerjs" type="js"
+			path="EXT:flw24/Resources/Public/js/ticker.js:tickerCB" />
 	</meta>
 	<control>
 		<datahandler:RAW>
-			<record><userobj extension="System25\Flw24\Form\Ticker" method="fillMatchForm" /></record>
+			<record>
+				<userobj extension="System25\Flw24\Form\Ticker" method="fillMatchForm" />
+			</record>
 		</datahandler:RAW>
 		<datasources>
 			<datasource:DB name="dsMatchNotes">
@@ -25,40 +29,39 @@
 
 		<renderlet:BOX name="box_watch">
 			<childs>
-				<template
-					path="TS:templates.box.watch.file"
-					subpart="TS:templates.box.watch.subpart"
-				/>
-				<renderlet:TEXT name="watch" label="label_flw24_watch" />
-				<renderlet:TEXT name="watch_offset" label="label_flw24_watch_offset" inputtype="number">
-						<onchange
-				      runat="ajax"
-				      params="box_watch__*"
-				      cache="false"
-				      validate="error"
-				      exec="tickerphp.cbWatchOffset()"
-						 />
+				<template path="TS:templates.box.watch.file" subpart="TS:templates.box.watch.subpart" />
+				<renderlet:BOX name="watch" mode="span" class="flw24-watch" />
+				<renderlet:LISTBOX name="watch_matchpart"
+					label="label_flw24_watch_matchpart">
+					<onchange runat="ajax" params="box_watch__*" cache="false"
+						validate="error" exec="tickerphp.cbWatchMatchPart()" />
+					<data>
+						<items>
+							<item caption="label_flw24_watch_matchpart_1" value="0" />
+							<item caption="label_flw24_watch_matchpart_2" value="45" />
+							<item caption="label_flw24_watch_matchpart_3" value="90" />
+							<item caption="label_flw24_watch_matchpart_4" value="115" />
+						</items>
+					</data>
+				</renderlet:LISTBOX>
+
+				<!--renderlet:TEXT name="watch" label="label_flw24_watch" / -->
+				<renderlet:TEXT name="watch_offset" label="label_flw24_watch_offset"
+					inputtype="number">
+					<onchange runat="ajax" params="box_watch__*" cache="false"
+						validate="error" exec="tickerphp.cbWatchOffset()" />
 				</renderlet:TEXT>
 				<renderlet:HIDDEN name="watch_starttime" />
 				<renderlet:HIDDEN name="watch_localtime" />
 				<renderlet:HIDDEN name="watch_minute" />
 				<renderlet:BUTTON name="btn_watch_start" label="Start">
-						<onclick
-				      runat="ajax"
-				      params="box_watch__*"
-				      cache="false"
-				      validate="error"
-				      exec="tickerphp.cbWatchToggleClick()"
-						 />
+					<onclick runat="ajax" params="box_watch__*" cache="false"
+						validate="error" exec="tickerphp.cbWatchToggleClick()" />
 				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btn_watch_stop" label="Stop" style="display:none">
-						<onclick
-				      runat="ajax"
-				      params="box_watch__*"
-				      cache="false"
-				      validate="error"
-				      exec="tickerphp.cbWatchToggleClick()"
-						 />
+				<renderlet:BUTTON name="btn_watch_stop" label="Stop"
+					style="display:none">
+					<onclick runat="ajax" params="box_watch__*" cache="false"
+						validate="error" exec="tickerphp.cbWatchToggleClick()" />
 				</renderlet:BUTTON>
 			</childs>
 		</renderlet:BOX>
@@ -66,17 +69,16 @@
 
 		<renderlet:BOX name="box_base">
 			<childs>
-				<template
-					path="TS:templates.box.tickerdata.file"
-					subpart="TS:templates.box.tickerdata.subpart"
-				/>
-				<renderlet:TEXT name="minute" label="label_flw24_ticker_minute" inputtype="number">
+				<template path="TS:templates.box.tickerdata.file" subpart="TS:templates.box.tickerdata.subpart" />
+				<renderlet:TEXT name="minute" label="label_flw24_ticker_minute"
+					inputtype="number">
 					<custom>min="-1"</custom>
 					<validators>
 						<validator:STANDARD>
 							<required>
 								<value>true</value>
-								<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required</message>
+								<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required
+								</message>
 							</required>
 						</validator:STANDARD>
 					</validators>
@@ -87,13 +89,14 @@
 
 
 				<renderlet:LISTBOX name="type" label="label_flw24_ticker_type">
-						<onchange runat="js" exec="tickerjs.cbTickerTypeChanged()" />
+					<onchange runat="js" exec="tickerjs.cbTickerTypeChanged()" />
 					<data>
 						<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes" />
 					</data>
 					<validators>
 						<validator:STANDARD>
-							<custom message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
+							<custom
+								message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
 								<userobj extension="System25\Flw24\Form\Ticker" method="validatePlayer" />
 							</custom>
 						</validator:STANDARD>
@@ -103,8 +106,9 @@
 				<renderlet:BOX name="box_players">
 					<childs>
 
-						<renderlet:LISTBOX name="player_home" label="label_flw24_ticker_playerHome">
- 							<onchange runat="js" exec="tickerjs.cbPlayerHomeChanged()" />
+						<renderlet:LISTBOX name="player_home"
+							label="label_flw24_ticker_playerHome">
+							<onchange runat="js" exec="tickerjs.cbPlayerHomeChanged()" />
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 									<params>
@@ -113,8 +117,9 @@
 								</userobj>
 							</data>
 						</renderlet:LISTBOX>
-						<renderlet:LISTBOX name="player_guest" label="label_flw24_ticker_playerGuest">
- 							<onchange runat="js" exec="tickerjs.cbPlayerGuestChanged()" />
+						<renderlet:LISTBOX name="player_guest"
+							label="label_flw24_ticker_playerGuest">
+							<onchange runat="js" exec="tickerjs.cbPlayerGuestChanged()" />
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 									<params>
@@ -126,22 +131,15 @@
 					</childs>
 				</renderlet:BOX>
 
-				<renderlet:TEXTAREA name="comment" label="label_flw24_ticker_comment">
+				<renderlet:TEXTAREA name="comment"
+					label="label_flw24_ticker_comment">
 					<custom>cols="50" rows="5"</custom>
-					<onclick
-				      runat="js"
-				      exec="tickerjs.cbSetMinute()"
-					/>
+					<onclick runat="js" exec="tickerjs.cbSetMinute()" />
 				</renderlet:TEXTAREA>
 
-				<renderlet:BUTTON name="btn_submit" label="Submit" >
-				   <onclick
-				      runat="ajax"
-				      params="box_base__*"
-				      cache="false"
-				      validate="error"
-				      exec="tickerphp.cbTickerSubmitClick()"
-				   />
+				<renderlet:BUTTON name="btn_submit" label="Submit">
+					<onclick runat="ajax" params="box_base__*" cache="false"
+						validate="error" exec="tickerphp.cbTickerSubmitClick()" />
 				</renderlet:BUTTON>
 
 			</childs>
@@ -149,10 +147,7 @@
 
 		<renderlet:BOX name="box_matchdata">
 			<childs>
-				<template
-					path="TS:templates.box.matchdata.file"
-					subpart="TS:templates.box.matchdata.subpart"
-				/>
+				<template path="TS:templates.box.matchdata.file" subpart="TS:templates.box.matchdata.subpart" />
 
 				<renderlet:TEXT name="goals_home_2" inputtype="number">
 					<custom>min="0"</custom>
@@ -168,43 +163,39 @@
 					<custom>min="0"</custom>
 				</renderlet:TEXT>
 
-				<renderlet:TEXT name="visitors" inputtype="number" label="label_flw24_match_visitors">
+				<renderlet:TEXT name="visitors" inputtype="number"
+					label="label_flw24_match_visitors">
 					<custom>min="0"</custom>
 				</renderlet:TEXT>
 
-				<renderlet:HIDDEN name="link_ticker" label="label_flw24_match_linkticker" />
+				<renderlet:HIDDEN name="link_ticker"
+					label="label_flw24_match_linkticker" />
 
 				<renderlet:HIDDEN name="status" label="label_flw24_match_status">
-					<!--data>
-						<items>
-							<item caption="label_flw24_match_status_scheduled" value="0"/>
-							<item caption="label_flw24_match_status_running" value="1"/>
-							<item caption="label_flw24_match_status_finished" value="2"/>
-						</items>
-					</data-->
+					<!--data> <items> <item caption="label_flw24_match_status_scheduled" 
+						value="0"/> <item caption="label_flw24_match_status_running" value="1"/> 
+						<item caption="label_flw24_match_status_finished" value="2"/> </items> </data -->
 				</renderlet:HIDDEN>
 
-				<renderlet:BUTTON name="btn_submit" label="Submit" >
-				   <onclick
-				      runat="ajax"
-				      params="box_matchdata__*"
-				      cache="false"
-				      validate="error"
-				      exec="tickerphp.cbMatchSubmitClick()"
-				   />
+				<renderlet:BUTTON name="btn_submit" label="Submit">
+					<onclick runat="ajax" params="box_matchdata__*" cache="false"
+						validate="error" exec="tickerphp.cbMatchSubmitClick()" />
 				</renderlet:BUTTON>
 
 			</childs>
 		</renderlet:BOX>
 
-		<renderlet:LISTER name="matchnotes" uidColumn="uid" ajaxLister="true">
+		<renderlet:LISTER name="matchnotes" uidColumn="uid"
+			ajaxLister="true">
 			<ifEmpty message="No data" />
 			<dataSource use="dsMatchNotes" />
-			<pager><sort column="minute" direction="desc" /></pager>
+			<pager>
+				<sort column="minute" direction="desc" />
+			</pager>
 			<columns>
-				<column name="uid" type="renderlet:HIDDEN" activelistable="true"/>
-				<column name="minute" type="renderlet:TEXT" listHeader="label_flw24_ticker_minute"/>
-				<column name="type" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_type" >
+				<column name="uid" type="renderlet:HIDDEN" activelistable="true" />
+				<column name="minute" type="renderlet:TEXT" listHeader="label_flw24_ticker_minute" />
+				<column name="type" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_type">
 					<data>
 						<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes">
 							<params>
@@ -213,7 +204,8 @@
 						</userobj>
 					</data>
 				</column>
-				<column name="player_home" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_playerHome" activelistable="true">
+				<column name="player_home" type="renderlet:LISTBOX"
+					listHeader="label_flw24_ticker_playerHome" activelistable="true">
 					<data>
 						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 							<params>
@@ -222,7 +214,8 @@
 						</userobj>
 					</data>
 				</column>
-				<column name="player_guest" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_playerGuest" activelistable="true">
+				<column name="player_guest" type="renderlet:LISTBOX"
+					listHeader="label_flw24_ticker_playerGuest" activelistable="true">
 					<data>
 						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 							<params>
@@ -232,15 +225,19 @@
 					</data>
 				</column>
 
-				<column name="comment" type="renderlet:TEXT" listHeader="label_flw24_ticker_comment" activelistable="true" />
+				<column name="comment" type="renderlet:TEXT" listHeader="label_flw24_ticker_comment"
+					activelistable="true" />
 
-				<column name="save" label="label_btn_save" type="renderlet:BUTTON" listHeader="">
-					<onclick runat="ajax" cache="false" exec="tickerphp.cbUpdateMatchNote()" 
-							params="rowData::uid,rowInput::matchnotes__comment,rowInput::matchnotes__player_home,rowInput::matchnotes__player_guest">
+				<column name="save" label="label_btn_save" type="renderlet:BUTTON"
+					listHeader="">
+					<onclick runat="ajax" cache="false" exec="tickerphp.cbUpdateMatchNote()"
+						params="rowData::uid,rowInput::matchnotes__comment,rowInput::matchnotes__player_home,rowInput::matchnotes__player_guest">
 					</onclick>
 				</column>
-				<column name="delete" label="label_btn_delete" type="renderlet:BUTTON" listHeader="">
-					<onclick runat="ajax" cache="false" exec="tickerphp.cbDeleteMatchNote()" params="rowData::uid"></onclick>
+				<column name="delete" label="label_btn_delete" type="renderlet:BUTTON"
+					listHeader="">
+					<onclick runat="ajax" cache="false" exec="tickerphp.cbDeleteMatchNote()"
+						params="rowData::uid"></onclick>
 				</column>
 			</columns>
 		</renderlet:LISTER>

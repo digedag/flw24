@@ -224,6 +224,8 @@ class Ticker {
 	const FIELD_TICKER_STARTTIME = 'watch_starttime';
 	/** Enhält einen optionalen Offset */
 	const FIELD_TICKER_OFFSET = 'watch_offset';
+	/** Enhält den aktuellen Spielabschnitt */
+	const FIELD_TICKER_MATCHPART = 'watch_matchpart';
 	/**
 	 *
 	 * @param array $params
@@ -241,7 +243,12 @@ class Ticker {
 			$ret[] = $form->getWidget('btn_watch_start')->majixDisplayDefault();
 			$ret[] = $form->getWidget('btn_watch_stop')->majixDisplayNone();
 			$ret[] = $form->getWidget('watch_minute')->majixSetValue('0');
-			$ret[] = $form->getWidget('watch')->majixSetValue('');
+			if($form->getWidget('watch') instanceof \tx_mkforms_widgets_box_Main) {
+				$ret[] = $form->getWidget('watch')->majixSetHtml('');
+			}
+			else {
+				$ret[] = $form->getWidget('watch')->majixSetValue('');
+			}
 		}
 		else {
 			$starttime = $form->getWidget(self::FIELD_TICKER_LOCALTIME)->getValue();;
@@ -265,6 +272,19 @@ class Ticker {
 	public function cbWatchOffset($params, $form) {
 		$offset = $form->getWidget(self::FIELD_TICKER_OFFSET)->getValue();;
 		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_OFFSET, $offset, 'flw24');
+		$GLOBALS['TSFE']->storeSessionData();
+		return [];
+	}
+	/**
+	 * Halbzeit wurde geändert und muss gespeichert werden
+	 *
+	 * @param array $params
+	 * @param \tx_mkforms_forms_Base $form
+	 * @return []
+	 */
+	public function cbWatchMatchPart($params, $form) {
+		$offset = $form->getWidget(self::FIELD_TICKER_MATCHPART)->getValue();;
+		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_MATCHPART, $offset, 'flw24');
 		$GLOBALS['TSFE']->storeSessionData();
 		return [];
 	}
@@ -309,8 +329,12 @@ class Ticker {
 			$match->setProperty(self::FIELD_TICKER_STARTTIME, $starttime);
 		}
 		$offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_OFFSET, 'flw24');
-		if($starttime) {
+		if($offset) {
 			$match->setProperty(self::FIELD_TICKER_OFFSET, $offset);
+		}
+		$offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_MATCHPART, 'flw24');
+		if($offset) {
+			$match->setProperty(self::FIELD_TICKER_MATCHPART, $offset);
 		}
 
 

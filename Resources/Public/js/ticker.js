@@ -63,14 +63,22 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		this.getFieldWatch(form, 'watch_localtime').setValue(now);
 		start = this.getFieldWatch(form, 'watch_starttime').getValue();
 		if(start > 0) {
+			var matchPart = parseInt(this.getFieldWatch(form, 'watch_matchpart').getValue());
 			offset = this.trim(this.getFieldWatch(form, 'watch_offset').getValue());
 			offset = parseInt(isNaN(offset) || offset == "" ? 0 : offset);
+			offset = offset + matchPart;
 			diff = new Date(now - start);
 			std = diff.getHours();
 			min = diff.getMinutes() + ((std - 1) * 60) + offset;
 			sec = diff.getSeconds();
 			this.getFieldWatch(form, 'watch_minute').setValue(min + 1);
-			this.getFieldWatch(form, 'watch').setValue(((min>9) ? min : "0" + min) + ":" + ((sec>9) ? sec : "0" + sec));
+			var watchField = this.getFieldWatch(form, 'watch');
+			if( typeof watchField.setHtml == 'function') {
+				watchField.setHtml(((min>9) ? min : "0" + min) + ":" + ((sec>9) ? sec : "0" + sec));
+			}
+			else {
+				watchField.setValue(((min>9) ? min : "0" + min) + ":" + ((sec>9) ? sec : "0" + sec));
+			}
 		}
 		this.form = form;
 		context = this;
