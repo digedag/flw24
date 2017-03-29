@@ -244,7 +244,7 @@ class Ticker {
 			$ret[] = $form->getWidget('btn_watch_stop')->majixDisplayNone();
 			$ret[] = $form->getWidget('watch_minute')->majixSetValue('0');
 			if($form->getWidget('watch') instanceof \tx_mkforms_widgets_box_Main) {
-				$ret[] = $form->getWidget('watch')->majixSetHtml('');
+				$ret[] = $form->getWidget('watch')->majixSetHtml('00:00');
 			}
 			else {
 				$ret[] = $form->getWidget('watch')->majixSetValue('');

@@ -30,7 +30,7 @@
 		<renderlet:BOX name="box_watch">
 			<childs>
 				<template path="TS:templates.box.watch.file" subpart="TS:templates.box.watch.subpart" />
-				<renderlet:BOX name="watch" mode="span" class="flw24-watch" />
+				<renderlet:BOX name="watch" mode="span" class="flw24-watch" html="00:00"/>
 				<renderlet:LISTBOX name="watch_matchpart"
 					label="label_flw24_watch_matchpart">
 					<onchange runat="ajax" params="box_watch__*" cache="false"
