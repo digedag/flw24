@@ -15,9 +15,20 @@ lib.t3sports.match {
 	}
 }
 
+includeLibs.tx_rnbase_controller = EXT:rn_base/class.tx_rnbase_controller.php
+plugin.tx_flw24_form                = USER_INT
+plugin.tx_flw24_form.flexform       = Configuration/Flexform/plugin_form.xml
+plugin.tx_flw24_form.userFunc       = tx_rnbase_controller->main
+plugin.tx_flw24_form.defaultAction  = System25\Flw24\Action\TickerForm
+plugin.tx_flw24_form.qualifier      = cfc_league_fe
+plugin.tx_flw24_form.extensionKey   = flw24
+plugin.tx_flw24_form.templatePath   = EXT:flw24/Resources/Private/Templates
+plugin.tx_flw24_form.locallangFilename = EXT:flw24/Resources/Private/Language/locallang.xml
 
-plugin.tx_cfcleaguefe_report {
-	locallangFilename.100 = EXT:flw24/Resources/Private/Language/locallang.xml
+tt_content.list.20.tx_flw24_form    =< plugin.tx_flw24_form
+
+plugin.tx_flw24_form {
+#	locallangFilename.100 = EXT:flw24/Resources/Private/Language/locallang.xml
 	tickerformTemplate = {$plugin.tx_flw24_base.tickerformTemplate}
 
 	tickerform =< lib.mkforms.formbase
