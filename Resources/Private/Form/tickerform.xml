@@ -6,6 +6,8 @@
 		<debug>false</debug>
 		<codeBehind name="tickerphp" type="php"
 			path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Ticker" />
+		<codeBehind name="watchphp" type="php"
+			path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Watch" />
 		<codeBehind name="tickerjs" type="js"
 			path="EXT:flw24/Resources/Public/js/ticker.js:tickerCB" />
 	</meta>
@@ -34,7 +36,7 @@
 				<!--renderlet:LISTBOX name="watch_matchpart"
 					label="label_flw24_watch_matchpart">
 					<onchange runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="tickerphp.cbWatchMatchPart()" />
+						validate="error" exec="watchphp.cbWatchMatchPart()" />
 					<data>
 						<items>
 							<item caption="label_flw24_watch_matchpart_1" value="0" />
@@ -49,8 +51,9 @@
 				<renderlet:HIDDEN name="watch_offset" label="label_flw24_watch_offset"
 					inputtype="number">
 					<onchange runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="tickerphp.cbWatchOffset()" />
+						validate="error" exec="watchphp.cbWatchOffset()" />
 				</renderlet:HIDDEN>
+				<renderlet:HIDDEN name="watch_matchpart" />
 				<renderlet:HIDDEN name="watch_starttime" />
 				<renderlet:HIDDEN name="watch_localtime" />
 				<renderlet:HIDDEN name="watch_pausetime" />
@@ -65,17 +68,27 @@
 
 				<renderlet:BUTTON name="btn_watch_start" label="Start">
 					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="tickerphp.cbWatchStartClick()" />
+						validate="error" exec="watchphp.cbWatchStartClick()" />
 				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btn_watch_stop" label="Stop"
+				<renderlet:BUTTON name="btn_watch_halftime" label="Halbzeitpause"
 					style="display:none">
 					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="tickerphp.cbWatchStopClick()" />
+						validate="error" exec="watchphp.cbWatchHalftimeClick()" />
+				</renderlet:BUTTON>
+				<renderlet:BUTTON name="btn_watch_secondht" label="2. Halbzeit"
+					style="display:none">
+					<onclick runat="ajax" params="box_watch__*" cache="false"
+						validate="error" exec="watchphp.cbWatchSecondHTClick()" />
+				</renderlet:BUTTON>
+				<renderlet:BUTTON name="btn_watch_stop" label="Spielende"
+					style="display:none">
+					<onclick runat="ajax" params="box_watch__*" cache="false"
+						validate="error" exec="watchphp.cbWatchStopClick()" />
 				</renderlet:BUTTON>
 				<renderlet:BUTTON name="btn_watch_pause" label="Pause"
 					style="display:none">
 					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="tickerphp.cbWatchPauseClick()" />
+						validate="error" exec="watchphp.cbWatchPauseClick()" />
 				</renderlet:BUTTON>
 			</childs>
 		</renderlet:BOX>

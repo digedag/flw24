@@ -218,122 +218,7 @@ class Ticker {
 		return array(
 		);
 	}
-	/** Enthält die aktuelle Client-Zeit */
-	const FIELD_TICKER_LOCALTIME = 'watch_localtime';
-	/** Enthält den Zeitpunkt des Start-Klicks */
-	const FIELD_TICKER_STARTTIME = 'watch_starttime';
-	/** Enthält den Zeitpunkt des Pause-Klicks */
-	const FIELD_TICKER_PAUSETIME = 'watch_pausetime';
-	/** Enhält einen optionalen Offset */
-	const FIELD_TICKER_OFFSET = 'watch_offset';
-	/** Enhält den aktuellen Spielabschnitt */
-	const FIELD_TICKER_MATCHPART = 'watch_matchpart';
 
-	/**
-	 *
-	 * @param array $params
-	 * @param \tx_mkforms_forms_Base $form
-	 * @return []
-	 */
-	public function cbWatchStartClick($params, $form) {
-		// Startzeit auf dem Client wird gesichert
-		$starttime = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_STARTTIME, 'flw24');
-		$ret = [];
-		// Start
-		// Damit geht es wieder bei 0 los. Es muss aber bei der letzten Zeit weiterlaufen.
-		// Jetzt die Differenz zur aktuellen Zeit ermitteln
-		$starttime = $form->getWidget(self::FIELD_TICKER_STARTTIME)->getValue();
-		$localtime = $form->getWidget(self::FIELD_TICKER_LOCALTIME)->getValue();
-		$pausetime = $form->getWidget(self::FIELD_TICKER_PAUSETIME)->getValue();
-		$starttime = $starttime + $localtime - $pausetime;
-		$ret[] = $form->getWidget(self::FIELD_TICKER_STARTTIME)->majixSetValue($starttime);
-		$ret[] = $form->getWidget(self::FIELD_TICKER_PAUSETIME)->majixSetValue(0);
-		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_STARTTIME, $starttime, 'flw24');
-		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_PAUSETIME, 0, 'flw24');
-
-		$ret[] = $form->getWidget('btn_watch_start')->majixDisplayNone();
-		$ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
-		$ret[] = $form->getWidget('btn_watch_pause')->majixDisplayDefault();
-		$GLOBALS['TSFE']->storeSessionData();
-
-		return $ret;
-	}
-
-	/**
-	 *
-	 * @param array $params
-	 * @param \tx_mkforms_forms_Base $form
-	 * @return []
-	 */
-	public function cbWatchStopClick($params, $form) {
-		$ret = [];
-		// Ausschalten alles auf 0 setzen
-		\tx_t3users_util_ServiceRegistry::getFeUserService()->removeSessionValue(self::FIELD_TICKER_STARTTIME, 'flw24');
-		\tx_t3users_util_ServiceRegistry::getFeUserService()->removeSessionValue(self::FIELD_TICKER_PAUSETIME, 'flw24');
-		$ret[] = $form->getWidget('btn_watch_start')->majixDisplayDefault();
-		$ret[] = $form->getWidget('btn_watch_stop')->majixDisplayNone();
-		$ret[] = $form->getWidget('btn_watch_pause')->majixDisplayNone();
-		$ret[] = $form->getWidget('watch_offset')->majixSetValue('0');
-		$ret[] = $form->getWidget('watch_minute')->majixSetValue('0');
-		if($form->getWidget('watch') instanceof \tx_mkforms_widgets_box_Main) {
-			$ret[] = $form->getWidget('watch')->majixSetHtml('00:00');
-		}
-		else {
-			$ret[] = $form->getWidget('watch')->majixSetValue('');
-		}
-		$GLOBALS['TSFE']->storeSessionData();
-
-		$starttime = 0;
-		$ret[] = $form->getWidget(self::FIELD_TICKER_STARTTIME)->majixSetValue($starttime);
-		$ret[] = $form->getWidget(self::FIELD_TICKER_PAUSETIME)->majixSetValue($starttime);
-		return $ret;
-	}
-
-	/**
-	 *
-	 * @param array $params
-	 * @param \tx_mkforms_forms_Base $form
-	 * @return []
-	 */
-	public function cbWatchPauseClick($params, $form) {
-		$ret = [];
-		$ret[] = $form->getWidget('btn_watch_start')->majixDisplayDefault();
-		$ret[] = $form->getWidget('btn_watch_pause')->majixDisplayNone();
-		// Zeitpunkt der Pause merken
-		$localtime = $form->getWidget(self::FIELD_TICKER_LOCALTIME)->getValue();
-		$ret[] = $form->getWidget(self::FIELD_TICKER_PAUSETIME)->majixSetValue($localtime);
-		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_PAUSETIME, $localtime, 'flw24');
-		$GLOBALS['TSFE']->storeSessionData();
-
-		return $ret;
-	}
-
-	/**
-	 * Offset wurde geändert und muss gespeichert werden
-	 *
-	 * @param array $params
-	 * @param \tx_mkforms_forms_Base $form
-	 * @return []
-	 */
-	public function cbWatchOffset($params, $form) {
-		$offset = $form->getWidget(self::FIELD_TICKER_OFFSET)->getValue();;
-		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_OFFSET, $offset, 'flw24');
-		$GLOBALS['TSFE']->storeSessionData();
-		return [];
-	}
-	/**
-	 * Halbzeit wurde geändert und muss gespeichert werden
-	 *
-	 * @param array $params
-	 * @param \tx_mkforms_forms_Base $form
-	 * @return []
-	 */
-	public function cbWatchMatchPart($params, $form) {
-		$offset = $form->getWidget(self::FIELD_TICKER_MATCHPART)->getValue();;
-		\tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_MATCHPART, $offset, 'flw24');
-		$GLOBALS['TSFE']->storeSessionData();
-		return [];
-	}
 	public function getMatchNoteSql($params, $form) {
 		$uid = (int) $form->getDataHandler()->getStoredData('uid');
 		$options = [
@@ -370,21 +255,21 @@ class Ticker {
 	public function fillMatchForm($params, \tx_mkforms_forms_IForm $form) {
 		$match = $form->getParent()->getItem();
 
-		$starttime = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_STARTTIME, 'flw24');
+		$starttime = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(Watch::FIELD_TICKER_STARTTIME, 'flw24');
 		if($starttime) {
-			$match->setProperty(self::FIELD_TICKER_STARTTIME, $starttime);
+			$match->setProperty(Watch::FIELD_TICKER_STARTTIME, $starttime);
 		}
-		$pausetime = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_PAUSETIME, 'flw24');
+		$pausetime = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(Watch::FIELD_TICKER_PAUSETIME, 'flw24');
 		if($pausetime) {
-			$match->setProperty(self::FIELD_TICKER_PAUSETIME, $pausetime);
+			$match->setProperty(Watch::FIELD_TICKER_PAUSETIME, $pausetime);
 		}
-		$offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_OFFSET, 'flw24');
+		$offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(Watch::FIELD_TICKER_OFFSET, 'flw24');
 		if($offset) {
-			$match->setProperty(self::FIELD_TICKER_OFFSET, $offset);
+			$match->setProperty(Watch::FIELD_TICKER_OFFSET, $offset);
 		}
-		$offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(self::FIELD_TICKER_MATCHPART, 'flw24');
+		$offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(Watch::FIELD_TICKER_MATCHPART, 'flw24');
 		if($offset) {
-			$match->setProperty(self::FIELD_TICKER_MATCHPART, $offset);
+			$match->setProperty(Watch::FIELD_TICKER_MATCHPART, $offset);
 		}
 
 

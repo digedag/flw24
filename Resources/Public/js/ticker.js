@@ -28,13 +28,32 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		guest.setValue(0);
 	},
 	cbSetMinute: function(parent, form) {
-		var min = this.getFieldWatch(form, 'watch_minute').getValue();
-//		if(min == 0) return;
-
+ 		var min = this.getFieldWatch(form, 'watch_minute').getValue();
+ 		 //		if(min == 0) return;
+/*
 		var minuteField = form.o('box_base__minute');
 		if(!minuteField.getValue()) {
 			minuteField.setValue(min);
+ 		}
+*/
+		
+		var minuteField = form.o('box_base__minute');
+		if(minuteField.getValue()) {
+			return;
 		}
+		var min = this.getFieldWatch(form, 'watch_minute').getValue();
+		if(min == '') return;
+		min = parseInt(min);
+		// in der ersten Halbzeit nach der 45 den Offset setzen
+		if(this.isMatchPart(1, form) && min > 45) {
+			var extraTime = min - 45;
+			min = min - extraTime;
+			var extraField = form.o('box_base__extra_time');
+			extraField.setValue(extraTime);
+		}
+		minuteField.setValue(min);
+
+		
 	},
 	cbWatchAddMinute: function(parent, form) {
 		var offset = this.getCurrentOffset(form);
@@ -58,19 +77,41 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 	initTicker: function(form) {
 		if(this.getFieldWatch(form, 'watch_starttime').getValue() > 0) {
 			if (this.isPaused(form)) {
-				this.getFieldWatch(form, 'btn_watch_start').displayDefault();
-				this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
-				this.getFieldWatch(form, 'btn_watch_pause').displayNone();
 				// Spielzeit aktualisieren
 				now = (new Date()).getTime();
 				start = parseInt(this.getFieldWatch(form, 'watch_starttime').getValue());
 				pause = parseInt(this.getFieldWatch(form, 'watch_pausetime').getValue());
 				start = start + now - pause;
 				this.refreshWatch(form, start, now);
+				if(this.isMatchPart(1, form)) {
+					// Pause in HZ 1
+					this.getFieldWatch(form, 'btn_watch_start').displayDefault();
+					this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
+				}
+				else if(this.isHalftimePause(form)) {
+					// Halbzeitpause läuft
+					this.getFieldWatch(form, 'btn_watch_start').displayNone();
+					this.getFieldWatch(form, 'btn_watch_stop').displayNone();
+					this.getFieldWatch(form, 'btn_watch_secondht').displayDefault();
+					
+				}
+				else {
+					this.getFieldWatch(form, 'btn_watch_start').displayNone();
+					this.getFieldWatch(form, 'btn_watch_stop').displayNone();
+					this.getFieldWatch(form, 'btn_watch_halftime').displayDefault();
+				}
+				this.getFieldWatch(form, 'btn_watch_pause').displayNone();
 			}
 			else {
 				this.getFieldWatch(form, 'btn_watch_start').displayNone();
-				this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
+				if(this.isMatchPart(1, form)) {
+					this.getFieldWatch(form, 'btn_watch_stop').displayNone();
+					this.getFieldWatch(form, 'btn_watch_halftime').displayDefault();
+				}
+				else {
+					this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
+					this.getFieldWatch(form, 'btn_watch_halftime').displayNone();
+				}
 				this.getFieldWatch(form, 'btn_watch_pause').displayDefault();
 			}
 		}
@@ -84,6 +125,25 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 	getCurrentOffset: function (form) {
 		var offset = this.trim(this.getFieldWatch(form, 'watch_offset').getValue());
 		return parseInt(isNaN(offset) || offset == '' ? 0 : offset);
+	},
+	getCurrentMatchPart: function (form) {
+		var matchpart = this.trim(this.getFieldWatch(form, 'watch_matchpart').getValue());
+		return parseInt(matchpart) || 0;
+	},
+	getCurrentMinute: function (form) {
+		var value = this.trim(this.getFieldWatch(form, 'watch_minute').getValue());
+		return parseInt(value) || 0;
+	},
+	isMatchPart: function (part, form) {
+		if (part == 1) {
+			return this.getCurrentMatchPart(form) < 45;
+		}
+		return false;
+	},
+	isHalftimePause: function (form) {
+		return this.isPaused(form) && this.getCurrentMatchPart(form) == 45 && 
+			this.getFieldWatch(form, 'watch_minute').getValue() == 46;
+
 	},
 	isPaused: function (form) {
 		var pause = this.getFieldWatch(form, 'watch_pausetime').getValue();
@@ -104,8 +164,8 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		}.bind(context), 1000);
 	},
 	refreshWatch: function (form, start, now) {
-//		var matchPart = parseInt(this.getFieldWatch(form, 'watch_matchpart').getValue());
-		var matchPart = 0;
+		var matchPart = this.getCurrentMatchPart(form);
+//		var matchPart = 0;
 		offset = this.getCurrentOffset(form);
 		offset = offset + matchPart;
 		diff = new Date(now - start);
