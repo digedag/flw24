@@ -204,7 +204,7 @@
 						<item caption="label_flw24_match_status_finished" value="2"/> </items> </data -->
 				</renderlet:HIDDEN>
 
-				<renderlet:BUTTON name="btn_submit" label="Submit">
+				<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
 					<onclick runat="ajax" params="box_matchdata__*" cache="false"
 						validate="error" exec="tickerphp.cbMatchSubmitClick()" />
 				</renderlet:BUTTON>
@@ -213,7 +213,7 @@
 		</renderlet:BOX>
 
 		<renderlet:LISTER name="matchnotes" uidColumn="uid" ajaxLister="true">
-			<ifEmpty message="No data" />
+			<ifEmpty message="" />
 			<dataSource use="dsMatchNotes" />
 			<pager>
 				<sort column="minute" direction="desc" />
@@ -325,10 +325,10 @@
 				</renderlet:TEXTAREA>
 
 
-				<renderlet:BUTTON name="btnCancel" label="Cancel">
+				<renderlet:BUTTON name="btnCancel" label="label_btn_cancel">
 					<onclick runat="client" exec="tickerphp.cbBtnCancelTicker()" />
 				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btnSave" label="Save and close">
+				<renderlet:BUTTON name="btnSave" label="label_btn_save">
 					<onclick
 						runat="ajax"
 						params="editbox_ticker__*"

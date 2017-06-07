@@ -35,9 +35,12 @@
 			<label index="label_btn_save">Save</label>
 			<label index="label_btn_edit">Edit</label>
 			<label index="label_btn_delete">Delete</label>
+			<label index="label_btn_submit">Submit</label>
+			<label index="label_btn_cancel">Cancel</label>
+
 			<label index="label_msg_minute_required">Minute is required</label>
 			<label index="label_msg_player_not_set">Set one player for this message type</label>
-			
+
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="label_flw24_watch">Spielzeit</label>
@@ -68,10 +71,12 @@
 			<label index="label_btn_edit">Bearbeiten</label>
 			<label index="label_btn_save">Speichern</label>
 			<label index="label_btn_delete">Löschen</label>
+			<label index="label_btn_submit">Absenden</label>
+			<label index="label_btn_cancel">Abbruch</label>
 
 			<label index="label_msg_minute_required">Es muss eine Spielminute angegeben werden</label>
 			<label index="label_msg_player_not_set">Für diese Tickermeldung muss genau ein Spieler angegeben werden.</label>
-			
+
 		</languageKey>
 	</data>
 </T3locallang>
