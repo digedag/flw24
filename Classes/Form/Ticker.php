@@ -30,6 +30,8 @@ class Ticker
 
     private $playerNames = [];
 
+    const MODALBOX_TICKER = 'editbox_ticker';
+
     /**
      *
      * @param array $params
@@ -150,6 +152,34 @@ class Ticker
         \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
         return true;
     }
+    /**
+     * Show modal box to edit match note
+     *
+     * @param array $params
+     * @param \tx_mkforms_forms_Base $form
+     * @return []
+     */
+    public function cbEditMatchNote($params, $form)
+    {
+        /* @var $matchNote \tx_cfcleague_models_MatchNote */
+        $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
+        if (! $matchNote->isValid()) {
+            return [];
+        }
+
+        // keeping the current uid
+//        $form->oSandBox->iRecordUid = $matchNote->getUid();
+        // init the modalbox/childs with this record
+        $form->getWidget(self::MODALBOX_TICKER)->setValue($matchNote->getProperty());
+        //			tx_mkforms_util_Div::debug4ajax($aRecord);
+
+        // open the box
+        return $form->getWidget(self::MODALBOX_TICKER)->majixShowBox();
+    }
+    public function cbBtnCancelTicker($params, $form) {
+        // close the box
+        return $form->getWidget(self::MODALBOX_TICKER)->majixCloseBox();
+    }
 
     /**
      *
@@ -159,11 +189,12 @@ class Ticker
      */
     public function cbUpdateMatchNote($params, $form)
     {
-        $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
+        /* @var $matchNote \tx_cfcleague_models_MatchNote */
+        $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params[self::MODALBOX_TICKER.'__uid']);
         if (! $matchNote->isValid()) {
-            return [];
+            return $this->cbBtnCancelTicker($params, $form);
         }
-        $prefix = 'matchnotes__';
+        $prefix = self::MODALBOX_TICKER.'__';
         $fields = [
             'minute',
             'extra_time',
@@ -183,7 +214,8 @@ class Ticker
         $repo->persist($matchNote);
 
         $ret = [
-            $form->getWidget('matchnotes')->majixRepaint()
+            $form->getWidget('matchnotes')->majixRepaint(),
+            $form->getWidget(self::MODALBOX_TICKER)->majixCloseBox()
         ];
 
         /* @var $match \tx_cfcleague_models_Match */
@@ -294,6 +326,30 @@ class Ticker
         return true;
     }
 
+    /**
+     * Validator in modalbox
+     * @param array $params
+     * @param \tx_mkforms_forms_Base $form
+     * @return []
+     */
+    public function validatePlayerModal($params, $form)
+    {
+        $home = $form->getWidget(self::MODALBOX_TICKER. '__player_home')->getValue();
+        $guest = $form->getWidget(self::MODALBOX_TICKER. '__player_guest')->getValue();
+        $type = $form->getWidget(self::MODALBOX_TICKER. '__type')->getValue();
+        if ($type == 100 || $type == 1000) {
+            // Hier ist der Spieler egal
+            return true;
+        }
+        // Jetzt muss genau ein Spieler gesetzt sein
+        if ($home != 0 && $guest != 0 || $home == 0 && $guest == 0) {
+            return false;
+            // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set";
+        }
+
+        return true;
+    }
+
     public function fillMatchForm($params, \tx_mkforms_forms_IForm $form)
     {
         $match = $form->getParent()->getItem();
@@ -345,7 +401,7 @@ class Ticker
         $uid = $form->getDataHandler()->getStoredData('uid');
         $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
 
-        $data = $this->getPlayerNames($match, $params['team']);
+        $data = $this->getPlayerNames($match, $params['team'], $form);
         return $data;
     }
 
@@ -354,7 +410,7 @@ class Ticker
      * @param tx_cfcleague_models_Match $match
      * @param string $team
      */
-    protected function getPlayerNames($match, $team)
+    protected function getPlayerNames($match, $team, \tx_mkforms_forms_IForm $form)
     {
         if (isset($this->playerNames[$team])) {
             return $this->playerNames[$team];
@@ -383,7 +439,7 @@ class Ticker
         }
         $this->playerNames[$team][] = [
             'value' => - 1,
-            'caption' => '###LABEL_FLW24_TICKER_PLAYER_UNKNOWN###'
+            'caption' => $form->getConfigurations()->getLL('label_flw24_ticker_player_unknown'),
         ];
 
         return $this->playerNames[$team];
