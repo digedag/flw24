@@ -12,6 +12,7 @@
 			<label index="tx_cfcleague_games_newsreport2">Match report 2</label>
 			<label index="tx_cfcleague_club_feusers">FE Users</label>
 			<label index="tx_cfcleague_matchnote_crfeuser">FE User</label>
+			<label index="tx_cfcleague_profile_crfeuser">FE User</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="plugin.flw24_form.label">FLW 24</label>

@@ -25,3 +25,7 @@ CREATE TABLE tx_cfcleague_club2feusers_mm (
 CREATE TABLE tx_cfcleague_match_notes (
 	crfeuser int(11) DEFAULT '0' NOT NULL
 );
+
+CREATE TABLE tx_cfcleague_profiles (
+	crfeuser int(11) DEFAULT '0' NOT NULL
+);

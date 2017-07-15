@@ -1,0 +1,60 @@
+<formidable version="2.0.296">
+	<elements>
+		<box_teammember>
+
+			<renderlet:MODALBOX name="editbox_teammember_home">
+				<childs>
+					<renderlet:BOX name="errors" />
+					<renderlet:HIDDEN name="uid" />
+					<renderlet:HIDDEN name="team"><data value="home" /></renderlet:HIDDEN>
+	
+					<renderlet:LISTER name="players" uidColumn="uid" ajaxLister="true">
+						<ifEmpty message="Für dieses Team wurden noch keine Spieler angelegt." />
+						<dataSource use="dsTeamPlayersHome" />
+						
+ 						<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember_parts.xml" xPath="/formidable/elements/teamlister_cols/" />
+					</renderlet:LISTER>
+
+ 					<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember_parts.xml" xPath="/formidable/elements/create_box/" />
+
+					<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
+						<onclick runat="ajax" params="editbox_teammember_home__*" cache="false"
+							validate="error" exec="teamphp.cbNewPlayerSubmitClick()" />
+					</renderlet:BUTTON>
+	
+					<renderlet:BUTTON name="btnClose" label="label_btn_close">
+						<onclick runat="client" exec="teamphp.cbBtnCloseTeamMemberHome()" />
+					</renderlet:BUTTON>
+				</childs>
+			</renderlet:MODALBOX>
+
+			<renderlet:MODALBOX name="editbox_teammember_guest">
+				<childs>
+					<renderlet:BOX name="errors" />
+					<renderlet:HIDDEN name="uid" />
+					<renderlet:HIDDEN name="team"><data value="guest" /></renderlet:HIDDEN>
+	
+					<renderlet:LISTER name="players" uidColumn="uid" ajaxLister="true">
+						<ifEmpty message="" />
+						<dataSource use="dsTeamPlayersGuest" />
+						
+ 						<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember_parts.xml" xPath="/formidable/elements/teamlister_cols/" />
+					</renderlet:LISTER>
+
+ 					<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember_parts.xml" xPath="/formidable/elements/create_box/" />
+					<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
+						<onclick runat="ajax" params="editbox_teammember_guest__uid,editbox_teammember_guest__team,editbox_teammember_guest__first_name,editbox_teammember_guest__last_name" cache="false"
+							validate="error" exec="teamphp.cbNewPlayerSubmitClick()" />
+					</renderlet:BUTTON>
+	
+					<renderlet:BUTTON name="btnClose" label="label_btn_close">
+						<onclick runat="client" exec="teamphp.cbBtnCloseTeamMemberGuest()" />
+					</renderlet:BUTTON>
+				</childs>
+			</renderlet:MODALBOX>
+
+
+
+		</box_teammember>
+	</elements>
+</formidable>

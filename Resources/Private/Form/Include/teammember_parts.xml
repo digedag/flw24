@@ -1,0 +1,15 @@
+<formidable version="2.0.296">
+	<elements>
+		<teamlister_cols>
+						<columns>
+							<column name="uid" type="renderlet:HIDDEN" activelistable="true" />
+							<column name="first_name" type="renderlet:TEXT" listHeader="label_flw24_profile_firstname" />
+							<column name="last_name" type="renderlet:TEXT" listHeader="label_flw24_profile_lastname" />
+						</columns>
+		</teamlister_cols>
+		<create_box>
+			<renderlet:TEXT name="first_name" />
+			<renderlet:TEXT name="last_name" />
+		</create_box>
+	</elements>
+</formidable>

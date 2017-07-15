@@ -4,6 +4,8 @@
 		<form formid="ticker" />
 		<displaylabels>true</displaylabels>
 		<debug>false</debug>
+		<codeBehind name="teamphp" type="php"
+			path="EXT:flw24/Classes/Form/Team.php:System25\Flw24\Form\Team" />
 		<codeBehind name="tickerphp" type="php"
 			path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Ticker" />
 		<codeBehind name="watchphp" type="php"
@@ -23,11 +25,22 @@
 					<userobj extension="System25\Flw24\Form\Ticker" method="getMatchNoteSql" />
 				</sql>
 			</datasource:DB>
+			<datasource:DB name="dsTeamPlayersHome">
+				<sql>
+					<userobj extension="System25\Flw24\Form\Team" method="getPlayersHomeSql" />
+				</sql>
+			</datasource:DB>
+			<datasource:DB name="dsTeamPlayersGuest">
+				<sql>
+					<userobj extension="System25\Flw24\Form\Team" method="getPlayersGuestSql" />
+				</sql>
+			</datasource:DB>
 		</datasources>
 	</control>
 	<elements>
 		<renderlet:BOX name="error">
 		</renderlet:BOX>
+
 
 		<renderlet:BOX name="box_watch">
 			<childs>
@@ -133,8 +146,7 @@
 				<renderlet:BOX name="box_players">
 					<childs>
 
-						<renderlet:LISTBOX name="player_home"
-							label="label_flw24_ticker_playerHome">
+						<renderlet:LISTBOX name="player_home" label="label_flw24_ticker_playerHome">
 							<onchange runat="js" exec="tickerjs.cbPlayerHomeChanged()" />
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
@@ -144,8 +156,7 @@
 								</userobj>
 							</data>
 						</renderlet:LISTBOX>
-						<renderlet:LISTBOX name="player_guest"
-							label="label_flw24_ticker_playerGuest">
+						<renderlet:LISTBOX name="player_guest" label="label_flw24_ticker_playerGuest">
 							<onchange runat="js" exec="tickerjs.cbPlayerGuestChanged()" />
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
@@ -339,6 +350,18 @@
 				</renderlet:BUTTON>
 			</childs>
 		</renderlet:MODALBOX>
+
+ 		<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember.xml" xPath="/formidable/elements/box_teammember/" />
+
+		<renderlet:BUTTON name="edit_teammember_home" label="label_btn_edit_teammember_home">
+			<onclick runat="ajax" cache="false" exec="teamphp.cbEditTeamMemberHome()">
+			</onclick>
+		</renderlet:BUTTON>
+		<renderlet:BUTTON name="edit_teammember_guest" label="label_btn_edit_teammember_guest">
+			<onclick runat="ajax" cache="false" exec="teamphp.cbEditTeamMemberGuest()">
+			</onclick>
+		</renderlet:BUTTON>
+		
 
 	</elements>
 </formidable>
