@@ -41,6 +41,7 @@
 			<label index="label_btn_submit">Submit</label>
 			<label index="label_btn_cancel">Cancel</label>
 			<label index="label_btn_close">Close</label>
+			<label index="label_btn_remove">Entfernen</label>
 			<label index="label_btn_edit_teammember_home">Edit Team Home</label>
 			<label index="label_btn_edit_teammember_guest">Edit Team Guest</label>
 
@@ -83,6 +84,7 @@
 			<label index="label_btn_submit">Absenden</label>
 			<label index="label_btn_cancel">Abbruch</label>
 			<label index="label_btn_close">Schließen</label>
+			<label index="label_btn_remove">Entfernen</label>
 			<label index="label_btn_edit_teammember_home">Spieler Heim</label>
 			<label index="label_btn_edit_teammember_guest">Spieler Gast</label>
 

@@ -111,7 +111,12 @@ class Team
             $options['where'] = '1=2';
         }
 
-        return \Tx_Rnbase_Database_Connection::getInstance()->doSelect('*', 'tx_cfcleague_profiles', $options);
+        return \Tx_Rnbase_Database_Connection::getInstance()->
+            doSelect(sprintf('uid,first_name,last_name,%d As team, \'%s\' As side',
+                $team->getUid(),
+                $isHome ? 'home' : 'guest'
+            ),
+            'tx_cfcleague_profiles', $options);
     }
     /**
      *
@@ -167,5 +172,37 @@ class Team
         \tx_cfcleague_util_ServiceRegistry::getProfileService()->persist($profile);
 
         return $profile;
+    }
+
+    /**
+     *
+     * @param array $params
+     * @param \tx_mkforms_forms_Base $form
+     * @return []
+     */
+    public function cbRemoveProfile($params, $form)
+    {
+        /* @var $profile \tx_cfcleague_models_Profile */
+        $profile = \tx_rnbase::makeInstance('tx_cfcleague_models_Profile', $params['uid']);
+        if (! $profile->isValid()) {
+            return [];
+        }
+        $isHome = $params['side'] == 'home';
+        $prefix = $this->getTeamMemberWidget($isHome) . '__';
+
+        /* @var $match \tx_cfcleague_models_Team */
+        $team = \tx_rnbase::makeInstance('tx_cfcleague_models_Team', $params['team']);
+        $players = $team->getProperty('players');
+        $players = $players ? \Tx_Rnbase_Utility_Strings::intExplode(',', $players) : [];
+        $idx = array_search($profile->getUid(), $players);
+        if($idx !== false) {
+            unset($players[$idx]);
+            $team->setProperty('players', implode(',', $players));
+            \tx_cfcleague_util_ServiceRegistry::getTeamService()->persist($team);
+        }
+
+        $ret = [];
+        $ret[] = $form->getWidget($prefix.'players')->majixRepaint();
+        return $ret;
     }
 }

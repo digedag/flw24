@@ -44,5 +44,7 @@ plugin.tx_flw24_form {
 		formconfig.templates.box.tickerdata.subpart = ###TICKERDATA###
 		formconfig.templates.box.watch.file = {$plugin.tx_flw24_base.tickerform}
 		formconfig.templates.box.watch.subpart = ###WATCH###
+		formconfig.templates.box.teamdata.file = {$plugin.tx_flw24_base.tickerform}
+		formconfig.templates.box.teamdata.subpart = ###TEAMDATA###
 	}
 }

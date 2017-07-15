@@ -4,6 +4,7 @@
 
 			<renderlet:MODALBOX name="editbox_teammember_home">
 				<childs>
+					<template path="TS:templates.box.teamdata.file" subpart="TS:templates.box.teamdata.subpart" />
 					<renderlet:BOX name="errors" />
 					<renderlet:HIDDEN name="uid" />
 					<renderlet:HIDDEN name="team"><data value="home" /></renderlet:HIDDEN>
@@ -30,6 +31,7 @@
 
 			<renderlet:MODALBOX name="editbox_teammember_guest">
 				<childs>
+					<template path="TS:templates.box.teamdata.file" subpart="TS:templates.box.teamdata.subpart" />
 					<renderlet:BOX name="errors" />
 					<renderlet:HIDDEN name="uid" />
 					<renderlet:HIDDEN name="team"><data value="guest" /></renderlet:HIDDEN>
@@ -47,7 +49,7 @@
 							validate="error" exec="teamphp.cbNewPlayerSubmitClick()" />
 					</renderlet:BUTTON>
 	
-					<renderlet:BUTTON name="btnClose" label="label_btn_close">
+					<renderlet:BUTTON name="btn_close" label="label_btn_close">
 						<onclick runat="client" exec="teamphp.cbBtnCloseTeamMemberGuest()" />
 					</renderlet:BUTTON>
 				</childs>
