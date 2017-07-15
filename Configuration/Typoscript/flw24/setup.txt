@@ -38,13 +38,17 @@ plugin.tx_flw24_form {
 		viewClassName = System25\Flw24\View\FormView
 		xml = EXT:flw24/Resources/Private/Form/tickerform.xml
 		mainSubpart = ###TICKERFORM###
-		formconfig.templates.box.matchdata.file = {$plugin.tx_flw24_base.tickerform}
-		formconfig.templates.box.matchdata.subpart = ###MATCHDATA###
-		formconfig.templates.box.tickerdata.file = {$plugin.tx_flw24_base.tickerform}
-		formconfig.templates.box.tickerdata.subpart = ###TICKERDATA###
-		formconfig.templates.box.watch.file = {$plugin.tx_flw24_base.tickerform}
-		formconfig.templates.box.watch.subpart = ###WATCH###
-		formconfig.templates.box.teamdata.file = {$plugin.tx_flw24_base.tickerform}
-		formconfig.templates.box.teamdata.subpart = ###TEAMDATA###
+		formconfig.templates.box {
+			matchdata.file = {$plugin.tx_flw24_base.tickerform}
+			matchdata.subpart = ###MATCHDATA###
+			tickerdata.file = {$plugin.tx_flw24_base.tickerform}
+			tickerdata.subpart = ###TICKERDATA###
+			watch.file = {$plugin.tx_flw24_base.tickerform}
+			watch.subpart = ###WATCH###
+			teamdata.file = {$plugin.tx_flw24_base.tickerform}
+			teamdata.subpart = ###TEAMDATA###
+			lineup.file = {$plugin.tx_flw24_base.tickerform}
+			lineup.subpart = ###LINEUP###
+		}
 	}
 }

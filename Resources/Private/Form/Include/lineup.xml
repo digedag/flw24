@@ -1,0 +1,71 @@
+<formidable version="2.0.296">
+	<elements>
+		<box_lineup>
+
+			<renderlet:MODALBOX name="editbox_lineup_home">
+				<childs>
+					<template path="TS:templates.box.lineup.file" subpart="TS:templates.box.lineup.subpart" />
+					<renderlet:BOX name="errors" />
+					<renderlet:HIDDEN name="uid" />
+					<renderlet:HIDDEN name="team"><data value="home" /></renderlet:HIDDEN>
+					<renderlet:CHECKBOX name="players" label="Aufstellung">
+						<data>
+							<userobj extension="System25\Flw24\Form\LineUp" method="getPlayers">
+								<params>
+									<param name="team" value="home" />
+								</params>
+							</userobj>
+						</data>
+					</renderlet:CHECKBOX>
+
+
+					<renderlet:BUTTON name="btn_save" label="label_btn_save">
+						<onclick
+							runat="ajax"
+							params="editbox_lineup_home__*"
+							cache="false"
+							exec="lineupphp.cbUpdateLineup()"
+						/>
+					</renderlet:BUTTON>
+		
+					<renderlet:BUTTON name="btn_cancel" label="label_btn_cancel">
+						<onclick runat="client" exec="lineupphp.cbBtnCloseHome()" />
+					</renderlet:BUTTON>
+				</childs>
+			</renderlet:MODALBOX>
+
+			<renderlet:MODALBOX name="editbox_lineup_guest">
+				<childs>
+					<template path="TS:templates.box.lineup.file" subpart="TS:templates.box.lineup.subpart" />
+					<renderlet:BOX name="errors" />
+					<renderlet:HIDDEN name="uid" />
+					<renderlet:HIDDEN name="team"><data value="guest" /></renderlet:HIDDEN>
+
+					<renderlet:CHECKBOX name="players">
+						<data>
+							<userobj extension="System25\Flw24\Form\LineUp" method="getPlayers">
+								<params>
+									<param name="team" value="guest" />
+								</params>
+							</userobj>
+						</data>
+					</renderlet:CHECKBOX>
+
+					<renderlet:BUTTON name="btn_save" label="label_btn_save">
+						<onclick
+							runat="ajax"
+							params="editbox_lineup_guest__*"
+							cache="false"
+							exec="lineupphp.cbUpdateLineup()"
+						/>
+					</renderlet:BUTTON>
+		
+					<renderlet:BUTTON name="btn_cancel" label="label_btn_cancel">
+						<onclick runat="client" exec="lineupphp.cbBtnCloseGuest()" />
+					</renderlet:BUTTON>
+				</childs>
+			</renderlet:MODALBOX>
+
+		</box_lineup>
+	</elements>
+</formidable>

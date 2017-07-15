@@ -19,11 +19,11 @@
  					<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember_parts.xml" xPath="/formidable/elements/create_box/" />
 
 					<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
-						<onclick runat="ajax" params="editbox_teammember_home__*" cache="false"
+						<onclick runat="ajax" params="editbox_teammember_home__uid,editbox_teammember_home__team,editbox_teammember_home__first_name,editbox_teammember_home__last_name" cache="false"
 							validate="error" exec="teamphp.cbNewPlayerSubmitClick()" />
 					</renderlet:BUTTON>
 	
-					<renderlet:BUTTON name="btnClose" label="label_btn_close">
+					<renderlet:BUTTON name="btn_close" label="label_btn_close">
 						<onclick runat="client" exec="teamphp.cbBtnCloseTeamMemberHome()" />
 					</renderlet:BUTTON>
 				</childs>

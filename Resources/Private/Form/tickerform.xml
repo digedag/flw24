@@ -6,6 +6,8 @@
 		<debug>false</debug>
 		<codeBehind name="teamphp" type="php"
 			path="EXT:flw24/Classes/Form/Team.php:System25\Flw24\Form\Team" />
+		<codeBehind name="lineupphp" type="php"
+			path="EXT:flw24/Classes/Form/Team.php:System25\Flw24\Form\LineUp" />
 		<codeBehind name="tickerphp" type="php"
 			path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Ticker" />
 		<codeBehind name="watchphp" type="php"
@@ -361,7 +363,20 @@
 			<onclick runat="ajax" cache="false" exec="teamphp.cbEditTeamMemberGuest()">
 			</onclick>
 		</renderlet:BUTTON>
-		
 
+ 		<includeXml path="EXT:flw24/Resources/Private/Form/Include/lineup.xml" xPath="/formidable/elements/box_lineup/" />
+
+		<renderlet:BUTTON name="edit_lineup_home" label="label_btn_edit_lineup_home">
+			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditHome()">
+			</onclick>
+		</renderlet:BUTTON>
+		
+		<renderlet:BUTTON name="edit_lineup_guest" label="label_btn_edit_lineup_guest">
+			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditGuest()">
+			</onclick>
+		</renderlet:BUTTON>
+
+
+<renderlet:CHECKBOX name="dummy"><custom>style="display: none;"</custom></renderlet:CHECKBOX>
 	</elements>
 </formidable>
