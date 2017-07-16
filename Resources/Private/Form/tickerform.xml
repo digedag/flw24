@@ -7,11 +7,11 @@
 		<codeBehind name="teamphp" type="php"
 			path="EXT:flw24/Classes/Form/Team.php:System25\Flw24\Form\Team" />
 		<codeBehind name="lineupphp" type="php"
-			path="EXT:flw24/Classes/Form/Team.php:System25\Flw24\Form\LineUp" />
+			path="EXT:flw24/Classes/Form/LineUp.php:System25\Flw24\Form\LineUp" />
 		<codeBehind name="tickerphp" type="php"
 			path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Ticker" />
 		<codeBehind name="watchphp" type="php"
-			path="EXT:flw24/Classes/Form/Ticker.php:System25\Flw24\Form\Watch" />
+			path="EXT:flw24/Classes/Form/Watch.php:System25\Flw24\Form\Watch" />
 		<codeBehind name="tickerjs" type="js"
 			path="EXT:flw24/Resources/Public/js/ticker.js:tickerCB" />
 	</meta>
