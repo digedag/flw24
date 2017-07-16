@@ -376,6 +376,15 @@
 			</onclick>
 		</renderlet:BUTTON>
 
+		<renderlet:BUTTON name="edit_subst_home" label="label_btn_edit_subst_home">
+			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditSubstHome()">
+			</onclick>
+		</renderlet:BUTTON>
+
+		<renderlet:BUTTON name="edit_subst_guest" label="label_btn_edit_subst_guest">
+			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditSubstGuest()">
+			</onclick>
+		</renderlet:BUTTON>
 
 <renderlet:CHECKBOX name="dummy"><custom>style="display: none;"</custom></renderlet:CHECKBOX>
 	</elements>

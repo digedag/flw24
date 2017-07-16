@@ -47,6 +47,8 @@
 			<label index="label_btn_edit_teammember_guest">Edit Team Guest</label>
 			<label index="label_btn_edit_lineup_home">Edit lineup home</label>
 			<label index="label_btn_edit_lineup_guest">Edit lineup guest</label>
+			<label index="label_btn_edit_subst_home">Substitutes home</label>
+			<label index="label_btn_edit_subst_guest">Substitutes guest</label>
 
 			<label index="label_msg_minute_required">Minute is required</label>
 			<label index="label_msg_player_not_set">Set one player for this message type</label>
@@ -93,6 +95,8 @@
 			<label index="label_btn_edit_teammember_guest">Spieler Gast</label>
 			<label index="label_btn_edit_lineup_home">Aufstellung Heim</label>
 			<label index="label_btn_edit_lineup_guest">Aufstellung Gast</label>
+			<label index="label_btn_edit_subst_home">Bank Heim</label>
+			<label index="label_btn_edit_subst_guest">Bank Gast</label>
 
 			<label index="label_msg_minute_required">Es muss eine Spielminute angegeben werden</label>
 			<label index="label_msg_player_not_set">Für diese Tickermeldung muss genau ein Spieler angegeben werden.</label>

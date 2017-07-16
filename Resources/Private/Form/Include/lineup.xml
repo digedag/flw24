@@ -7,8 +7,9 @@
 					<template path="TS:templates.box.lineup.file" subpart="TS:templates.box.lineup.subpart" />
 					<renderlet:BOX name="errors" />
 					<renderlet:HIDDEN name="uid" />
+					<renderlet:HIDDEN name="subst" />
 					<renderlet:HIDDEN name="team"><data value="home" /></renderlet:HIDDEN>
-					<renderlet:CHECKBOX name="players" label="Aufstellung">
+					<renderlet:CHECKBOX name="players">
 						<data>
 							<userobj extension="System25\Flw24\Form\LineUp" method="getPlayers">
 								<params>
@@ -39,6 +40,7 @@
 					<template path="TS:templates.box.lineup.file" subpart="TS:templates.box.lineup.subpart" />
 					<renderlet:BOX name="errors" />
 					<renderlet:HIDDEN name="uid" />
+					<renderlet:HIDDEN name="subst" />
 					<renderlet:HIDDEN name="team"><data value="guest" /></renderlet:HIDDEN>
 
 					<renderlet:CHECKBOX name="players">

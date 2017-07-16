@@ -31,7 +31,6 @@ class LineUp
     const MODALBOX_LINEUP_HOME = 'editbox_lineup_home';
     const MODALBOX_LINEUP_GUEST = 'editbox_lineup_guest';
 
-
     /**
      * Show modal box to edit team member home
      *
@@ -50,22 +49,48 @@ class LineUp
      * @param \tx_mkforms_forms_Base $form
      * @return []
      */
+    public function cbEditSubstHome($params, $form)
+    {
+        return $this->editLineup($params, $form, true, true);
+    }
+
+    /**
+     * Show modal box to edit team member home
+     *
+     * @param array $params
+     * @param \tx_mkforms_forms_Base $form
+     * @return []
+     */
     public function cbEditGuest($params, $form)
     {
         return $this->editLineup($params, $form, false);
     }
-    protected function editLineup($params, $form, $isHome)
+
+    /**
+     * Show modal box to edit substitutes member home
+     *
+     * @param array $params
+     * @param \tx_mkforms_forms_Base $form
+     * @return []
+     */
+    public function cbEditSubstGuest($params, $form)
+    {
+        return $this->editLineup($params, $form, false, true);
+    }
+    protected function editLineup($params, $form, $isHome, $isSubst = false)
     {
         $uid = $form->getDataHandler()->getStoredData('uid');
         /* @var $match \tx_cfcleague_models_Match */
         $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
 
         // init the modalbox/childs with this record
-        $players = $match->getProperty($isHome ? 'players_home' : 'players_guest');
+        $what = $isSubst ? 'substitutes' : 'players';
+        $players = $match->getProperty($isHome ? $what.'_home' : $what.'_guest');
         $players = $players ? \Tx_Rnbase_Utility_Strings::intExplode(',', $players) : [];
         $record = [
             'uid' => $match->getUid(),
             'players' => $players,
+            'subst' => $isSubst,
         ];
         $form->getWidget($this->getLineUpWidget($isHome))->setValue($record);
 
@@ -94,10 +119,21 @@ class LineUp
         /* @var $match \tx_cfcleague_models_Match */
         $uid = $form->getDataHandler()->getStoredData('uid');
         $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
-        $team = $params['team'] == 'home' ? $match->getHome() : $match->getGuest();
+        $isHome = $params['team'] == 'home';
+        $data = $form->getWidget($this->getLineUpWidget($isHome))->getValue();
+        $isSubst = (bool) $data['subst'];
+        $team = $isHome ? $match->getHome() : $match->getGuest();
+        // die schon aufgestellten Spieler entfernen
+        $what = $isSubst ? 'players' : 'substitutes';
+        $ignore = $match->getProperty($isHome ? $what.'_home' : $what.'_guest');
+        $ignore = $ignore ? \Tx_Rnbase_Utility_Strings::intExplode(',', $ignore) : [];
+
         $items = [];
         foreach ($team->getPlayers() As $profile) {
             /* @var $profile \tx_cfcleague_models_Profile */
+            if(in_array($profile->getUid(), $ignore)) {
+                continue;
+            }
             $items[] = [
                 'caption' => $profile->getName(true),
                 'value' => $profile->getUid(),
@@ -121,10 +157,12 @@ class LineUp
         /* @var $match \tx_cfcleague_models_Match */
         $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchUid);
         if($match->isValid()) {
+            $isSubst = $params[$prefix.'subst'];
+            $what = $isSubst ? 'substitutes' : 'players';
             // init the modalbox/childs with this record
             $players = $params[$prefix.'players'];
             $players = is_array($players) && !empty($players) ? implode(',', $players) : '';
-            $match->setProperty($isHome ? 'players_home' : 'players_guest', $players);
+            $match->setProperty($isHome ? $what.'_home' : $what.'_guest', $players);
             \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
         }
 
