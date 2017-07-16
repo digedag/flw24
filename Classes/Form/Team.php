@@ -101,7 +101,7 @@ class Team
         $team = $isHome ? $match->getHome() : $match->getGuest();
         $options = [
             'sqlonly' => 1,
-            'orderby' => 'last_name asc, first_name asc',
+//            'orderby' => 'last_name asc, first_name asc',
         ];
         $players = $team->getProperty('players');
         if($players) {
