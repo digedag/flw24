@@ -221,7 +221,7 @@
 							</data>
 						</column>
 						<column name="player_home" type="renderlet:LISTBOX"
-							listHeader="label_flw24_ticker_playerHome" activelistable="false">
+							listHeader="label_flw24_ticker_playerHome" activelistable="false" sort="false">
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 									<params>
@@ -231,7 +231,7 @@
 							</data>
 						</column>
 						<column name="player_guest" type="renderlet:LISTBOX"
-							listHeader="label_flw24_ticker_playerGuest" activelistable="false">
+							listHeader="label_flw24_ticker_playerGuest" activelistable="false" sort="false">
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 									<params>
