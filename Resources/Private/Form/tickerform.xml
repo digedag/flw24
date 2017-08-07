@@ -44,112 +44,184 @@
 		</renderlet:BOX>
 
 
-		<renderlet:BOX name="box_watch">
+		<renderlet:TABPANEL name="tabpanel">
+		
+			<!-- set defaultTab to "none" if you don't want any tab to be shown on load. -->
+			<config defaultTab="tab1" activeClassName="act" />
+			
 			<childs>
-				<template path="TS:templates.box.watch.file" subpart="TS:templates.box.watch.subpart" />
-				<renderlet:BOX name="watch" mode="span" class="flw24-watch" html="00:00"/>
-				<!--renderlet:LISTBOX name="watch_matchpart"
-					label="label_flw24_watch_matchpart">
-					<onchange runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="watchphp.cbWatchMatchPart()" />
-					<data>
-						<items>
-							<item caption="label_flw24_watch_matchpart_1" value="0" />
-							<item caption="label_flw24_watch_matchpart_2" value="45" />
-							<item caption="label_flw24_watch_matchpart_3" value="90" />
-							<item caption="label_flw24_watch_matchpart_4" value="115" />
-						</items>
-					</data>
-				</renderlet:LISTBOX-->
-
-				<!--renderlet:TEXT name="watch" label="label_flw24_watch" / -->
-				<renderlet:HIDDEN name="watch_offset" label="label_flw24_watch_offset"
-					inputtype="number">
-					<onchange runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="watchphp.cbWatchOffset()" />
-				</renderlet:HIDDEN>
-				<renderlet:HIDDEN name="watch_matchpart" />
-				<renderlet:HIDDEN name="watch_starttime" />
-				<renderlet:HIDDEN name="watch_localtime" />
-				<renderlet:HIDDEN name="watch_pausetime" />
-				<renderlet:HIDDEN name="watch_minute" />
-
-				<renderlet:BUTTON name="btn_watch_addmin" label="+">
-					<onclick runat="js" exec="tickerjs.cbWatchAddMinute()" />
-				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btn_watch_submin" label="-">
-					<onclick runat="js" exec="tickerjs.cbWatchSubMinute()" />
-				</renderlet:BUTTON>
-
-				<renderlet:BUTTON name="btn_watch_start" label="Start">
-					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="watchphp.cbWatchStartClick()" />
-				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btn_watch_halftime" label="Halbzeitpause"
-					style="display:none">
-					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="watchphp.cbWatchHalftimeClick()" />
-				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btn_watch_secondht" label="2. Halbzeit"
-					style="display:none">
-					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="watchphp.cbWatchSecondHTClick()" />
-				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btn_watch_stop" label="Spielende"
-					style="display:none">
-					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="watchphp.cbWatchStopClick()" />
-				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btn_watch_pause" label="Pause"
-					style="display:none">
-					<onclick runat="ajax" params="box_watch__*" cache="false"
-						validate="error" exec="watchphp.cbWatchPauseClick()" />
-				</renderlet:BUTTON>
+			<renderlet:TAB label="Aufstellung" name="tab1"  content="tab_lineup" />
+			<renderlet:TAB label="Ticker"      name="tab2"  content="tab_ticker" />
+			<renderlet:TAB label="Spieldaten"  name="tab3"  content="box_matchdata" />
 			</childs>
-		</renderlet:BOX>
+		
+		</renderlet:TABPANEL>
 
-
-		<renderlet:BOX name="box_base">
+		<renderlet:BOX name="tab_ticker">
 			<childs>
-				<template path="TS:templates.box.tickerdata.file" subpart="TS:templates.box.tickerdata.subpart" />
-				<renderlet:TEXT name="minute" label="label_flw24_ticker_minute"
-					inputtype="number">
-					<custom>min="-1"</custom>
-					<validators>
-						<validator:STANDARD>
-							<required>
-								<value>true</value>
-								<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required
-								</message>
-							</required>
-						</validator:STANDARD>
-					</validators>
-				</renderlet:TEXT>
-				<renderlet:TEXT name="extra_time" inputtype="number">
-					<custom>min="0"</custom>
-				</renderlet:TEXT>
 
-
-				<renderlet:LISTBOX name="type" label="label_flw24_ticker_type">
-					<onchange runat="js" exec="tickerjs.cbTickerTypeChanged()" />
-					<data>
-						<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes" />
-					</data>
-					<validators>
-						<validator:STANDARD>
-							<custom
-								message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
-								<userobj extension="System25\Flw24\Form\Ticker" method="validatePlayer" />
-							</custom>
-						</validator:STANDARD>
-					</validators>
-				</renderlet:LISTBOX>
-
-				<renderlet:BOX name="box_players">
+				<renderlet:BOX name="box_watch">
 					<childs>
+						<template path="TS:templates.box.watch.file" subpart="TS:templates.box.watch.subpart" />
+						<renderlet:BOX name="watch" mode="span" class="flw24-watch" html="00:00"/>
+						<!--renderlet:LISTBOX name="watch_matchpart"
+							label="label_flw24_watch_matchpart">
+							<onchange runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchMatchPart()" />
+							<data>
+								<items>
+									<item caption="label_flw24_watch_matchpart_1" value="0" />
+									<item caption="label_flw24_watch_matchpart_2" value="45" />
+									<item caption="label_flw24_watch_matchpart_3" value="90" />
+									<item caption="label_flw24_watch_matchpart_4" value="115" />
+								</items>
+							</data>
+						</renderlet:LISTBOX-->
+		
+						<!--renderlet:TEXT name="watch" label="label_flw24_watch" / -->
+						<renderlet:HIDDEN name="watch_offset" label="label_flw24_watch_offset"
+							inputtype="number">
+							<onchange runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchOffset()" />
+						</renderlet:HIDDEN>
+						<renderlet:HIDDEN name="watch_matchpart" />
+						<renderlet:HIDDEN name="watch_starttime" />
+						<renderlet:HIDDEN name="watch_localtime" />
+						<renderlet:HIDDEN name="watch_pausetime" />
+						<renderlet:HIDDEN name="watch_minute" />
+		
+						<renderlet:BUTTON name="btn_watch_addmin" label="+">
+							<onclick runat="js" exec="tickerjs.cbWatchAddMinute()" />
+						</renderlet:BUTTON>
+						<renderlet:BUTTON name="btn_watch_submin" label="-">
+							<onclick runat="js" exec="tickerjs.cbWatchSubMinute()" />
+						</renderlet:BUTTON>
+		
+						<renderlet:BUTTON name="btn_watch_start" label="Start">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchStartClick()" />
+						</renderlet:BUTTON>
+						<renderlet:BUTTON name="btn_watch_halftime" label="Halbzeitpause"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchHalftimeClick()" />
+						</renderlet:BUTTON>
+						<renderlet:BUTTON name="btn_watch_secondht" label="2. Halbzeit"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchSecondHTClick()" />
+						</renderlet:BUTTON>
+						<renderlet:BUTTON name="btn_watch_stop" label="Spielende"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchStopClick()" />
+						</renderlet:BUTTON>
+						<renderlet:BUTTON name="btn_watch_pause" label="Pause"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchPauseClick()" />
+						</renderlet:BUTTON>
+					</childs>
+				</renderlet:BOX>
+		
+		
+				<renderlet:BOX name="box_base">
+					<childs>
+						<template path="TS:templates.box.tickerdata.file" subpart="TS:templates.box.tickerdata.subpart" />
+						<renderlet:TEXT name="minute" label="label_flw24_ticker_minute"
+							inputtype="number">
+							<custom>min="-1"</custom>
+							<validators>
+								<validator:STANDARD>
+									<required>
+										<value>true</value>
+										<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required
+										</message>
+									</required>
+								</validator:STANDARD>
+							</validators>
+						</renderlet:TEXT>
+						<renderlet:TEXT name="extra_time" inputtype="number">
+							<custom>min="0"</custom>
+						</renderlet:TEXT>
+		
+		
+						<renderlet:LISTBOX name="type" label="label_flw24_ticker_type">
+							<onchange runat="js" exec="tickerjs.cbTickerTypeChanged()" />
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes" />
+							</data>
+							<validators>
+								<validator:STANDARD>
+									<custom
+										message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
+										<userobj extension="System25\Flw24\Form\Ticker" method="validatePlayer" />
+									</custom>
+								</validator:STANDARD>
+							</validators>
+						</renderlet:LISTBOX>
+		
+						<renderlet:BOX name="box_players">
+							<childs>
+		
+								<renderlet:LISTBOX name="player_home" label="label_flw24_ticker_playerHome">
+									<onchange runat="js" exec="tickerjs.cbPlayerHomeChanged()" />
+									<data>
+										<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+											<params>
+												<param name="team" value="home" />
+											</params>
+										</userobj>
+									</data>
+								</renderlet:LISTBOX>
+								<renderlet:LISTBOX name="player_guest" label="label_flw24_ticker_playerGuest">
+									<onchange runat="js" exec="tickerjs.cbPlayerGuestChanged()" />
+									<data>
+										<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+											<params>
+												<param name="team" value="guest" />
+											</params>
+										</userobj>
+									</data>
+								</renderlet:LISTBOX>
+							</childs>
+						</renderlet:BOX>
+		
+						<renderlet:TEXTAREA name="comment"
+							label="label_flw24_ticker_comment">
+							<custom>cols="50" rows="5"</custom>
+							<onclick runat="js" exec="tickerjs.cbSetMinute()" />
+						</renderlet:TEXTAREA>
+		
+						<renderlet:BUTTON name="btn_submit" label="Submit">
+							<onclick runat="ajax" params="tab_ticker__box_base__*" cache="false"
+								validate="error" exec="tickerphp.cbTickerSubmitClick()" />
+						</renderlet:BUTTON>
+		
+					</childs>
+				</renderlet:BOX>
 
-						<renderlet:LISTBOX name="player_home" label="label_flw24_ticker_playerHome">
-							<onchange runat="js" exec="tickerjs.cbPlayerHomeChanged()" />
+
+				<renderlet:LISTER name="matchnotes" uidColumn="uid" ajaxLister="true">
+					<ifEmpty message="" />
+					<dataSource use="dsMatchNotes" />
+					<pager>
+						<sort column="minute" direction="desc" />
+					</pager>
+					<columns>
+						<column name="uid" type="renderlet:HIDDEN" activelistable="true" />
+						<column name="minute" type="renderlet:TEXT" listHeader="label_flw24_ticker_minute" />
+						<column name="type" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_type">
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes">
+									<params>
+										<param get="rowData::uid" />
+									</params>
+								</userobj>
+							</data>
+						</column>
+						<column name="player_home" type="renderlet:LISTBOX"
+							listHeader="label_flw24_ticker_playerHome" activelistable="false">
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 									<params>
@@ -157,9 +229,9 @@
 									</params>
 								</userobj>
 							</data>
-						</renderlet:LISTBOX>
-						<renderlet:LISTBOX name="player_guest" label="label_flw24_ticker_playerGuest">
-							<onchange runat="js" exec="tickerjs.cbPlayerGuestChanged()" />
+						</column>
+						<column name="player_guest" type="renderlet:LISTBOX"
+							listHeader="label_flw24_ticker_playerGuest" activelistable="false">
 							<data>
 								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
 									<params>
@@ -167,23 +239,31 @@
 									</params>
 								</userobj>
 							</data>
-						</renderlet:LISTBOX>
-					</childs>
-				</renderlet:BOX>
-
-				<renderlet:TEXTAREA name="comment"
-					label="label_flw24_ticker_comment">
-					<custom>cols="50" rows="5"</custom>
-					<onclick runat="js" exec="tickerjs.cbSetMinute()" />
-				</renderlet:TEXTAREA>
-
-				<renderlet:BUTTON name="btn_submit" label="Submit">
-					<onclick runat="ajax" params="box_base__*" cache="false"
-						validate="error" exec="tickerphp.cbTickerSubmitClick()" />
-				</renderlet:BUTTON>
-
+						</column>
+		
+						<column name="comment" type="renderlet:TEXT" listHeader="label_flw24_ticker_comment"
+							activelistable="false" />
+		
+						<column name="edit" label="label_btn_edit" type="renderlet:BUTTON"
+							listHeader="">
+							<onclick runat="ajax" cache="false" exec="tickerphp.cbEditMatchNote()"
+								params="rowData::uid">
+							</onclick>
+						</column>
+						<column name="delete" label="label_btn_delete" type="renderlet:BUTTON"
+							listHeader="">
+							<onclick runat="ajax" cache="false" exec="tickerphp.cbDeleteMatchNote()"
+								params="rowData::uid"></onclick>
+						</column>
+					</columns>
+				</renderlet:LISTER>
+		
 			</childs>
 		</renderlet:BOX>
+
+ 		<includeXml path="EXT:flw24/Resources/Private/Form/Include/ticker.xml" xPath="/formidable/elements/modalbox/" />
+
+
 
 		<renderlet:BOX name="box_matchdata">
 			<childs>
@@ -225,167 +305,42 @@
 			</childs>
 		</renderlet:BOX>
 
-		<renderlet:LISTER name="matchnotes" uidColumn="uid" ajaxLister="true">
-			<ifEmpty message="" />
-			<dataSource use="dsMatchNotes" />
-			<pager>
-				<sort column="minute" direction="desc" />
-			</pager>
-			<columns>
-				<column name="uid" type="renderlet:HIDDEN" activelistable="true" />
-				<column name="minute" type="renderlet:TEXT" listHeader="label_flw24_ticker_minute" />
-				<column name="type" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_type">
-					<data>
-						<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes">
-							<params>
-								<param get="rowData::uid" />
-							</params>
-						</userobj>
-					</data>
-				</column>
-				<column name="player_home" type="renderlet:LISTBOX"
-					listHeader="label_flw24_ticker_playerHome" activelistable="false">
-					<data>
-						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
-							<params>
-								<param name="team" value="home" />
-							</params>
-						</userobj>
-					</data>
-				</column>
-				<column name="player_guest" type="renderlet:LISTBOX"
-					listHeader="label_flw24_ticker_playerGuest" activelistable="false">
-					<data>
-						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
-							<params>
-								<param name="team" value="guest" />
-							</params>
-						</userobj>
-					</data>
-				</column>
-
-				<column name="comment" type="renderlet:TEXT" listHeader="label_flw24_ticker_comment"
-					activelistable="false" />
-
-				<column name="edit" label="label_btn_edit" type="renderlet:BUTTON"
-					listHeader="">
-					<onclick runat="ajax" cache="false" exec="tickerphp.cbEditMatchNote()"
-						params="rowData::uid">
-					</onclick>
-				</column>
-				<column name="delete" label="label_btn_delete" type="renderlet:BUTTON"
-					listHeader="">
-					<onclick runat="ajax" cache="false" exec="tickerphp.cbDeleteMatchNote()"
-						params="rowData::uid"></onclick>
-				</column>
-			</columns>
-		</renderlet:LISTER>
-
-		<renderlet:MODALBOX name="editbox_ticker">
-			<childs>
-				<renderlet:BOX name="errors" />
-				<renderlet:HIDDEN name="uid" />
-
-				<renderlet:TEXT name="minute" label="label_flw24_ticker_minute" inputtype="number">
-					<custom>min="-1"</custom>
-					<validators>
-						<validator:STANDARD>
-							<required>
-								<value>true</value>
-								<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required
-								</message>
-							</required>
-						</validator:STANDARD>
-					</validators>
-				</renderlet:TEXT>
-
-				<renderlet:LISTBOX name="type" label="label_flw24_ticker_type">
-					<data>
-						<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes" />
-					</data>
-					<validators>
-						<validator:STANDARD>
-							<custom
-								message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
-								<userobj extension="System25\Flw24\Form\Ticker" method="validatePlayerModal"/>
-							</custom>
-						</validator:STANDARD>
-					</validators>
-				</renderlet:LISTBOX>
-
-				<renderlet:LISTBOX name="player_home" label="label_flw24_ticker_playerHome">
-					<data>
-						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
-							<params>
-								<param name="team" value="home" />
-							</params>
-						</userobj>
-					</data>
-				</renderlet:LISTBOX>
-				<renderlet:LISTBOX name="player_guest" label="label_flw24_ticker_playerGuest">
-					<data>
-						<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
-							<params>
-								<param name="team" value="guest" />
-							</params>
-						</userobj>
-					</data>
-				</renderlet:LISTBOX>
-
-				<renderlet:TEXTAREA name="comment"
-					label="label_flw24_ticker_comment">
-					<custom>cols="50" rows="5"</custom>
-				</renderlet:TEXTAREA>
-
-
-				<renderlet:BUTTON name="btnCancel" label="label_btn_cancel">
-					<onclick runat="client" exec="tickerphp.cbBtnCancelTicker()" />
-				</renderlet:BUTTON>
-				<renderlet:BUTTON name="btnSave" label="label_btn_save">
-					<onclick
-						runat="ajax"
-						params="editbox_ticker__*"
-						cache="false"
-						exec="tickerphp.cbUpdateMatchNote()"
-						validate="editbox_ticker__errors"
-					/>
-				</renderlet:BUTTON>
-			</childs>
-		</renderlet:MODALBOX>
 
  		<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember.xml" xPath="/formidable/elements/box_teammember/" />
-
-		<renderlet:BUTTON name="edit_teammember_home" label="label_btn_edit_teammember_home">
-			<onclick runat="ajax" cache="false" exec="teamphp.cbEditTeamMemberHome()">
-			</onclick>
-		</renderlet:BUTTON>
-		<renderlet:BUTTON name="edit_teammember_guest" label="label_btn_edit_teammember_guest">
-			<onclick runat="ajax" cache="false" exec="teamphp.cbEditTeamMemberGuest()">
-			</onclick>
-		</renderlet:BUTTON>
-
- 		<includeXml path="EXT:flw24/Resources/Private/Form/Include/lineup.xml" xPath="/formidable/elements/box_lineup/" />
-
-		<renderlet:BUTTON name="edit_lineup_home" label="label_btn_edit_lineup_home">
-			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditHome()">
-			</onclick>
-		</renderlet:BUTTON>
+		<includeXml path="EXT:flw24/Resources/Private/Form/Include/lineup.xml" xPath="/formidable/elements/box_lineup/" />
+		<renderlet:BOX name="tab_lineup">
+			<childs>
+				<renderlet:BUTTON name="edit_teammember_home" label="label_btn_edit_teammember_home">
+					<onclick runat="ajax" cache="false" exec="teamphp.cbEditTeamMemberHome()">
+					</onclick>
+				</renderlet:BUTTON>
+				<renderlet:BUTTON name="edit_teammember_guest" label="label_btn_edit_teammember_guest">
+					<onclick runat="ajax" cache="false" exec="teamphp.cbEditTeamMemberGuest()">
+					</onclick>
+				</renderlet:BUTTON>
 		
-		<renderlet:BUTTON name="edit_lineup_guest" label="label_btn_edit_lineup_guest">
-			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditGuest()">
-			</onclick>
-		</renderlet:BUTTON>
-
-		<renderlet:BUTTON name="edit_subst_home" label="label_btn_edit_subst_home">
-			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditSubstHome()">
-			</onclick>
-		</renderlet:BUTTON>
-
-		<renderlet:BUTTON name="edit_subst_guest" label="label_btn_edit_subst_guest">
-			<onclick runat="ajax" cache="false" exec="lineupphp.cbEditSubstGuest()">
-			</onclick>
-		</renderlet:BUTTON>
-
+				<renderlet:BUTTON name="edit_lineup_home" label="label_btn_edit_lineup_home">
+					<onclick runat="ajax" cache="false" exec="lineupphp.cbEditHome()">
+					</onclick>
+				</renderlet:BUTTON>
+				
+				<renderlet:BUTTON name="edit_lineup_guest" label="label_btn_edit_lineup_guest">
+					<onclick runat="ajax" cache="false" exec="lineupphp.cbEditGuest()">
+					</onclick>
+				</renderlet:BUTTON>
+		
+				<renderlet:BUTTON name="edit_subst_home" label="label_btn_edit_subst_home">
+					<onclick runat="ajax" cache="false" exec="lineupphp.cbEditSubstHome()">
+					</onclick>
+				</renderlet:BUTTON>
+		
+				<renderlet:BUTTON name="edit_subst_guest" label="label_btn_edit_subst_guest">
+					<onclick runat="ajax" cache="false" exec="lineupphp.cbEditSubstGuest()">
+					</onclick>
+				</renderlet:BUTTON>
+			</childs>
+		</renderlet:BOX>
+<!-- Die Checkbox muss sein, damit das JS geladen wird. Es wird dann in Modalboxen benötigt. -->
 <renderlet:CHECKBOX name="dummy"><custom>style="display: none;"</custom></renderlet:CHECKBOX>
 	</elements>
 </formidable>

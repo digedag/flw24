@@ -1,0 +1,79 @@
+<formidable version="2.0.296">
+	<elements>
+		<modalbox>
+
+			<renderlet:MODALBOX name="editbox_ticker">
+				<childs>
+					<renderlet:BOX name="errors" />
+					<renderlet:HIDDEN name="uid" />
+	
+					<renderlet:TEXT name="minute" label="label_flw24_ticker_minute" inputtype="number">
+						<custom>min="-1"</custom>
+						<validators>
+							<validator:STANDARD>
+								<required>
+									<value>true</value>
+									<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required
+									</message>
+								</required>
+							</validator:STANDARD>
+						</validators>
+					</renderlet:TEXT>
+	
+					<renderlet:LISTBOX name="type" label="label_flw24_ticker_type">
+						<data>
+							<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes" />
+						</data>
+						<validators>
+							<validator:STANDARD>
+								<custom
+									message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
+									<userobj extension="System25\Flw24\Form\Ticker" method="validatePlayerModal"/>
+								</custom>
+							</validator:STANDARD>
+						</validators>
+					</renderlet:LISTBOX>
+	
+					<renderlet:LISTBOX name="player_home" label="label_flw24_ticker_playerHome">
+						<data>
+							<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+								<params>
+									<param name="team" value="home" />
+								</params>
+							</userobj>
+						</data>
+					</renderlet:LISTBOX>
+					<renderlet:LISTBOX name="player_guest" label="label_flw24_ticker_playerGuest">
+						<data>
+							<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+								<params>
+									<param name="team" value="guest" />
+								</params>
+							</userobj>
+						</data>
+					</renderlet:LISTBOX>
+	
+					<renderlet:TEXTAREA name="comment"
+						label="label_flw24_ticker_comment">
+						<custom>cols="50" rows="5"</custom>
+					</renderlet:TEXTAREA>
+	
+	
+					<renderlet:BUTTON name="btnCancel" label="label_btn_cancel">
+						<onclick runat="client" exec="tickerphp.cbBtnCancelTicker()" />
+					</renderlet:BUTTON>
+					<renderlet:BUTTON name="btnSave" label="label_btn_save">
+						<onclick
+							runat="ajax"
+							params="editbox_ticker__*"
+							cache="false"
+							exec="tickerphp.cbUpdateMatchNote()"
+							validate="editbox_ticker__errors"
+						/>
+					</renderlet:BUTTON>
+				</childs>
+			</renderlet:MODALBOX>
+
+		</modalbox>
+	</elements>
+</formidable>

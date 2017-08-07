@@ -6,14 +6,14 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		this.initTicker(this.oForm);
 	},
 	cbTickerTypeChanged: function(parent, form) {
-		var ttype = form.o('box_base__type');
+		var ttype = this.getFieldBase(form, 'type');
 		if(ttype.getValue() == 100 || ttype.getValue() == 1000) {
-			form.o('box_base__box_players').displayNone();
+			this.getFieldBase(form, 'box_players').displayNone();
 			this.getFieldPlayerHome(form).setValue(0);
 			this.getFieldPlayerGuest(form).setValue(0);
 		}
 		else {
-			form.o('box_base__box_players').displayBlock();
+			this.getFieldBase(form, 'box_players').displayBlock();
 		}
 		this.cbSetMinute(parent, form);
 	},
@@ -37,7 +37,7 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
  		}
 */
 		
-		var minuteField = form.o('box_base__minute');
+		var minuteField = this.getFieldBase(form, 'minute');
 		if(minuteField.getValue()) {
 			return;
 		}
@@ -48,7 +48,7 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		if(this.isMatchPart(1, form) && min > 45) {
 			var extraTime = min - 45;
 			min = min - extraTime;
-			var extraField = form.o('box_base__extra_time');
+			var extraField = this.getFieldBase(form, 'extra_time');
 			extraField.setValue(extraTime);
 		}
 		minuteField.setValue(min);
@@ -64,14 +64,17 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		this.getFieldWatch(form, 'watch_offset').setValue(offset-1);
 	},
 	getFieldPlayerHome: function(form) {
-		return form.o('box_base__box_players__player_home');
+		return form.o('tab_ticker__box_base__box_players__player_home');
 	},
 	getFieldPlayerGuest: function(form) {
-		return form.o('box_base__box_players__player_guest');
+		return form.o('tab_ticker__box_base__box_players__player_guest');
 	},
 
 	getFieldWatch: function(form, fieldname) {
-		return form.o('box_watch__' + fieldname);
+		return form.o('tab_ticker__box_watch__' + fieldname);
+	},
+	getFieldBase: function(form, fieldname) {
+		return form.o('tab_ticker__box_base__' + fieldname);
 	},
 	
 	initTicker: function(form) {
