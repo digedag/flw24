@@ -34,6 +34,7 @@ plugin.tx_flw24_form {
 	tickerform =< lib.mkforms.formbase
 	tickerform {
 		match =< lib.t3sports.match
+		match.links.ticker.force = 1
 
 		viewClassName = System25\Flw24\View\FormView
 		xml = EXT:flw24/Resources/Private/Form/tickerform.xml
