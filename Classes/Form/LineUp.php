@@ -5,7 +5,7 @@ namespace System25\Flw24\Form;
  * *************************************************************
  * Copyright notice
  *
- * (c) 2017 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -139,7 +139,15 @@ class LineUp
                 'value' => $profile->getUid(),
             ];
         }
+        usort($items, [LineUp::class, 'sortByCaption']);
         return $items;
+    }
+
+    public static function sortByCaption($a, $b)
+    {
+        $s1 = mb_strtolower( $a['caption'] );
+        $s2 = mb_strtolower( $b['caption'] );
+        return strnatcasecmp($s1, $s2);
     }
 
     /**

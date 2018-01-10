@@ -5,7 +5,7 @@ namespace System25\Flw24\Form;
  * *************************************************************
  * Copyright notice
  *
- * (c) 2017 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -441,6 +441,7 @@ class Ticker
             'value' => - 1,
             'caption' => $form->getConfigurations()->getLL('label_flw24_ticker_player_unknown'),
         ];
+        usort($this->playerNames[$team], [LineUp::class, 'sortByCaption']);
 
         return $this->playerNames[$team];
     }
