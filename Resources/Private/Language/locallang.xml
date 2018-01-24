@@ -26,6 +26,9 @@
 			<label index="label_flw24_ticker_playerGuestChangeOut">Changed out</label>
 
 			<label index="label_flw24_event_matchend">Match end</label>
+			<label index="label_flw24_event_prereport">Preliminary report</label>
+			<label index="label_flw24_event_midreport">Halftime report</label>
+			<label index="label_flw24_event_endreport">Final report</label>
 			<label index="label_flw24_match_status">Status</label>
 			<label index="label_flw24_match_status_scheduled">Scheduled</label>
 			<label index="label_flw24_match_status_running">Running</label>
@@ -79,6 +82,9 @@
 			<label index="label_flw24_ticker_playerGuestChangeOut">Ausgewechselt</label>
 
 			<label index="label_flw24_event_matchend">Spielende</label>
+			<label index="label_flw24_event_prereport">Vorbericht</label>
+			<label index="label_flw24_event_midreport">Halbzeitfazit</label>
+			<label index="label_flw24_event_endreport">Fazit</label>
 			<label index="label_flw24_match_status">Status</label>
 			<label index="label_flw24_match_status_scheduled">Angesetzt</label>
 			<label index="label_flw24_match_status_running">Spiel läuft</label>

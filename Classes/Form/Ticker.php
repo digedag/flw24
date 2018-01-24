@@ -345,7 +345,7 @@ class Ticker
     public function validatePlayer($params, $form)
     {
         $type = $form->getWidget('type')->getValue();
-        if ($type == 100 || $type == 1000) {
+        if ($type == 100 || $type >= 1000) {
             // Hier ist der Spieler egal
             return true;
         }

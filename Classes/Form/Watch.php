@@ -149,7 +149,7 @@ class Watch
     }
 
     /**
-     *
+     * Klick auf Spielende.
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
      * @return []
