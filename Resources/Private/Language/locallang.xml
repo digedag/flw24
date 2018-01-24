@@ -20,6 +20,10 @@
 			<label index="label_flw24_ticker_player_unknown">Unknown player</label>
 			<label index="label_flw24_ticker_playerHome">Player Home</label>
 			<label index="label_flw24_ticker_playerGuest">Player Guest</label>
+			<label index="label_flw24_ticker_playerHomeChangeIn">Changed in</label>
+			<label index="label_flw24_ticker_playerGuestChangeIn">Changed in</label>
+			<label index="label_flw24_ticker_playerHomeChangeOut">Changed out</label>
+			<label index="label_flw24_ticker_playerGuestChangeOut">Changed out</label>
 
 			<label index="label_flw24_event_matchend">Match end</label>
 			<label index="label_flw24_match_status">Status</label>
@@ -69,6 +73,10 @@
 			<label index="label_flw24_ticker_player_unknown">Unbekannter Spieler</label>
 			<label index="label_flw24_ticker_playerHome">Spieler Heim</label>
 			<label index="label_flw24_ticker_playerGuest">Spieler Gast</label>
+			<label index="label_flw24_ticker_playerHomeChangeIn">Eingewechselt</label>
+			<label index="label_flw24_ticker_playerGuestChangeIn">Eingewechselt</label>
+			<label index="label_flw24_ticker_playerHomeChangeOut">Ausgewechselt</label>
+			<label index="label_flw24_ticker_playerGuestChangeOut">Ausgewechselt</label>
 
 			<label index="label_flw24_event_matchend">Spielende</label>
 			<label index="label_flw24_match_status">Status</label>

@@ -2,6 +2,7 @@
 	<elements>
 		<modalbox>
 
+			<!-- Modalbox zur Bearbeitung von Tickermeldungen -->
 			<renderlet:MODALBOX name="editbox_ticker">
 				<childs>
 					<renderlet:BOX name="errors" />

@@ -47,7 +47,7 @@
 		<renderlet:TABPANEL name="tabpanel">
 		
 			<!-- set defaultTab to "none" if you don't want any tab to be shown on load. -->
-			<config defaultTab="tab1" activeClassName="act" />
+			<config defaultTab="tab2" activeClassName="act" />
 			
 			<childs>
 			<renderlet:TAB label="Aufstellung" name="tab1"  content="tab_lineup" />
@@ -186,6 +186,9 @@
 								</renderlet:LISTBOX>
 							</childs>
 						</renderlet:BOX>
+
+				 		<includeXml path="EXT:flw24/Resources/Private/Form/Include/box_change.xml" xPath="/formidable/elements/" />
+
 		
 						<renderlet:TEXTAREA name="comment"
 							label="label_flw24_ticker_comment">
@@ -213,7 +216,7 @@
 						<column name="minute" type="renderlet:TEXT" listHeader="label_flw24_ticker_minute" />
 						<column name="type" type="renderlet:LISTBOX" listHeader="label_flw24_ticker_type">
 							<data>
-								<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypes">
+								<userobj extension="System25\Flw24\Form\Ticker" method="getTickerTypesAll">
 									<params>
 										<param get="rowData::uid" />
 									</params>

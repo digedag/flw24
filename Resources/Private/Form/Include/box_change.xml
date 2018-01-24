@@ -1,0 +1,75 @@
+<formidable version="2.0.296">
+	<elements>
+
+		<renderlet:BOX name="box_change">
+			<childs>
+				<renderlet:TABPANEL name="tabteam">
+				
+					<!-- set defaultTab to "none" if you don't want any tab to be shown on load. -->
+					<config defaultTab="tabHome" activeClassName="act" />
+					
+					<childs>
+						<renderlet:TAB label="Heim" name="tabHome"  content="tab_ticker__box_base__box_change__tab_home" />
+						<renderlet:TAB label="Gast" name="tabHuest"  content="tab_ticker__box_base__box_change__tab_guest" />
+					</childs>
+				
+				</renderlet:TABPANEL>
+				
+				<renderlet:BOX name="tab_home">
+					<childs>
+						<renderlet:LISTBOX name="player_home_changeout" label="label_flw24_ticker_playerHomeChangeOut">
+							<onchange runat="js" exec="tickerjs.cbPlayerHomeChangeChanged()" />
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+									<params>
+										<param name="team" value="home" />
+									</params>
+								</userobj>
+							</data>
+						</renderlet:LISTBOX>
+
+						<renderlet:LISTBOX name="player_home_changein" label="label_flw24_ticker_playerHomeChangeIn">
+							<onchange runat="js" exec="tickerjs.cbPlayerHomeChangeChanged()" />
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+									<params>
+										<param name="team" value="home" />
+									</params>
+								</userobj>
+							</data>
+						</renderlet:LISTBOX>
+					</childs>
+				</renderlet:BOX>
+
+				<renderlet:BOX name="tab_guest">
+					<childs>
+						<renderlet:LISTBOX name="player_guest_changeout" label="label_flw24_ticker_playerGuestChangeOut">
+							<onchange runat="js" exec="tickerjs.cbPlayerGuestChangeChanged()" />
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+									<params>
+										<param name="team" value="guest" />
+									</params>
+								</userobj>
+							</data>
+						</renderlet:LISTBOX>
+
+						<renderlet:LISTBOX name="player_guest_changein" label="label_flw24_ticker_playerGuestChangeIn">
+							<onchange runat="js" exec="tickerjs.cbPlayerGuestChangeChanged()" />
+							<data>
+								<userobj extension="System25\Flw24\Form\Ticker" method="getPlayers">
+									<params>
+										<param name="team" value="guest" />
+									</params>
+								</userobj>
+							</data>
+						</renderlet:LISTBOX>
+					</childs>
+				</renderlet:BOX>
+
+
+			</childs>
+		</renderlet:BOX>
+
+	</elements>
+</formidable>

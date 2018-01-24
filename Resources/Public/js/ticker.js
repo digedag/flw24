@@ -8,15 +8,50 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 	cbTickerTypeChanged: function(parent, form) {
 		var ttype = this.getFieldBase(form, 'type');
 		if(ttype.getValue() == 100 || ttype.getValue() == 1000) {
-			this.getFieldBase(form, 'box_players').displayNone();
-			this.getFieldPlayerHome(form).setValue(0);
-			this.getFieldPlayerGuest(form).setValue(0);
+			this.closeBoxPlayers(form);
+			this.closeBoxChange(form);
+		}
+		else if (ttype.getValue() == 80) {
+			// Spielerwechsel
+			this.openBoxChange(form);
+			this.closeBoxPlayers(form);
 		}
 		else {
-			this.getFieldBase(form, 'box_players').displayBlock();
+			this.closeBoxChange(form);
+			this.openBoxPlayers(form);
 		}
 		this.cbSetMinute(parent, form);
 	},
+
+	closeBoxPlayers: function(form) {
+		this.getFieldBase(form, 'box_players').displayNone();
+		this.getFieldPlayerHome(form).setValue(0);
+		this.getFieldPlayerGuest(form).setValue(0);
+	},
+	openBoxPlayers: function(form) {
+		this.getFieldBase(form, 'box_players').displayBlock();
+	},
+	closeBoxChange: function(form) {
+		this.getFieldBase(form, 'box_change').displayNone();
+	},
+	openBoxChange: function(form) {
+		this.getFieldBase(form, 'box_change').displayBlock();
+	},
+
+	cbPlayerHomeChangeChanged: function(parent, form) {
+		var field = this.getFieldBoxChange(form, 'tab_guest__player_guest_changein');
+		field.setValue(0);
+		var field = this.getFieldBoxChange(form, 'tab_guest__player_guest_changeout');
+		field.setValue(0);
+	},
+	cbPlayerGuestChangeChanged: function(parent, form) {
+		var field = this.getFieldBoxChange(form, 'tab_home__player_home_changein');
+		field.setValue(0);
+		var field = this.getFieldBoxChange(form, 'tab_home__player_home_changeout');
+		field.setValue(0);
+	},
+
+
 	cbPlayerHomeChanged: function(parent, form) {
 		// your implementation here
 		var field = this.getFieldPlayerGuest(form);
@@ -68,6 +103,10 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 	},
 	getFieldPlayerGuest: function(form) {
 		return form.o('tab_ticker__box_base__box_players__player_guest');
+	},
+
+	getFieldBoxChange: function(form, fieldname) {
+		return form.o('tab_ticker__box_base__box_change__' + fieldname);
 	},
 
 	getFieldWatch: function(form, fieldname) {

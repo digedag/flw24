@@ -25,15 +25,18 @@ namespace System25\Flw24\Form;
  * This copyright notice MUST APPEAR in all copies of the script!
  * *************************************************************
  */
+\tx_rnbase::load('tx_cfcleague_models_MatchNote');
+
 class Ticker
 {
 
     private $playerNames = [];
 
+    /** In dieser Box werden vorhandene Notes bearbeitet */
     const MODALBOX_TICKER = 'editbox_ticker';
 
     /**
-     *
+     * Speichern von Tickermeldungen
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
      * @return []
@@ -62,10 +65,15 @@ class Ticker
         /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
         $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
         $model = $repo->createNewModel($record);
+        if($record['type'] == \tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT) {
+            $this->handleChange($form, $model, $repo);
+        }
         $repo->persist($model);
+
         $ret = array(
             $form->getWidget('box_base')->majixClearValue(),
             $form->getWidget('box_players')->majixDisplayNone(),
+            $form->getWidget('box_change')->majixDisplayNone(),
             $form->getWidget('matchnotes')->majixRepaint()
         );
 
@@ -87,6 +95,32 @@ class Ticker
         return $ret;
     }
 
+    /**
+     * Sonderbehandlung für Spielerwechsel. Es muss ein zweite Note angelegt werden.
+     * @param \tx_mkforms_forms_Base $form
+     * @param \tx_cfcleague_model_MatchNote $model
+     * @param \Tx_Cfcleague_Model_Repository_MatchNote $repo
+     */
+    protected function handleChange(\tx_mkforms_forms_Base $form, \tx_cfcleague_models_MatchNote $model, $repo)
+    {
+        $team = 'home';
+        $playerOut = $form->getWidget('player_home_changeout')->getValue();
+        $playerIn = $form->getWidget('player_home_changein')->getValue();
+        if(!$playerOut) {
+            $playerOut = $form->getWidget('player_guest_changeout')->getValue();
+            $playerIn = $form->getWidget('player_guest_changein')->getValue();
+            $team = 'guest';
+        }
+        $record = (array) (object) $model->getProperty();
+        // Den Spieler im vorhandenen Model setzen
+        $model->setProperty('player_'.$team, $playerOut);
+        // Jetzt ein weiteres Model anlegen
+        $model2 = clone $model;
+        $model2->setProperty($record);
+        $model2->setProperty('player_'.$team, $playerIn);
+        $model2->setProperty('type', \tx_cfcleague_models_MatchNote::TYPE_CHANGEIN);
+        $repo->persist($model2);
+    }
     /**
      *
      * @param tx_cfcleague_models_MatchNote $ticker
@@ -310,37 +344,54 @@ class Ticker
      */
     public function validatePlayer($params, $form)
     {
-        $home = $form->getWidget('player_home')->getValue();
-        $guest = $form->getWidget('player_guest')->getValue();
         $type = $form->getWidget('type')->getValue();
         if ($type == 100 || $type == 1000) {
             // Hier ist der Spieler egal
             return true;
         }
-        // Jetzt muss genau ein Spieler gesetzt sein
-        if ($home != 0 && $guest != 0 || $home == 0 && $guest == 0) {
-            return false;
-            // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set";
+        if ($type == \tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT) {
+            // Bei Auswechslungen werden zwei Spieler benötigt
+            if(
+                !(
+                ($this->hasValue($form, 'player_home_changeout') && $this->hasValue($form, 'player_home_changein'))
+                ||
+                ($this->hasValue($form, 'player_guest_changeout') && $this->hasValue($form, 'player_guest_changein'))
+                )) {
+                return false;
+            }
+        }
+        else {
+            $home = $form->getWidget('player_home')->getValue();
+            $guest = $form->getWidget('player_guest')->getValue();
+            // Jetzt muss genau ein Spieler gesetzt sein
+            if ($home != 0 && $guest != 0 || $home == 0 && $guest == 0) {
+                return false;
+                // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set";
+            }
         }
 
         return true;
     }
+    protected function hasValue($form, $widgetName)
+    {
+        return $form->getWidget($widgetName)->getValue() > 0;
+    }
 
     /**
-     * Validator in modalbox
+     * Validator für TickerType
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
      * @return []
      */
     public function validatePlayerModal($params, $form)
     {
-        $home = $form->getWidget(self::MODALBOX_TICKER. '__player_home')->getValue();
-        $guest = $form->getWidget(self::MODALBOX_TICKER. '__player_guest')->getValue();
         $type = $form->getWidget(self::MODALBOX_TICKER. '__type')->getValue();
         if ($type == 100 || $type == 1000) {
             // Hier ist der Spieler egal
             return true;
         }
+        $home = $form->getWidget(self::MODALBOX_TICKER. '__player_home')->getValue();
+        $guest = $form->getWidget(self::MODALBOX_TICKER. '__player_guest')->getValue();
         // Jetzt muss genau ein Spieler gesetzt sein
         if ($home != 0 && $guest != 0 || $home == 0 && $guest == 0) {
             return false;
@@ -375,7 +426,7 @@ class Ticker
     }
 
     /**
-     * Liefert die Tickertypen ohne Ein- und Auswechslung
+     * Liefert die Tickertypen ohne Auswechslung
      *
      * @param array $params
      * @param \tx_mkforms_forms_IForm $form
@@ -386,15 +437,40 @@ class Ticker
         $tcaTypes = $this->loadTickerTypes();
         $data = [];
         foreach ($tcaTypes as $typeDef) {
-            if (! $this->isChange($typeDef[1]))
+            if (! $this->isChange($typeDef[1])) {
                 $data[] = [
                     'caption' => $typeDef[0],
                     'value' => $typeDef[1]
                 ];
+            }
         }
         return $data;
     }
-
+    /**
+     * Liefert alle Tickertypen. Das wird für die Darstellung im Lister benötigt.
+     *
+     * @param array $params
+     * @param \tx_mkforms_forms_IForm $form
+     * @return []
+     */
+    public function getTickerTypesAll($params, \tx_mkforms_forms_IForm $form)
+    {
+        $tcaTypes = $this->loadTickerTypes();
+        $data = [];
+        foreach ($tcaTypes as $typeDef) {
+            $data[] = [
+                'caption' => $typeDef[0],
+                'value' => $typeDef[1]
+            ];
+        }
+        return $data;
+    }
+    /**
+     * Liefert alle Spieler von Aufstellung und Bank.
+     * @param array $params
+     * @param \tx_mkforms_forms_IForm $form
+     * @return number[][]|string[][]
+     */
     public function getPlayers($params, \tx_mkforms_forms_IForm $form)
     {
         /* @var $match \tx_cfcleague_models_Match */
@@ -448,7 +524,7 @@ class Ticker
 
     protected function isChange($type)
     {
-        return $type == 80 || $type == 81;
+        return $type == 81;
     }
 
     protected function loadTickerTypes()
