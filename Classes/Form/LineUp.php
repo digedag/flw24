@@ -177,6 +177,8 @@ class LineUp
         $ret = [];
         $ret[] = $isHome ? $this->cbBtnCloseHome($params, $form) : $this->cbBtnCloseGuest($params, $form);
         $ret[] = $form->getWidget( $isHome ? 'player_home' : 'player_guest')->majixRepaint();
+        $ret[] = $form->getWidget( $isHome ? 'player_home_changeout' : 'player_guest_changeout')->majixRepaint();
+        $ret[] = $form->getWidget( $isHome ? 'player_home_changein' : 'player_guest_changein')->majixRepaint();
         return $ret;
     }
 }

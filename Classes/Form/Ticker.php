@@ -513,11 +513,19 @@ class Ticker
                 'value' => $player->getUid()
             ];
         }
+        if(count($this->playerNames[$team]) > 1) {
+            usort($this->playerNames[$team], [LineUp::class, 'sortByCaption']);
+
+            $this->playerNames[$team][] = [
+                'value' => '',
+                'caption' => '',
+                'custom' => 'disabled'
+            ];
+        }
         $this->playerNames[$team][] = [
-            'value' => - 1,
+            'value' => -1,
             'caption' => $form->getConfigurations()->getLL('label_flw24_ticker_player_unknown'),
         ];
-        usort($this->playerNames[$team], [LineUp::class, 'sortByCaption']);
 
         return $this->playerNames[$team];
     }
