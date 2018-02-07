@@ -19,8 +19,10 @@
  					<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember_parts.xml" xPath="/formidable/elements/create_box/" />
 
 					<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
-						<onclick runat="ajax" params="editbox_teammember_home__uid,editbox_teammember_home__team,editbox_teammember_home__first_name,editbox_teammember_home__last_name" cache="false"
-							validate="error" exec="teamphp.cbNewPlayerSubmitClick()" />
+						<onclick runat="ajax" 
+							params="editbox_teammember_home__uid,editbox_teammember_home__team,editbox_teammember_home__first_name,editbox_teammember_home__last_name"
+							cache="false"
+							validate="editbox_teammember_home__errors" exec="teamphp.cbNewPlayerSubmitClick()" />
 					</renderlet:BUTTON>
 	
 					<renderlet:BUTTON name="btn_close" label="label_btn_close">
@@ -45,8 +47,10 @@
 
  					<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember_parts.xml" xPath="/formidable/elements/create_box/" />
 					<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
-						<onclick runat="ajax" params="editbox_teammember_guest__uid,editbox_teammember_guest__team,editbox_teammember_guest__first_name,editbox_teammember_guest__last_name" cache="false"
-							validate="error" exec="teamphp.cbNewPlayerSubmitClick()" />
+						<onclick runat="ajax"
+							params="editbox_teammember_guest__uid,editbox_teammember_guest__team,editbox_teammember_guest__first_name,editbox_teammember_guest__last_name"
+							cache="false"
+							validate="editbox_teammember_guest__errors" exec="teamphp.cbNewPlayerSubmitClick()" />
 					</renderlet:BUTTON>
 	
 					<renderlet:BUTTON name="btn_close" label="label_btn_close">

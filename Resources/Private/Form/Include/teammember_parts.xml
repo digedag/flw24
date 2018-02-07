@@ -12,14 +12,23 @@
 				<column name="first_name" type="renderlet:TEXT" listHeader="label_flw24_profile_firstname" activelistable="false" sort="false"/>
 				<column name="last_name" type="renderlet:TEXT" listHeader="label_flw24_profile_lastname" activelistable="false" sort="false" />
 				<column name="remove" label="label_btn_remove" type="renderlet:BUTTON" listHeader="">
-					<onclick runat="ajax" cache="false" exec="teamphp.cbRemoveProfile()" params="rowData::uid,rowData::team,rowData::side"/>
+					<onclick runat="ajax" cache="false" 
+						exec="teamphp.cbRemoveProfile()" 
+						params="rowData::uid,rowData::team,rowData::side"/>
 				</column>
 
 			</columns>
 		</teamlister_cols>
 		<create_box>
-			<renderlet:TEXT name="first_name" />
-			<renderlet:TEXT name="last_name" />
+			<renderlet:TEXT name="first_name">
+			</renderlet:TEXT>
+			<renderlet:TEXT name="last_name">
+				<validators>
+					<validator:STANDARD>
+						<minsize value="3" message="Bitte mindestens drei Zeichen eingeben."/>
+					</validator:STANDARD>
+				</validators>
+			</renderlet:TEXT>
 		</create_box>
 	</elements>
 </formidable>
