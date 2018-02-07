@@ -196,7 +196,7 @@
 							<onclick runat="js" exec="tickerjs.cbSetMinute()" />
 						</renderlet:TEXTAREA>
 		
-						<renderlet:BUTTON name="btn_submit" label="Submit">
+						<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
 							<onclick runat="ajax" params="tab_ticker__box_base__*" cache="false"
 								validate="error" exec="tickerphp.cbTickerSubmitClick()" />
 						</renderlet:BUTTON>
