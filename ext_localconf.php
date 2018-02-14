@@ -22,6 +22,7 @@ $GLOBALS ['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getJoins_hoo
 \tx_cfcleague_util_Misc::removeMatchNote('13');
 \tx_cfcleague_util_Misc::removeMatchNote('31');
 \tx_cfcleague_util_Misc::removeMatchNote('32');
+\tx_cfcleague_util_Misc::removeMatchNote('33');
 \tx_cfcleague_util_Misc::removeMatchNote('200');
 
 //\tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_matchend','1000');
