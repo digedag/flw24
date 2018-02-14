@@ -4,7 +4,7 @@ namespace System25\Flw24\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Rene Nitzsche (rene@system25.de)
+*  (c) 2017-2018 Rene Nitzsche (rene@system25.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,11 +24,23 @@ namespace System25\Flw24\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+\tx_rnbase::load('tx_t3users_models_feuser');
 
 /**
  */
-class Errors {
+class Access {
 	const CODE_NOT_LOGGED_IN = 1000;
-	const CODE_NOT_ALLOWED = 1010;
 
+	public static function isTickerAllowed(\tx_t3users_models_feuser $feuser, $matchUid)
+	{
+	    $fields = [
+	        'TEAM1FEUSER.UID_FOREIGN' => [OP_EQ_INT => $feuser->getUid()],
+	        'MATCH.UID' => [OP_EQ_INT => $matchUid]
+	    ];
+	    $options = [
+	        'count' => 1,
+	    ];
+	    $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
+	    return $cnt > 0;
+	}
 }

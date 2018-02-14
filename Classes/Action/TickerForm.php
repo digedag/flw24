@@ -2,6 +2,7 @@
 namespace System25\Flw24\Action;
 
 use System25\Flw24\Utility\Errors;
+use System25\Flw24\Utility\Access;
 
 /***************************************************************
  *  Copyright notice
@@ -50,6 +51,10 @@ class TickerForm extends \tx_mkforms_action_FormBase {
 		$feuser = \tx_t3users_models_feuser::getCurrent();
 		if(!$feuser || !$feuser->isValid()) {
 			throw new \Exception("Login please!", Errors::CODE_NOT_LOGGED_IN);
+		}
+		// Ist der Zugriff erlaubt?
+		if (!Access::isTickerAllowed($feuser, $matchId)) {
+		    throw new \Exception("You are not allowed to ticker this match!", Errors::CODE_NOT_ALLOWED);
 		}
 
 		// Das Spiel laden

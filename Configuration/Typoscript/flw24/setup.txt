@@ -3,6 +3,10 @@ lib.t3sports.match {
 	links {
 		tickerform.pid = {$plugin.tx_flw24_base.tickerformPage}
 		tickerform._cfg.params.matchId = uid
+		tickerform.disable = USER
+		tickerform.disable.userFunc = Tx_Flw24_Hook_MatchMarker->disableLink
+		tickerform.disable.includeLibs = EXT:flw24/Classes/Hook/MatchMarker.php
+		tickerform.removeIfDisabled = 1
 	}
 
 	newsreport2 =< lib.t3sports.ttnews

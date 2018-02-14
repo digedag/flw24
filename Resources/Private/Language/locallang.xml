@@ -59,6 +59,7 @@
 
 			<label index="label_msg_minute_required">Minute is required</label>
 			<label index="label_msg_player_not_set">Set one player for this message type</label>
+			<label index="ERROR_1010">You are not allowed to ticker this match!</label>
 
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -114,6 +115,8 @@
 
 			<label index="label_msg_minute_required">Es muss eine Spielminute angegeben werden</label>
 			<label index="label_msg_player_not_set">Für diese Tickermeldung muss genau ein Spieler angegeben werden.</label>
+
+			<label index="ERROR_1010">Ihnen fehlt die Erlaubnis, für dieses Spiel den Ticker zu schreiben!</label>
 
 		</languageKey>
 	</data>

@@ -1,4 +1,6 @@
 <?php
+use System25\Flw24\Utility\Access;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -39,4 +41,25 @@ class Tx_Flw24_Hook_MatchMarker extends Tx_More4t3sports_Hook_MatchMarker {
 		$template = $this->addNews($match, $template, $params['marker'], $confId, $formatter, 'newspreview2');
 		$params['template'] = $template;
 	}
+
+	/**
+	 *
+	 * @param string $content
+	 * @param array $config
+	 * @return boolean
+	 */
+	public function disableLink($content, $config)
+	{
+	    \tx_rnbase::load('tx_t3users_models_feuser');
+	    $matchData = $this->cObj->data;
+	    if (!isset($matchData['uid']) || !$matchData['uid']) {
+	        return true;
+	    }
+	    $feuser = tx_t3users_models_feuser::getCurrent();
+	    if (!$feuser) {
+	        return true;
+	    }
+	    return !Access::isTickerAllowed($feuser, $matchData['uid']);
+	}
+
 }

@@ -11,6 +11,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['matchMarker_initRecord'
 // Hook for match search
 $GLOBALS ['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getTableMapping_hook'][] = 'EXT:' . $_EXTKEY . '/Classes/Hook/Search.php:&System25\Flw24\Hook\Search->getTableMappingMatch';
 $GLOBALS ['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getJoins_hook'][] = 'EXT:' . $_EXTKEY . '/Classes/Hook/Search.php:&System25\Flw24\Hook\Search->getJoinsMatch';
+$GLOBALS ['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getTableMapping_hook'][] = 'EXT:' . $_EXTKEY . '/Classes/Hook/Search.php:&System25\Flw24\Hook\Search->getTableMappingMatch';
+$GLOBALS ['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getJoins_hook'][] = 'EXT:' . $_EXTKEY . '/Classes/Hook/Search.php:&System25\Flw24\Hook\Search->getJoinsMatch';
+
 
 \tx_rnbase::load('tx_cfcleague_util_Misc');
 
