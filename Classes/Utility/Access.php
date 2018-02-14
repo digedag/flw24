@@ -1,5 +1,4 @@
 <?php
-namespace System25\Flw24\Utility;
 
 /***************************************************************
 *  Copyright notice
@@ -28,7 +27,8 @@ namespace System25\Flw24\Utility;
 
 /**
  */
-class Access {
+class Tx_Flw24_Utility_Access
+{
 	const CODE_NOT_LOGGED_IN = 1000;
 
 	public static function isTickerAllowed(\tx_t3users_models_feuser $feuser, $matchUid)

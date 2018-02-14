@@ -1,5 +1,4 @@
 <?php
-use System25\Flw24\Utility\Access;
 
 /***************************************************************
  *  Copyright notice
@@ -24,7 +23,9 @@ use System25\Flw24\Utility\Access;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+tx_rnbase::load('Tx_Flw24_Utility_Access');
 tx_rnbase::load('Tx_More4t3sports_Hook_MatchMarker');
+
 class Tx_Flw24_Hook_MatchMarker extends Tx_More4t3sports_Hook_MatchMarker {
 	/**
 	 * Integrates output of preview and matchreport fields to matches.
@@ -59,7 +60,7 @@ class Tx_Flw24_Hook_MatchMarker extends Tx_More4t3sports_Hook_MatchMarker {
 	    if (!$feuser) {
 	        return true;
 	    }
-	    return !Access::isTickerAllowed($feuser, $matchData['uid']);
+	    return !Tx_Flw24_Utility_Access::isTickerAllowed($feuser, $matchData['uid']);
 	}
 
 }

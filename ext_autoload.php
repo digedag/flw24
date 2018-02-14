@@ -9,6 +9,6 @@ $extensionPath = ExtensionManagementUtility::extPath('flw24');
 
 
 return array(
-    'system25\flw24\utility\access'                 => $extensionPath. 'Classes/Utility/Access.php',
+    'tx_flw24_utility_access'                 => $extensionPath. 'Classes/Utility/Access.php',
     'system25\flw24\utility\errors'                 => $extensionPath. 'Classes/Utility/Errors.php',
 );
