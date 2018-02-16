@@ -41,6 +41,17 @@ class Tx_Flw24_Utility_Access
 	        'count' => 1,
 	    ];
 	    $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
-	    return $cnt > 0;
+	    $home = $cnt > 0;
+
+	    $fields = [
+	        'TEAM2FEUSER.UID_FOREIGN' => [OP_EQ_INT => $feuser->getUid()],
+	        'MATCH.UID' => [OP_EQ_INT => $matchUid]
+	    ];
+	    $options = [
+	        'count' => 1,
+	    ];
+	    $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
+	    $guest = $cnt > 0;
+	    return $home || $guest;
 	}
 }
