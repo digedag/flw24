@@ -46,8 +46,13 @@ class MatchByUser extends \tx_cfcleaguefe_filter_Match {
 
 		$feuser = \tx_t3users_models_feuser::getCurrent();
 		if($feuser->isValid()) {
-			$fields['TEAM1FEUSER.UID_FOREIGN'][OP_EQ_INT] = $feuser->getUid();
-//			$fields['TEAM2FEUSER'][OP_EQ_INT] = $feuser->getUid();
+// 			$fields['TEAM1FEUSER.UID_FOREIGN'][OP_GT_INT] = 0;
+// 			$fields['TEAM2FEUSER.UID_FOREIGN'][OP_GT_INT] = 0;
+			$fields[SEARCH_FIELD_JOINED][] = [
+			    'value' => $feuser->getUid(),
+			    'cols' => ['TEAM1FEUSER.UID_FOREIGN', 'TEAM2FEUSER.UID_FOREIGN'],
+			    'operator' => OP_IN_INT,
+			];
 		}
 		return TRUE;
 	}
