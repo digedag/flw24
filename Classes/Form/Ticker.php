@@ -46,9 +46,13 @@ class Ticker
         \tx_rnbase::load('tx_t3users_models_feuser');
         // Die Match-UID wird im DataHandler persistiert
         $uid = $form->getDataHandler()->getStoredData('uid');
+        /* @var $match \tx_cfcleague_models_Match */
+        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+
         $record = [
             'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
-            'game' => $uid
+            'game' => $uid,
+            'pid' => $match->getProperty('pid')
         ];
         $fields = [
             'minute',
@@ -78,8 +82,6 @@ class Ticker
         );
 
         // Spielticker ggf. aktivieren, wenn das Spiel nicht in Vergangenheit liegt
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
         if ($this->ensureTickerActive($match, $form, $model->getMinute())) {
             $ret[] = $form->getWidget('link_ticker')->majixSetValue($match->getProperty('link_ticker'));
             $ret[] = $form->getWidget('status')->majixSetValue($match->getProperty('status'));
