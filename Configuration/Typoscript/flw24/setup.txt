@@ -66,7 +66,7 @@ plugin.tx_flw24_form {
 #				MATCH.STATUS.OP_EQ_INT = 1
 			}
 			options {
-				limit = 2
+				limit = 1
 #				debug = 1
 				orderby.MATCHNOTE.crdate = DESC
 			}

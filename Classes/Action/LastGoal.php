@@ -57,9 +57,6 @@ class LastGoal extends \tx_rnbase_action_BaseIOC
         $notes = $matchSrv->searchMatchNotes($fields, $options);
         $items = $this->buildItems($notes);
 
-        //if($_SERVER["REMOTE_ADDR"] == '89.246.162.16')
-        \tx_rnbase_util_Debug::debug($items,__FILE__.':'.__LINE__); // TODO: remove me
-
         $viewData->offsetSet('items', $items);
 
         return '';
