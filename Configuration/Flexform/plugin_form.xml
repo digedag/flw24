@@ -23,6 +23,10 @@
 										<numIndex index="0">Live-Ticker Formular</numIndex>
 										<numIndex index="1">System25\Flw24\Action\TickerForm</numIndex>
 									</numIndex>
+									<numIndex index="10" type="array">
+										<numIndex index="0">Letztes Tor anzeigen</numIndex>
+										<numIndex index="1">System25\Flw24\Action\LastGoal</numIndex>
+									</numIndex>
 								</items>
 								<multiple>0</multiple>
 								<maxitems>10</maxitems>

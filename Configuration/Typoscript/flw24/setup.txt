@@ -19,7 +19,7 @@ lib.t3sports.match {
 	}
 }
 
-includeLibs.tx_rnbase_controller = EXT:rn_base/class.tx_rnbase_controller.php
+includeLibs.tx_rnbase_controller    = EXT:rn_base/class.tx_rnbase_controller.php
 plugin.tx_flw24_form                = USER_INT
 plugin.tx_flw24_form.flexform       = Configuration/Flexform/plugin_form.xml
 plugin.tx_flw24_form.userFunc       = tx_rnbase_controller->main
@@ -54,6 +54,44 @@ plugin.tx_flw24_form {
 			teamdata.subpart = ###TEAMDATA###
 			lineup.file = {$plugin.tx_flw24_base.tickerform}
 			lineup.subpart = ###LINEUP###
+		}
+	}
+	lastgoal {
+		template.file = {$plugin.tx_flw24_base.lastgoalTemplate}
+		template.markerclass = tx_cfcleaguefe_util_MatchNoteMarker
+
+		filter{
+			fields {
+				MATCHNOTE.TYPE.OP_IN_INT = 10,11,12,13,30
+#				MATCH.STATUS.OP_EQ_INT = 1
+			}
+			options {
+				limit = 2
+#				debug = 1
+				orderby.MATCHNOTE.crdate = DESC
+			}
+		}
+		item {
+			uid.wrap = <i>|</i>
+			player =< lib.t3sports.profile
+			# Das geht noch nicht. Der ProfileMarker erbt noch nicht vom Simple-Marker
+			player.subparts {
+				hasplayer {
+					marker {
+						### Definiert den Marker für den Subpart, der angezeigt werden soll (optional). Default ist VISIBLE
+						visible = YES
+						### Definiert den Marker für den Subpart, der ausgeblendet werden soll (optional). Default ist HIDDEN
+						hidden = NO
+					}
+					visible = TEXT
+					visible.value = 1
+					visible.if {
+						value = 0
+						isGreaterThan.data = field:uid
+					}
+				}
+			}
+			match =< lib.t3sports.match
 		}
 	}
 }
