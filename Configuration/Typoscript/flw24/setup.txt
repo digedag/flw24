@@ -60,7 +60,9 @@ plugin.tx_flw24_form {
 		template.file = {$plugin.tx_flw24_base.lastgoalTemplate}
 		template.markerclass = tx_cfcleaguefe_util_MatchNoteMarker
 
-		filter{
+		filter {
+		  class = tx_cfcleaguefe_filter_MatchNote
+		  timePastExpression = today - 1 day
 			fields {
 				MATCHNOTE.TYPE.OP_IN_INT = 10,11,12,13,30
 #				MATCH.STATUS.OP_EQ_INT = 1
