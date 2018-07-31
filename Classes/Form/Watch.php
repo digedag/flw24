@@ -153,6 +153,10 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_pause')->majixDisplayDefault();
         $ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
 
+        /* @var $ticker \System25\Flw24\Form\Ticker */
+        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ret = array_merge($ret, $ticker->onMatchHalftime2($form));
+
         $GLOBALS['TSFE']->storeSessionData();
 
         return $ret;
