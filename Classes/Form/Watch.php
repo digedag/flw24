@@ -5,7 +5,7 @@ namespace System25\Flw24\Form;
  * *************************************************************
  * Copyright notice
  *
- * (c) 2017 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -82,6 +82,11 @@ class Watch
             $ret[] = $form->getWidget('btn_watch_halftime')->majixDisplayDefault();
         }
         $ret[] = $form->getWidget('btn_watch_pause')->majixDisplayDefault();
+
+        /* @var $ticker \System25\Flw24\Form\Ticker */
+        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ret = array_merge($ret, $ticker->onMatchStarted($form));
+
         $GLOBALS['TSFE']->storeSessionData();
 
         return $ret;
@@ -102,7 +107,8 @@ class Watch
         $ret[] = $form->getWidget(self::FIELD_TICKER_MATCHPART)->majixSetValue($halftime);
         $ret[] = $form->getWidget('watch_minute')->majixSetValue($halftime);
 
-        // Pause ausblenden
+        // Pause und Start ausblenden
+        $ret[] = $form->getWidget('btn_watch_start')->majixDisplayNone();
         $ret[] = $form->getWidget('btn_watch_pause')->majixDisplayNone();
         $ret[] = $form->getWidget(self::FIELD_TICKER_OFFSET)->majixSetValue('0');
         $ret[] = $form->getWidget('watch')->majixSetHtml($halftime . ':00');
@@ -117,6 +123,10 @@ class Watch
         // Start 2. Halbzeit einblenden
         $ret[] = $form->getWidget('btn_watch_halftime')->majixDisplayNone();
         $ret[] = $form->getWidget('btn_watch_secondht')->majixDisplayDefault();
+
+        /* @var $ticker \System25\Flw24\Form\Ticker */
+        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ret = array_merge($ret, $ticker->onMatchHalftime($form));
 
         $GLOBALS['TSFE']->storeSessionData();
 
@@ -177,6 +187,10 @@ class Watch
         $starttime = 0;
         $ret[] = $form->getWidget(self::FIELD_TICKER_STARTTIME)->majixSetValue($starttime);
         $ret[] = $form->getWidget(self::FIELD_TICKER_PAUSETIME)->majixSetValue($starttime);
+
+        /* @var $ticker \System25\Flw24\Form\Ticker */
+        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ret = array_merge($ret, $ticker->onMatchFinished($form));
 
         $GLOBALS['TSFE']->storeSessionData();
         return $ret;

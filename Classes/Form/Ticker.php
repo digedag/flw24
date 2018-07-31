@@ -36,6 +36,18 @@ class Ticker
     const MODALBOX_TICKER = 'editbox_ticker';
 
     /**
+     *
+     * @param \tx_mkforms_forms_IForm $form
+     * @return \tx_cfcleague_models_Match
+     */
+    protected function getCurrentMatch(\tx_mkforms_forms_IForm $form)
+    {
+        // Die Match-UID wird im DataHandler persistiert
+        $uid = $form->getDataHandler()->getStoredData('uid');
+        /* @var $match \tx_cfcleague_models_Match */
+        return \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+    }
+    /**
      * Speichern von Tickermeldungen
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
@@ -44,14 +56,11 @@ class Ticker
     public function cbTickerSubmitClick($params, $form)
     {
         \tx_rnbase::load('tx_t3users_models_feuser');
-        // Die Match-UID wird im DataHandler persistiert
-        $uid = $form->getDataHandler()->getStoredData('uid');
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        $match = $this->getCurrentMatch($form);
 
         $record = [
             'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
-            'game' => $uid,
+            'game' => $match->getUid(),
             'pid' => $match->getProperty('pid')
         ];
         $fields = [
@@ -150,20 +159,22 @@ class Ticker
         if (! $ticker->isGoal()) {
             return false;
         }
+        $this->persistScore($match, '2');
+        return true;
+    }
 
+    protected function persistScore($match, $part = '2')
+    {
         \tx_rnbase::load('tx_cfcleaguefe_util_MatchTicker');
         $tickerArr = \tx_cfcleaguefe_util_MatchTicker::getTicker4Match($match);
         // im letzten Eintrag steht der aktuelle Spielstand
         $lastTicker = end($tickerArr);
         if ($lastTicker) {
-            $match->setProperty('goals_home_2', $lastTicker->getProperty('goals_home'));
-            $match->setProperty('goals_guest_2', $lastTicker->getProperty('goals_guest'));
+            $match->setProperty('goals_home_'.$part, $lastTicker->getProperty('goals_home'));
+            $match->setProperty('goals_guest_'.$part, $lastTicker->getProperty('goals_guest'));
             \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
         }
-
-        return true;
     }
-
     /**
      * Spiel- und Tickerstatus automatisch setzen
      *
@@ -305,8 +316,7 @@ class Ticker
      */
     public function cbMatchSubmitClick($params, $form)
     {
-        $uid = $form->getDataHandler()->getStoredData('uid');
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        $match = $this->getCurrentMatch($form);
 
         $fields = [
             'goals_home_2',
@@ -476,8 +486,7 @@ class Ticker
     public function getPlayers($params, \tx_mkforms_forms_IForm $form)
     {
         /* @var $match \tx_cfcleague_models_Match */
-        $uid = $form->getDataHandler()->getStoredData('uid');
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        $match = $this->getCurrentMatch($form);
 
         $data = $this->getPlayerNames($match, $params['team'], $form);
         return $data;
@@ -541,5 +550,73 @@ class Ticker
     {
         $srv = \tx_cfcleague_util_ServiceRegistry::getMatchService();
         return $srv->getMatchNoteTypes4TCA();
+    }
+
+    public function onMatchFinished(\tx_mkforms_forms_IForm $form)
+    {
+        $ret = [];
+        $match = $this->getCurrentMatch($form);
+        $match->setProperty('status', \tx_cfcleague_models_Match::MATCH_STATUS_FINISHED);
+        $match->setProperty('link_report', 1);
+        // Zur Sicherheit den Spielstand nochmal übernehmen
+        $this->persistScore($match);
+        $ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
+        $ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
+        return $ret;
+    }
+
+    public function onMatchHalftime(\tx_mkforms_forms_IForm $form)
+    {
+        $ret = [];
+        $match = $this->getCurrentMatch($form);
+        // Spielstand setzen
+        $this->persistScore($match, '1');
+        $ret[] = $form->getWidget('goals_home_1')->majixSetValue($match->getGoalsHome(1));
+        $ret[] = $form->getWidget('goals_guest_1')->majixSetValue($match->getGoalsGuest(1));
+        return $ret;
+    }
+
+    /**
+     * called if watch is started initially or after pause
+     * @param \tx_mkforms_forms_IForm $form
+     */
+    public function onMatchStarted(\tx_mkforms_forms_IForm $form)
+    {
+        $ret = [];
+        $match = $this->getCurrentMatch($form);
+
+        if (!($match->isRunning() || $match->isFinished())) {
+            //
+            $this->createInitialNote($match);
+            $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+        }
+        return $ret;
+    }
+
+    /**
+     *
+     * @param \tx_cfcleague_models_Match $match
+     * @param $repo \Tx_Cfcleague_Model_Repository_MatchNote
+     * @return \tx_cfcleague_models_MatchNote
+     */
+    protected function createNewMatchNote($match, $repo)
+    {
+        $record = [
+            'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
+            'game' => $match->getUid(),
+            'pid' => $match->getProperty('pid')
+        ];
+        return $repo->createNewModel($record);
+    }
+    protected function createInitialNote($match)
+    {
+        /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
+        $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
+        $model = $this->createNewMatchNote($match, $repo);
+        $model->setProperty('type', \tx_cfcleague_models_MatchNote::TYPE_TICKER);
+        $model->setProperty('minute', 1);
+        $model->setProperty('comment', 'Spiel gestarted');
+
+        $repo->persist($model);
     }
 }
