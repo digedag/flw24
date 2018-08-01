@@ -52,7 +52,6 @@
 			<childs>
 			<renderlet:TAB label="Aufstellung" name="tab1"  content="tab_lineup" />
 			<renderlet:TAB label="Ticker"      name="tab2"  content="tab_ticker" />
-			<renderlet:TAB label="Spieldaten"  name="tab3"  content="box_matchdata" />
 			</childs>
 		
 		</renderlet:TABPANEL>
@@ -265,48 +264,6 @@
 		</renderlet:BOX>
 
  		<includeXml path="EXT:flw24/Resources/Private/Form/Include/ticker.xml" xPath="/formidable/elements/modalbox/" />
-
-
-
-		<renderlet:BOX name="box_matchdata">
-			<childs>
-				<template path="TS:templates.box.matchdata.file" subpart="TS:templates.box.matchdata.subpart" />
-
-				<renderlet:TEXT name="goals_home_2" inputtype="number">
-					<custom>min="0"</custom>
-				</renderlet:TEXT>
-				<renderlet:TEXT name="goals_guest_2" inputtype="number">
-					<custom>min="0"</custom>
-				</renderlet:TEXT>
-
-				<renderlet:TEXT name="goals_home_1" inputtype="number">
-					<custom>min="0"</custom>
-				</renderlet:TEXT>
-				<renderlet:TEXT name="goals_guest_1" inputtype="number">
-					<custom>min="0"</custom>
-				</renderlet:TEXT>
-
-				<renderlet:TEXT name="visitors" inputtype="number"
-					label="label_flw24_match_visitors">
-					<custom>min="0"</custom>
-				</renderlet:TEXT>
-
-				<renderlet:HIDDEN name="link_ticker"
-					label="label_flw24_match_linkticker" />
-
-				<renderlet:HIDDEN name="status" label="label_flw24_match_status">
-					<!--data> <items> <item caption="label_flw24_match_status_scheduled" 
-						value="0"/> <item caption="label_flw24_match_status_running" value="1"/> 
-						<item caption="label_flw24_match_status_finished" value="2"/> </items> </data -->
-				</renderlet:HIDDEN>
-
-				<renderlet:BUTTON name="btn_submit" label="label_btn_submit">
-					<onclick runat="ajax" params="box_matchdata__*" cache="false"
-						validate="error" exec="tickerphp.cbMatchSubmitClick()" />
-				</renderlet:BUTTON>
-
-			</childs>
-		</renderlet:BOX>
 
 
  		<includeXml path="EXT:flw24/Resources/Private/Form/Include/teammember.xml" xPath="/formidable/elements/box_teammember/" />

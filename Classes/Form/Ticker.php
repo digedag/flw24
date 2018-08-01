@@ -91,17 +91,9 @@ class Ticker
         );
 
         // Spielticker ggf. aktivieren, wenn das Spiel nicht in Vergangenheit liegt
-        if ($this->ensureTickerActive($match, $form, $model->getMinute())) {
-            $ret[] = $form->getWidget('link_ticker')->majixSetValue($match->getProperty('link_ticker'));
-            $ret[] = $form->getWidget('status')->majixSetValue($match->getProperty('status'));
-        }
-        if ($this->ensureScore($model, $match, $form)) {
-            $ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
-            $ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
-        }
-        if ($this->ensureStatus($model, $match, $form)) {
-            $ret[] = $form->getWidget('status')->majixSetValue($match->getStatus());
-        }
+        $this->ensureTickerActive($match, $form, $model->getMinute());
+        $this->ensureScore($model, $match, $form);
+        $this->ensureStatus($model, $match, $form);
 
         return $ret;
     }
@@ -277,10 +269,7 @@ class Ticker
 
         /* @var $match \tx_cfcleague_models_Match */
         $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchNote->getProperty('game'));
-        if ($this->ensureScore($matchNote, $match, $form)) {
-            $ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
-            $ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
-        }
+        $this->ensureScore($matchNote, $match, $form);
 
         return $ret;
     }
@@ -305,45 +294,14 @@ class Ticker
 
         /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
         $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
-        $repo->handleDelete($matchNote);
+        $repo->handleDelete($matchNote, '', 1);
 
         $ret = [
             $form->getWidget('matchnotes')->majixRepaint()
         ];
 
-        if ($this->ensureScore($matchNoteClone, $match, $form)) {
-            $ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
-            $ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
-        }
+        $this->ensureScore($matchNoteClone, $match, $form);
         return $ret;
-    }
-
-    /**
-     *
-     * @param array $params
-     * @param \tx_mkforms_forms_Base $form
-     * @return []
-     */
-    public function cbMatchSubmitClick($params, $form)
-    {
-        $match = $this->getCurrentMatch($form);
-
-        $fields = [
-            'goals_home_2',
-            'goals_home_1',
-            'goals_guest_2',
-            'goals_guest_1',
-            'visitors',
-            'status',
-            'link_ticker'
-        ];
-        foreach ($fields as $fieldName) {
-            $match->setProperty($fieldName, $form->getWidget($fieldName)
-                ->getValue());
-        }
-
-        \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
-        return array();
     }
 
     public function getMatchNoteSql($params, $form)
@@ -586,8 +544,6 @@ class Ticker
         $match = $this->getCurrentMatch($form);
         // Spielstand setzen
         $lastNote = $this->persistScore($match, '1');
-        $ret[] = $form->getWidget('goals_home_1')->majixSetValue($match->getGoalsHome(1));
-        $ret[] = $form->getWidget('goals_guest_1')->majixSetValue($match->getGoalsGuest(1));
         // Tickermeldung schreiben
         $this->createMessageHalftime($match, $lastNote);
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
@@ -613,8 +569,6 @@ class Ticker
         $match->setProperty('link_report', 1);
         // Zur Sicherheit den Spielstand nochmal übernehmen
         $lastTicker = $this->persistScore($match);
-        $ret[] = $form->getWidget('goals_home_2')->majixSetValue($match->getGoalsHome(2));
-        $ret[] = $form->getWidget('goals_guest_2')->majixSetValue($match->getGoalsGuest(2));
         $this->createMessageFinished($match, $lastTicker);
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
         return $ret;
