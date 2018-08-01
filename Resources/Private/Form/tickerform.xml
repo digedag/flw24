@@ -72,7 +72,7 @@
 									<item caption="label_flw24_watch_matchpart_1" value="0" />
 									<item caption="label_flw24_watch_matchpart_2" value="45" />
 									<item caption="label_flw24_watch_matchpart_3" value="90" />
-									<item caption="label_flw24_watch_matchpart_4" value="115" />
+									<item caption="label_flw24_watch_matchpart_4" value="105" />
 								</items>
 							</data>
 						</renderlet:LISTBOX-->
@@ -87,6 +87,7 @@
 						<renderlet:HIDDEN name="watch_starttime" />
 						<renderlet:HIDDEN name="watch_localtime" />
 						<renderlet:HIDDEN name="watch_pausetime" />
+						<renderlet:HIDDEN name="watch_paused" />
 						<renderlet:HIDDEN name="watch_minute" />
 		
 						<renderlet:BUTTON name="btn_watch_addmin" label="+">
@@ -110,12 +111,43 @@
 							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
 								validate="error" exec="watchphp.cbWatchSecondHTClick()" />
 						</renderlet:BUTTON>
+
+						<renderlet:BUTTON name="btn_watch_extratime" label="Verlängerung"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchExtraTimeClick()" />
+						</renderlet:BUTTON>
+
+						<renderlet:BUTTON name="btn_watch_extratime_1" label="Verlängerung HZ 1"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchExtraTimeFirstHTClick()" />
+						</renderlet:BUTTON>
+
+						<renderlet:BUTTON name="btn_watch_extratime_ht" label="Verlängerung Halbzeitpause"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchExtraTimeHalftimeClick()" />
+						</renderlet:BUTTON>
+
+						<renderlet:BUTTON name="btn_watch_extratime_2" label="Verlängerung HZ 2"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchExtraTimeSecondHTClick()" />
+						</renderlet:BUTTON>
+
+						<renderlet:BUTTON name="btn_watch_penalties" label="Elfmeterschießen"
+							style="display:none">
+							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
+								validate="error" exec="watchphp.cbWatchPenaltiesClick()" />
+						</renderlet:BUTTON>
+
 						<renderlet:BUTTON name="btn_watch_stop" label="Spielende"
 							style="display:none">
 							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
 								validate="error" exec="watchphp.cbWatchStopClick()" />
 						</renderlet:BUTTON>
-						<renderlet:BUTTON name="btn_watch_pause" label="Pause"
+						<renderlet:BUTTON name="btn_watch_pause" label="Uhr anhalten"
 							style="display:none">
 							<onclick runat="ajax" params="tab_ticker__box_watch__*" cache="false"
 								validate="error" exec="watchphp.cbWatchPauseClick()" />

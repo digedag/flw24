@@ -83,12 +83,19 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		if(this.isMatchPart(1, form) && min > 45) {
 			var extraTime = min - 45;
 			min = min - extraTime;
-			var extraField = this.getFieldBase(form, 'extra_time');
-			extraField.setValue(extraTime);
+			this.getFieldBase(form, 'extra_time').setValue(extraTime);
+		}
+		else if(this.isMatchPart(2, form) && min > 90) {
+			var extraTime = min - 90;
+			min = min - extraTime;
+			this.getFieldBase(form, 'extra_time').setValue(extraTime);
+		}
+		else if(this.isMatchPart(3, form) && min > 105) {
+			var extraTime = min - 105;
+			min = min - extraTime;
+			this.getFieldBase(form, 'extra_time').setValue(extraTime);
 		}
 		minuteField.setValue(min);
-
-		
 	},
 	cbWatchAddMinute: function(parent, form) {
 		var offset = this.getCurrentOffset(form);
@@ -125,22 +132,40 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 				pause = parseInt(this.getFieldWatch(form, 'watch_pausetime').getValue());
 				start = start + now - pause;
 				this.refreshWatch(form, start, now);
-				if(this.isMatchPart(1, form)) {
-					// Pause in HZ 1
+
+
+				if (parseInt(this.getFieldWatch(form, 'watch_paused').getValue())) {
+					// Uhr während des Spiels angehalten
 					this.getFieldWatch(form, 'btn_watch_start').displayDefault();
-					this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
-				}
-				else if(this.isHalftimePause(form)) {
-					// Halbzeitpause läuft
-					this.getFieldWatch(form, 'btn_watch_start').displayNone();
 					this.getFieldWatch(form, 'btn_watch_stop').displayNone();
-					this.getFieldWatch(form, 'btn_watch_secondht').displayDefault();
-					
 				}
 				else {
-					this.getFieldWatch(form, 'btn_watch_start').displayNone();
-					this.getFieldWatch(form, 'btn_watch_stop').displayNone();
-					this.getFieldWatch(form, 'btn_watch_halftime').displayDefault();
+					if(this.isHalftimePause(form)) {
+						console.info('Paused im SPiel: ' + this.isPaused(form));
+						// Halbzeitpause läuft
+						this.getFieldWatch(form, 'btn_watch_start').displayNone();
+						this.getFieldWatch(form, 'btn_watch_stop').displayNone();
+						this.getFieldWatch(form, 'btn_watch_secondht').displayDefault();
+						
+					}
+					else if(this.isExtraTimePause(form)) {
+						// Pause vor Verlängerung läuft
+						this.getFieldWatch(form, 'btn_watch_start').displayNone();
+						this.getFieldWatch(form, 'btn_watch_stop').displayNone();
+						this.getFieldWatch(form, 'btn_watch_extratime_1').displayDefault();
+					}
+					else if(this.isExtraTimeHTPause(form)) {
+						// Halbzeitpause Verlängerung läuft
+						this.getFieldWatch(form, 'btn_watch_start').displayNone();
+						this.getFieldWatch(form, 'btn_watch_stop').displayNone();
+						this.getFieldWatch(form, 'btn_watch_extratime_2').displayDefault();
+					}
+					else if(this.isPenaltiesPause(form)) {
+						// Halbzeitpause Verlängerung läuft
+						this.getFieldWatch(form, 'btn_watch_start').displayNone();
+						this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
+					}
+					
 				}
 				this.getFieldWatch(form, 'btn_watch_pause').displayNone();
 			}
@@ -150,7 +175,18 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 					this.getFieldWatch(form, 'btn_watch_stop').displayNone();
 					this.getFieldWatch(form, 'btn_watch_halftime').displayDefault();
 				}
+				else if(this.isMatchPart(2, form)) {
+					this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
+					this.getFieldWatch(form, 'btn_watch_extratime').displayDefault();
+					this.getFieldWatch(form, 'btn_watch_halftime').displayNone();
+				}
+				else if(this.isMatchPart(3, form)) {
+					this.getFieldWatch(form, 'btn_watch_stop').displayNone();
+					this.getFieldWatch(form, 'btn_watch_pause').displayDefault();
+					this.getFieldWatch(form, 'btn_watch_extratime_ht').displayDefault();
+				}
 				else {
+					this.getFieldWatch(form, 'btn_watch_penalties').displayDefault();
 					this.getFieldWatch(form, 'btn_watch_stop').displayDefault();
 					this.getFieldWatch(form, 'btn_watch_halftime').displayNone();
 				}
@@ -180,12 +216,32 @@ Formidable.Classes.tickerCB = Formidable.Classes.CodeBehindClass.extend({
 		if (part == 1) {
 			return this.getCurrentMatchPart(form) < 45;
 		}
+		else if(part == 2) {
+			return this.getCurrentMatchPart(form) == 45;
+		}
+		else if(part == 3) {
+			return this.getCurrentMatchPart(form) == 90;
+		}
+		else if(part == 4) {
+			return this.getCurrentMatchPart(form) == 105;
+		}
 		return false;
 	},
 	isHalftimePause: function (form) {
 		return this.isPaused(form) && this.getCurrentMatchPart(form) == 45 && 
 			this.getFieldWatch(form, 'watch_minute').getValue() == 46;
 
+	},
+	isExtraTimePause: function (form) {
+		return this.isPaused(form) && this.getCurrentMatchPart(form) == 90 && 
+			this.getFieldWatch(form, 'watch_minute').getValue() == 91;
+	},
+	isExtraTimeHTPause: function (form) {
+		return this.isPaused(form) && this.getCurrentMatchPart(form) == 105 && 
+			this.getFieldWatch(form, 'watch_minute').getValue() == 106;
+	},
+	isPenaltiesPause: function (form) {
+		return this.isPaused(form) && this.getCurrentMatchPart(form) == 121;
 	},
 	isPaused: function (form) {
 		var pause = this.getFieldWatch(form, 'watch_pausetime').getValue();
