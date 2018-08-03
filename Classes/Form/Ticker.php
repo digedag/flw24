@@ -536,10 +536,14 @@ class Ticker
         $ret = [];
         $match = $this->getCurrentMatch($form);
 
+        $minute = 1;
         if (!($match->isRunning() || $match->isFinished())) {
-            $this->createMessage($match, 1, 'Spiel gestarted');
+            $this->createMessage($match, $minute, 'Spiel gestartet');
             $ret[] = $form->getWidget('matchnotes')->majixRepaint();
         }
+
+        $this->ensureTickerActive($match, $form, $minute);
+
         return $ret;
     }
 
