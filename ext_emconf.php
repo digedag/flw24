@@ -14,7 +14,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Anpassungen für flw24.',
 	'category' => 'misc',
 	'shy' => 0,
-	'version' => '0.1.0',
+	'version' => '0.2.0',
 	'dependencies' => 'cms',
 	'conflicts' => '',
 	'priority' => '',
@@ -39,12 +39,10 @@ $EM_CONF[$_EXTKEY] = array(
 			'cfc_league' => '1.0.2-0.0.0',
 			'more4t3sports' => '0.3.0-0.0.0',
 		    't3sportstats' => '0.3.0-0.0.0',
-		    'tt_news' => '3.6.0-0.0.0',
+		    'news' => '7.2.0-0.0.0',
 		),
-		'conflicts' => array(
-		),
-		'suggests' => array(
-		),
+		'conflicts' => [],
+		'suggests' => [],
 	),
 	'_md5_values_when_last_written' => '',
 	'suggests' => array(
