@@ -5,7 +5,7 @@ namespace System25\Flw24\Form;
  * *************************************************************
  * Copyright notice
  *
- * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2019 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,6 +25,7 @@ namespace System25\Flw24\Form;
  * This copyright notice MUST APPEAR in all copies of the script!
  * *************************************************************
  */
+
 \tx_rnbase::load('tx_cfcleague_models_MatchNote');
 
 class Ticker
@@ -57,9 +58,15 @@ class Ticker
     {
         \tx_rnbase::load('tx_t3users_models_feuser');
         $match = $this->getCurrentMatch($form);
+        $feuser = \tx_t3users_models_feuser::getCurrent();
+        if (!$feuser) {
+            // throw new \Exception('Login please!', \System25\Flw24\Utility\Errors::CODE_NOT_LOGGED_IN);
+            \tx_mkforms_util_Div::debug4ajax('Session timed out. Login please!');
+            return [];
+        }
 
         $record = [
-            'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
+            'crfeuser' => $feuser->getUid(),
             'game' => $match->getUid(),
             'pid' => $match->getProperty('pid')
         ];
@@ -83,12 +90,12 @@ class Ticker
         }
         $repo->persist($model);
 
-        $ret = array(
+        $ret = [
             $form->getWidget('box_base')->majixClearValue(),
             $form->getWidget('box_players')->majixDisplayNone(),
             $form->getWidget('box_change')->majixDisplayNone(),
             $form->getWidget('matchnotes')->majixRepaint()
-        );
+        ];
 
         // Spielticker ggf. aktivieren, wenn das Spiel nicht in Vergangenheit liegt
         $this->ensureTickerActive($match, $form, $model->getMinute());
