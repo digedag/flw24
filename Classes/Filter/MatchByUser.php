@@ -24,10 +24,6 @@ namespace System25\Flw24\Filter;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-\tx_rnbase::load('tx_rnbase_util_BaseMarker');
-\tx_rnbase::load('tx_cfcleaguefe_filter_Match');
-\tx_rnbase::load('tx_t3users_models_feuser');
-
 
 class MatchByUser extends \tx_cfcleaguefe_filter_Match {
 
@@ -36,8 +32,8 @@ class MatchByUser extends \tx_cfcleaguefe_filter_Match {
 	 *
 	 * @param array $fields
 	 * @param array $options
-	 * @param tx_rnbase_IParameters $parameters
-	 * @param Tx_Rnbase_Configuration_ProcessorInterface $configurations
+	 * @param \tx_rnbase_IParameters $parameters
+	 * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
 	 * @param string $confId
 	 */
 	protected function initFilter(&$fields, &$options, &$parameters, &$configurations, $confId) {
@@ -54,7 +50,6 @@ class MatchByUser extends \tx_cfcleaguefe_filter_Match {
 			    'operator' => OP_IN_INT,
 			];
 		}
-		return TRUE;
+		return true;
 	}
-
 }

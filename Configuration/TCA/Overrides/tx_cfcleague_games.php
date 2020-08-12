@@ -1,8 +1,6 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-tx_rnbase::load('tx_rnbase_util_Extensions');
-
 $tableName = tx_rnbase_util_TYPO3::isExtLoaded('news') ? 'tx_news_domain_model_news' : 'tt_news';
 
 $columns = [

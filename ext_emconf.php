@@ -9,7 +9,7 @@
 # writing. "version" and "dependencies" must not be touched!
 ########################################################################
 
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
 	'title' => 'flw 24',
 	'description' => 'Anpassungen für flw24.',
 	'category' => 'misc',
@@ -31,20 +31,19 @@ $EM_CONF[$_EXTKEY] = array(
 	'author_company' => 'System 25',
 	'CGLcompliance' => '',
 	'CGLcompliance_note' => '',
-	'constraints' => array(
-		'depends' => array(
-			'typo3' => '4.5.0-7.6.99',
+	'constraints' => [
+		'depends' => [
+			'typo3' => '4.5.0-9.5.99',
 			'php' => '5.3.7-8.1.99',
 			'rn_base' => '0.15.0-0.0.0',
 			'cfc_league' => '1.0.2-0.0.0',
 			'more4t3sports' => '0.3.0-0.0.0',
 		    't3sportstats' => '0.3.0-0.0.0',
 		    'news' => '7.2.0-0.0.0',
-		),
+		],
 		'conflicts' => [],
 		'suggests' => [],
-	),
+	],
 	'_md5_values_when_last_written' => '',
-	'suggests' => array(
-	),
-);
+	'suggests' => [],
+];

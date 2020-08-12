@@ -24,10 +24,6 @@ namespace System25\Flw24\View;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-\tx_rnbase::load('tx_mkforms_view_Form');
-\tx_rnbase::load('tx_rnbase_util_Templates');
-\tx_rnbase::load('tx_rnbase_view_List');
-
 
 class FormView extends \tx_mkforms_view_Form {
 
@@ -41,16 +37,16 @@ class FormView extends \tx_mkforms_view_Form {
 	}
 
 	protected function parseItems($items, $confId, $formatter, $template, $viewdata) {
-		if(is_array($items))
+	    if(is_array($items)) {
 			foreach ($items As $key => $item) {
 				$markerClass = 'tx_rnbase_util_SimpleMarker';
-				if($item instanceof \tx_cfcleague_models_Match)
+				if($item instanceof \tx_cfcleague_models_Match) {
 					$markerClass = 'tx_cfcleaguefe_util_MatchMarker';
+				}
 				$marker = \tx_rnbase::makeInstance($markerClass);
 				$template = $marker->parseTemplate($template, $item, $formatter, $confId.$key.'.', strtoupper($key));
 			}
+	    }
 		return $template;
 	}
-
 }
-

@@ -23,9 +23,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-tx_rnbase::load('Tx_Flw24_Utility_Access');
-tx_rnbase::load('Tx_More4t3sports_Hook_MatchMarker');
-
 class Tx_Flw24_Hook_MatchMarker extends Tx_More4t3sports_Hook_MatchMarker {
 	/**
 	 * Integrates output of preview and matchreport fields to matches.
@@ -51,7 +48,6 @@ class Tx_Flw24_Hook_MatchMarker extends Tx_More4t3sports_Hook_MatchMarker {
 	 */
 	public function disableLink($content, $config)
 	{
-	    \tx_rnbase::load('tx_t3users_models_feuser');
 	    $matchData = $this->cObj->data;
 	    if (!isset($matchData['uid']) || !$matchData['uid']) {
 	        return true;

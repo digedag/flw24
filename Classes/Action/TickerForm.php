@@ -26,10 +26,6 @@ use System25\Flw24\Utility\Errors;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-\tx_rnbase::load('tx_mkforms_action_FormBase');
-\tx_rnbase::load('tx_t3users_models_feuser');
-\tx_rnbase::load('Tx_Flw24_Utility_Access');
-
 
 class TickerForm extends \tx_mkforms_action_FormBase {
 	private $item;
@@ -37,9 +33,9 @@ class TickerForm extends \tx_mkforms_action_FormBase {
 	/**
 	 * handle request
 	 *
-	 * @param arrayobject $parameters
-	 * @param Tx_Rnbase_Configuration_ProcessorInterface $configurations
-	 * @param arrayobject $viewData
+	 * @param \arrayobject $parameters
+	 * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
+	 * @param \arrayobject $viewData
 	 * @return string
 	 */
 	public function handleRequest(&$parameters, &$configurations, &$viewData) {
@@ -65,7 +61,7 @@ class TickerForm extends \tx_mkforms_action_FormBase {
 
 		$this->item = $item;
 
-		$items = array();
+		$items = [];
 		$items['match'] = $item;
 		$viewData->offsetSet('items', $items);
 		$data = array('item' => $item->getProperty());

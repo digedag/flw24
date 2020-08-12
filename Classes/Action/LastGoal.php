@@ -1,8 +1,6 @@
 <?php
 namespace System25\Flw24\Action;
 
-use function foo\func;
-
 /**
  * *************************************************************
  * Copyright notice
@@ -27,8 +25,6 @@ use function foo\func;
  * This copyright notice MUST APPEAR in all copies of the script!
  * *************************************************************
  */
-\tx_rnbase::load('tx_rnbase_action_BaseIOC');
-\tx_rnbase::load('tx_rnbase_filter_BaseFilter');
 
 
 /**
@@ -40,9 +36,9 @@ class LastGoal extends \tx_rnbase_action_BaseIOC
     /**
      * handle request
      *
-     * @param arrayobject $parameters
-     * @param Tx_Rnbase_Configuration_ProcessorInterface $configurations
-     * @param arrayobject $viewData
+     * @param \ArrayObject $parameters
+     * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
+     * @param \ArrayObject $viewData
      * @return string
      */
     public function handleRequest(&$parameters, &$configurations, &$viewData)
