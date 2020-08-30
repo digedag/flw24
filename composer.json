@@ -22,7 +22,7 @@
 		"issues" : "https://github.com/digedag/flw24/issues"
 	},
 	"require" : {
-		"typo3/cms-core" : ">=4.5.0 <=8.7.99",
+		"typo3/cms-core" : ">=4.5.0 <=9.5.99",
 		"digedag/cfc-league" : ">=1.1.0",
 		"digedag/rn-base" : ">=1.2.0",
 		"dmk/mkforms" : ">=9.5.4"
