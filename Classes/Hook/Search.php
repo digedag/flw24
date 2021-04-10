@@ -1,6 +1,8 @@
 <?php
 namespace System25\Flw24\Hook;
 
+use Sys25\RnBase\Database\Query\Join;
+
 /***************************************************************
  * Copyright notice
  *
@@ -40,17 +42,39 @@ class Search
 
     public function getJoinsMatch($params, $parent)
     {
+        $useQB = is_array($params['join']);
         if (isset($params['tableAliases']['TEAM1FEUSER'])) {
-            if (stripos($params['join'], 'tx_cfcleague_teams As t1') === false) {
-                $params['join'] .= ' INNER JOIN tx_cfcleague_teams As t1 ON tx_cfcleague_games.home = t1.uid ';
+
+            if ($useQB ?
+                !$this->hasJoin($params['join'], 'tx_cfcleague_teams', 't1') :
+                stripos($params['join'], 'tx_cfcleague_teams As t1') === false) {
+                if ($useQB) $params['join'][] = new Join('MATCH', 'tx_cfcleague_teams', 't1.uid = MATCH.home', 't1');
+                else $params['join'] .= ' INNER JOIN tx_cfcleague_teams As t1 ON tx_cfcleague_games.home = t1.uid ';
+
             }
-            $params['join'] .= ' LEFT JOIN tx_cfcleague_club2feusers_mm AS usr1 ON t1.club = usr1.uid_local ';
+            if ($useQB) $params['join'][] = new Join('t1', 'tx_cfcleague_club2feusers_mm', 't1.club = usr1.uid_local', 'usr1', Join::TYPE_LEFT);
+            else $params['join'] .= ' LEFT JOIN tx_cfcleague_club2feusers_mm AS usr1 ON t1.club = usr1.uid_local ';
         }
         if (isset($params['tableAliases']['TEAM2FEUSER'])) {
-            if (stripos($params['join'], 'tx_cfcleague_teams As t2') === false) {
-                $params['join'] .= ' INNER JOIN tx_cfcleague_teams As t2 ON tx_cfcleague_games.guest = t2.uid ';
+            if ($useQB ?
+                !$this->hasJoin($params['join'], 'tx_cfcleague_teams', 't2') :
+                stripos($params['join'], 'tx_cfcleague_teams As t2') === false) {
+                if ($useQB) $params['join'][] = new Join('MATCH', 'tx_cfcleague_teams', 't2.uid = MATCH.home', 't2');
+                else $params['join'] .= ' INNER JOIN tx_cfcleague_teams As t2 ON tx_cfcleague_games.guest = t2.uid ';
             }
-            $params['join'] .= ' LEFT JOIN tx_cfcleague_club2feusers_mm AS usr2 ON t2.club = usr2.uid_local ';
+            if ($useQB) $params['join'][] = new Join('t2', 'tx_cfcleague_club2feusers_mm', 't2.club = usr2.uid_local', 'usr2', Join::TYPE_LEFT);
+            else $params['join'] .= ' LEFT JOIN tx_cfcleague_club2feusers_mm AS usr2 ON t2.club = usr2.uid_local ';
         }
+    }
+
+    private function hasJoin($joins, $tablename, $alias)
+    {
+        foreach ($joins as $join) {
+            /* @var $join Join */
+            if ($join->getTable() == $tablename && $join->getAlias() == $alias) {
+                return true;
+            }
+        }
+        return false;
     }
 }
