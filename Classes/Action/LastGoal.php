@@ -5,7 +5,7 @@ namespace System25\Flw24\Action;
  * *************************************************************
  * Copyright notice
  *
- * (c) 2018 Rene Nitzsche (rene@system25.de)
+ * (c) 2018-2022 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -51,7 +51,7 @@ class LastGoal extends \tx_rnbase_action_BaseIOC
         /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
         $matchSrv = \tx_cfcleague_util_ServiceRegistry::getMatchService();
         $notes = $matchSrv->searchMatchNotes($fields, $options);
-        $items = $this->buildItems($notes);
+        $items = $this->buildItems($notes->toArray());
 
         $viewData->offsetSet('items', $items);
 

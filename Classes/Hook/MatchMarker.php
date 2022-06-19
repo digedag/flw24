@@ -1,5 +1,7 @@
 <?php
 
+use Sys25\More4T3sports\Hook\MatchMarkerHook;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,7 +25,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class Tx_Flw24_Hook_MatchMarker extends Tx_More4t3sports_Hook_MatchMarker {
+class Tx_Flw24_Hook_MatchMarker extends MatchMarkerHook {
 	/**
 	 * Integrates output of preview and matchreport fields to matches.
 	 * @param array $params
