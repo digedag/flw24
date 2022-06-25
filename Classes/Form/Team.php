@@ -1,4 +1,5 @@
 <?php
+
 namespace System25\Flw24\Form;
 
 /***************************************************************
@@ -26,33 +27,35 @@ namespace System25\Flw24\Form;
  */
 class Team
 {
-
-    const MODALBOX_TEAMMEMBER_HOME = 'editbox_teammember_home';
-    const MODALBOX_TEAMMEMBER_GUEST = 'editbox_teammember_guest';
-
+    public const MODALBOX_TEAMMEMBER_HOME = 'editbox_teammember_home';
+    public const MODALBOX_TEAMMEMBER_GUEST = 'editbox_teammember_guest';
 
     /**
-     * Show modal box to edit team member home
+     * Show modal box to edit team member home.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbEditTeamMemberHome($params, $form)
     {
         return $this->editTeamMember($params, $form, true);
     }
+
     /**
-     * Show modal box to edit team member home
+     * Show modal box to edit team member home.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbEditTeamMemberGuest($params, $form)
     {
         return $this->editTeamMember($params, $form, false);
     }
+
     protected function editTeamMember($params, $form, $isHome)
     {
         $uid = $form->getDataHandler()->getStoredData('uid');
@@ -72,11 +75,13 @@ class Team
     {
         return $isHome ? self::MODALBOX_TEAMMEMBER_HOME : self::MODALBOX_TEAMMEMBER_GUEST;
     }
+
     public function cbBtnCloseTeamMemberHome($params, $form)
     {
         // close the box
         return $form->getWidget(self::MODALBOX_TEAMMEMBER_HOME)->majixCloseBox();
     }
+
     public function cbBtnCloseTeamMemberGuest($params, $form)
     {
         // close the box
@@ -87,10 +92,12 @@ class Team
     {
         return $this->getPlayersSql($params, $form, true);
     }
+
     public function getPlayersGuestSql($params, $form)
     {
         return $this->getPlayersSql($params, $form, false);
     }
+
     protected function getPlayersSql($params, $form, $isHome)
     {
         $uid = (int) $form->getDataHandler()->getStoredData('uid');
@@ -103,10 +110,9 @@ class Team
 //            'orderby' => 'last_name asc, first_name asc',
         ];
         $players = $team->getProperty('players');
-        if($players) {
-            $options['where'] = 'uid IN (' . $players. ')';
-        }
-        else {
+        if ($players) {
+            $options['where'] = 'uid IN ('.$players.')';
+        } else {
             $options['where'] = '1=2';
         }
 
@@ -117,16 +123,17 @@ class Team
             ),
             'tx_cfcleague_profiles', $options);
     }
+
     /**
-     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
-     * @return NULL[]
+     *
+     * @return null[]
      */
     public function cbNewPlayerSubmitClick($params, $form)
     {
         $isHome = isset($params[self::MODALBOX_TEAMMEMBER_HOME.'__uid']);
-        $prefix = $this->getTeamMemberWidget($isHome) . '__';
+        $prefix = $this->getTeamMemberWidget($isHome).'__';
         $teamUid = (int) $params[$prefix.'uid'];
         /* @var $team \tx_cfcleague_models_Team */
         $team = \tx_rnbase::makeInstance('tx_cfcleague_models_Team', $teamUid);
@@ -148,8 +155,8 @@ class Team
     }
 
     /**
-     *
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return \tx_cfcleague_models_Profile
      */
     protected function createProfile($form, $prefix)
@@ -174,27 +181,27 @@ class Team
     }
 
     /**
-     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbRemoveProfile($params, $form)
     {
         /* @var $profile \tx_cfcleague_models_Profile */
         $profile = \tx_rnbase::makeInstance('tx_cfcleague_models_Profile', $params['uid']);
-        if (! $profile->isValid()) {
+        if (!$profile->isValid()) {
             return [];
         }
-        $isHome = $params['side'] == 'home';
-        $prefix = $this->getTeamMemberWidget($isHome) . '__';
+        $isHome = 'home' == $params['side'];
+        $prefix = $this->getTeamMemberWidget($isHome).'__';
 
         /* @var $match \tx_cfcleague_models_Team */
         $team = \tx_rnbase::makeInstance('tx_cfcleague_models_Team', $params['team']);
         $players = $team->getProperty('players');
         $players = $players ? \Tx_Rnbase_Utility_Strings::intExplode(',', $players) : [];
         $idx = array_search($profile->getUid(), $players);
-        if($idx !== false) {
+        if (false !== $idx) {
             unset($players[$idx]);
             $team->setProperty('players', implode(',', $players));
             \tx_cfcleague_util_ServiceRegistry::getTeamService()->persist($team);
@@ -202,6 +209,7 @@ class Team
 
         $ret = [];
         $ret[] = $form->getWidget($prefix.'players')->majixRepaint();
+
         return $ret;
     }
 }

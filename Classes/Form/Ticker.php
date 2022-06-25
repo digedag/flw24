@@ -1,7 +1,8 @@
 <?php
+
 namespace System25\Flw24\Form;
 
-/**
+/*
  * *************************************************************
  * Copyright notice
  *
@@ -30,15 +31,14 @@ namespace System25\Flw24\Form;
 
 class Ticker
 {
-
     private $playerNames = [];
 
     /** In dieser Box werden vorhandene Notes bearbeitet */
-    const MODALBOX_TICKER = 'editbox_ticker';
+    public const MODALBOX_TICKER = 'editbox_ticker';
 
     /**
-     *
      * @param \tx_mkforms_forms_IForm $form
+     *
      * @return \tx_cfcleague_models_Match
      */
     protected function getCurrentMatch(\tx_mkforms_forms_IForm $form)
@@ -48,10 +48,13 @@ class Ticker
         /* @var $match \tx_cfcleague_models_Match */
         return \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
     }
+
     /**
-     * Speichern von Tickermeldungen
+     * Speichern von Tickermeldungen.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbTickerSubmitClick($params, $form)
@@ -62,13 +65,14 @@ class Ticker
         if (!$feuser) {
             // throw new \Exception('Login please!', \System25\Flw24\Utility\Errors::CODE_NOT_LOGGED_IN);
             \tx_mkforms_util_Div::debug4ajax('Session timed out. Login please!');
+
             return [];
         }
 
         $record = [
             'crfeuser' => $feuser->getUid(),
             'game' => $match->getUid(),
-            'pid' => $match->getProperty('pid')
+            'pid' => $match->getProperty('pid'),
         ];
         $fields = [
             'minute',
@@ -76,7 +80,7 @@ class Ticker
             'type',
             'player_home',
             'player_guest',
-            'comment'
+            'comment',
         ];
         foreach ($fields as $fieldName) {
             $record[$fieldName] = $form->getWidget($fieldName)->getValue();
@@ -85,7 +89,7 @@ class Ticker
         /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
         $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
         $model = $repo->createNewModel($record);
-        if($record['type'] == \tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT) {
+        if (\tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT == $record['type']) {
             $this->handleChange($form, $model, $repo);
         }
         $repo->persist($model);
@@ -94,7 +98,7 @@ class Ticker
             $form->getWidget('box_base')->majixClearValue(),
             $form->getWidget('box_players')->majixDisplayNone(),
             $form->getWidget('box_change')->majixDisplayNone(),
-            $form->getWidget('matchnotes')->majixRepaint()
+            $form->getWidget('matchnotes')->majixRepaint(),
         ];
 
         // Spielticker ggf. aktivieren, wenn das Spiel nicht in Vergangenheit liegt
@@ -107,6 +111,7 @@ class Ticker
 
     /**
      * Sonderbehandlung für Spielerwechsel. Es muss ein zweite Note angelegt werden.
+     *
      * @param \tx_mkforms_forms_Base $form
      * @param \tx_cfcleague_model_MatchNote $model
      * @param \Tx_Cfcleague_Model_Repository_MatchNote $repo
@@ -116,7 +121,7 @@ class Ticker
         $team = 'home';
         $playerOut = $form->getWidget('player_home_changeout')->getValue();
         $playerIn = $form->getWidget('player_home_changein')->getValue();
-        if(!$playerOut) {
+        if (!$playerOut) {
             $playerOut = $form->getWidget('player_guest_changeout')->getValue();
             $playerIn = $form->getWidget('player_guest_changein')->getValue();
             $team = 'guest';
@@ -133,43 +138,44 @@ class Ticker
     }
 
     /**
-     *
      * @param tx_cfcleague_models_MatchNote $ticker
      * @param tx_cfcleague_models_Match $match
      * @param \tx_mkforms_forms_Base $form
      */
     protected function ensureStatus($ticker, $match, \tx_mkforms_forms_Base $form)
     {
-        if ($ticker->getType() != 1000) {
+        if (1000 != $ticker->getType()) {
             return false;
         }
 
         $match->setProperty('status', 2);
         \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+
         return true;
     }
 
     /**
-     *
      * @param tx_cfcleague_models_MatchNote $ticker
      * @param tx_cfcleague_models_Match $match
      * @param \tx_mkforms_forms_Base $form
-     * @return boolean
+     *
+     * @return bool
      */
     protected function ensureScore($ticker, $match, \tx_mkforms_forms_Base $form)
     {
-        if (! $ticker->isGoal()) {
+        if (!$ticker->isGoal()) {
             return false;
         }
 
         $this->persistScore($match, $this->getMatchPartFinal($match));
+
         return true;
     }
 
     /**
-     *
      * @param tx_cfcleague_models_Match $match
      * @param string $part
+     *
      * @return \tx_cfcleague_models_MatchNote|null
      */
     protected function persistScore($match, $part = '2')
@@ -183,12 +189,15 @@ class Ticker
             $match->setProperty('goals_home_'.$part, $lastTicker->getProperty('goals_home'));
             $match->setProperty('goals_guest_'.$part, $lastTicker->getProperty('goals_guest'));
             \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+
             return $lastTicker;
         }
+
         return null;
     }
+
     /**
-     * Spiel- und Tickerstatus automatisch setzen
+     * Spiel- und Tickerstatus automatisch setzen.
      *
      * @param tx_cfcleague_models_Match $match
      */
@@ -209,20 +218,23 @@ class Ticker
             $match->setProperty('status', \tx_cfcleague_models_Match::MATCH_STATUS_RUNNING);
         }
         \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+
         return true;
     }
+
     /**
-     * Show modal box to edit match note
+     * Show modal box to edit match note.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbEditMatchNote($params, $form)
     {
         /* @var $matchNote \tx_cfcleague_models_MatchNote */
         $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
-        if (! $matchNote->isValid()) {
+        if (!$matchNote->isValid()) {
             return [];
         }
 
@@ -235,22 +247,24 @@ class Ticker
         // open the box
         return $form->getWidget(self::MODALBOX_TICKER)->majixShowBox();
     }
-    public function cbBtnCancelTicker($params, $form) {
+
+    public function cbBtnCancelTicker($params, $form)
+    {
         // close the box
         return $form->getWidget(self::MODALBOX_TICKER)->majixCloseBox();
     }
 
     /**
-     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbUpdateMatchNote($params, $form)
     {
         /* @var $matchNote \tx_cfcleague_models_MatchNote */
         $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params[self::MODALBOX_TICKER.'__uid']);
-        if (! $matchNote->isValid()) {
+        if (!$matchNote->isValid()) {
             return $this->cbBtnCancelTicker($params, $form);
         }
         $prefix = self::MODALBOX_TICKER.'__';
@@ -260,11 +274,11 @@ class Ticker
             'type',
             'player_home',
             'player_guest',
-            'comment'
+            'comment',
         ];
         foreach ($fields as $fieldName) {
-            if (isset($params[$prefix . $fieldName])) {
-                $matchNote->setProperty($fieldName, $params[$prefix . $fieldName]);
+            if (isset($params[$prefix.$fieldName])) {
+                $matchNote->setProperty($fieldName, $params[$prefix.$fieldName]);
             }
         }
 
@@ -274,7 +288,7 @@ class Ticker
 
         $ret = [
             $form->getWidget('matchnotes')->majixRepaint(),
-            $form->getWidget(self::MODALBOX_TICKER)->majixCloseBox()
+            $form->getWidget(self::MODALBOX_TICKER)->majixCloseBox(),
         ];
 
         /* @var $match \tx_cfcleague_models_Match */
@@ -285,16 +299,16 @@ class Ticker
     }
 
     /**
-     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbDeleteMatchNote($params, $form)
     {
         /* @var $matchNote \tx_cfcleague_models_MatchNote */
         $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
-        if (! $matchNote->isValid()) {
+        if (!$matchNote->isValid()) {
             return [];
         }
 
@@ -307,10 +321,11 @@ class Ticker
         $repo->handleDelete($matchNote, '', 1);
 
         $ret = [
-            $form->getWidget('matchnotes')->majixRepaint()
+            $form->getWidget('matchnotes')->majixRepaint(),
         ];
 
         $this->ensureScore($matchNoteClone, $match, $form);
+
         return $ret;
     }
 
@@ -319,7 +334,7 @@ class Ticker
         $uid = (int) $form->getDataHandler()->getStoredData('uid');
         $options = [
             'sqlonly' => 1,
-            'where' => 'game=' . $uid,
+            'where' => 'game='.$uid,
             // Wirft SQL-Fehler beim Count
             // 'orderby' => 'minute desc, extra_time desc',
         ];
@@ -328,21 +343,21 @@ class Ticker
     }
 
     /**
-     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function validatePlayer($params, $form)
     {
         $type = $form->getWidget('type')->getValue();
-        if ($type == 100 || $type >= 1000) {
+        if (100 == $type || $type >= 1000) {
             // Hier ist der Spieler egal
             return true;
         }
-        if ($type == \tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT) {
+        if (\tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT == $type) {
             // Bei Auswechslungen werden zwei Spieler benötigt
-            if(
+            if (
                 !(
                 ($this->hasValue($form, 'player_home_changeout') && $this->hasValue($form, 'player_home_changein'))
                 ||
@@ -350,12 +365,11 @@ class Ticker
                 )) {
                 return false;
             }
-        }
-        else {
+        } else {
             $home = $form->getWidget('player_home')->getValue();
             $guest = $form->getWidget('player_guest')->getValue();
             // Jetzt muss genau ein Spieler gesetzt sein
-            if ($home != 0 && $guest != 0 || $home == 0 && $guest == 0) {
+            if (0 != $home && 0 != $guest || 0 == $home && 0 == $guest) {
                 return false;
                 // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set";
             }
@@ -363,28 +377,31 @@ class Ticker
 
         return true;
     }
+
     protected function hasValue($form, $widgetName)
     {
         return $form->getWidget($widgetName)->getValue() > 0;
     }
 
     /**
-     * Validator für TickerType
+     * Validator für TickerType.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function validatePlayerModal($params, $form)
     {
-        $type = $form->getWidget(self::MODALBOX_TICKER. '__type')->getValue();
-        if ($type == 100 || $type == 1000) {
+        $type = $form->getWidget(self::MODALBOX_TICKER.'__type')->getValue();
+        if (100 == $type || 1000 == $type) {
             // Hier ist der Spieler egal
             return true;
         }
-        $home = $form->getWidget(self::MODALBOX_TICKER. '__player_home')->getValue();
-        $guest = $form->getWidget(self::MODALBOX_TICKER. '__player_guest')->getValue();
+        $home = $form->getWidget(self::MODALBOX_TICKER.'__player_home')->getValue();
+        $guest = $form->getWidget(self::MODALBOX_TICKER.'__player_guest')->getValue();
         // Jetzt muss genau ein Spieler gesetzt sein
-        if ($home != 0 && $guest != 0 || $home == 0 && $guest == 0) {
+        if (0 != $home && 0 != $guest || 0 == $home && 0 == $guest) {
             return false;
             // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set";
         }
@@ -405,7 +422,7 @@ class Ticker
             $match->setProperty(Watch::FIELD_TICKER_PAUSETIME, $pausetime);
         }
         $paused = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(Watch::FIELD_TICKER_PAUSED, 'flw24');
-        $match->setProperty(Watch::FIELD_TICKER_PAUSED, (int)$paused);
+        $match->setProperty(Watch::FIELD_TICKER_PAUSED, (int) $paused);
 
         $offset = \tx_t3users_util_ServiceRegistry::getFeUserService()->getSessionValue(Watch::FIELD_TICKER_OFFSET, 'flw24');
         if ($offset) {
@@ -420,10 +437,11 @@ class Ticker
     }
 
     /**
-     * Liefert die Tickertypen ohne Auswechslung
+     * Liefert die Tickertypen ohne Auswechslung.
      *
      * @param array $params
      * @param \tx_mkforms_forms_IForm $form
+     *
      * @return []
      */
     public function getTickerTypes($params, \tx_mkforms_forms_IForm $form)
@@ -431,20 +449,23 @@ class Ticker
         $tcaTypes = $this->loadTickerTypes();
         $data = [];
         foreach ($tcaTypes as $typeDef) {
-            if (! $this->isChange($typeDef[1])) {
+            if (!$this->isChange($typeDef[1])) {
                 $data[] = [
                     'caption' => $typeDef[0],
-                    'value' => $typeDef[1]
+                    'value' => $typeDef[1],
                 ];
             }
         }
+
         return $data;
     }
+
     /**
      * Liefert alle Tickertypen. Das wird für die Darstellung im Lister benötigt.
      *
      * @param array $params
      * @param \tx_mkforms_forms_IForm $form
+     *
      * @return []
      */
     public function getTickerTypesAll($params, \tx_mkforms_forms_IForm $form)
@@ -454,15 +475,19 @@ class Ticker
         foreach ($tcaTypes as $typeDef) {
             $data[] = [
                 'caption' => $typeDef[0],
-                'value' => $typeDef[1]
+                'value' => $typeDef[1],
             ];
         }
+
         return $data;
     }
+
     /**
      * Liefert alle Spieler von Aufstellung und Bank.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_IForm $form
+     *
      * @return number[][]|string[][]
      */
     public function getPlayers($params, \tx_mkforms_forms_IForm $form)
@@ -471,11 +496,11 @@ class Ticker
         $match = $this->getCurrentMatch($form);
 
         $data = $this->getPlayerNames($match, $params['team'], $form);
+
         return $data;
     }
 
     /**
-     *
      * @param tx_cfcleague_models_Match $match
      * @param string $team
      */
@@ -486,7 +511,7 @@ class Ticker
         }
 
         $profileSrv = \tx_cfcleague_util_ServiceRegistry::getProfileService();
-        if ($team == 'home') {
+        if ('home' == $team) {
             $players = $profileSrv->loadProfiles($match->getPlayersHome(true));
         } else {
             $players = $profileSrv->loadProfiles($match->getPlayersGuest(true));
@@ -496,23 +521,23 @@ class Ticker
             $team => [
                 [
                     'value' => 0,
-                    'caption' => ''
-                ]
-            ]
+                    'caption' => '',
+                ],
+            ],
         ];
         foreach ($players as $player) {
             $this->playerNames[$team][] = [
                 'caption' => $player->getName(true),
-                'value' => $player->getUid()
+                'value' => $player->getUid(),
             ];
         }
-        if(count($this->playerNames[$team]) > 1) {
+        if (count($this->playerNames[$team]) > 1) {
             usort($this->playerNames[$team], [LineUp::class, 'sortByCaption']);
 
             $this->playerNames[$team][] = [
                 'value' => '',
                 'caption' => '',
-                'custom' => 'disabled'
+                'custom' => 'disabled',
             ];
         }
         $this->playerNames[$team][] = [
@@ -525,17 +550,19 @@ class Ticker
 
     protected function isChange($type)
     {
-        return $type == 81;
+        return 81 == $type;
     }
 
     protected function loadTickerTypes()
     {
         $srv = \tx_cfcleague_util_ServiceRegistry::getMatchService();
+
         return $srv->getMatchNoteTypes4TCA();
     }
 
     /**
-     * called if watch is started initially or after pause
+     * called if watch is started initially or after pause.
+     *
      * @param \tx_mkforms_forms_IForm $form
      */
     public function onMatchStarted(\tx_mkforms_forms_IForm $form)
@@ -574,6 +601,7 @@ class Ticker
         // Tickermeldung schreiben
         $this->createMessage($match, 46, '2. Halbzeit läuft');
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+
         return $ret;
     }
 
@@ -586,6 +614,7 @@ class Ticker
         // Tickermeldung schreiben
         $this->createMessageExtraTime($match, $lastTicker);
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+
         return $ret;
     }
 
@@ -597,6 +626,7 @@ class Ticker
         // Tickermeldung schreiben
         $this->createMessage($match, 91, 'Verlängerung 1. Halbzeit läuft');
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+
         return $ret;
     }
 
@@ -608,6 +638,7 @@ class Ticker
         // Tickermeldung schreiben
         $this->createMessageExtraTime($match, $lastTicker, true);
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+
         return $ret;
     }
 
@@ -619,6 +650,7 @@ class Ticker
         // Tickermeldung schreiben
         $this->createMessage($match, 106, 'Verlängerung 2. Halbzeit läuft');
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+
         return $ret;
     }
 
@@ -631,6 +663,7 @@ class Ticker
         // Tickermeldung schreiben
         $this->createMessagePenalties($match, $lastTicker);
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+
         return $ret;
     }
 
@@ -644,26 +677,24 @@ class Ticker
         $lastTicker = $this->persistScore($match, $this->getMatchPartFinal($match));
         $this->createMessageFinished($match, $lastTicker);
         $ret[] = $form->getWidget('matchnotes')->majixRepaint();
+
         return $ret;
     }
 
     /**
-     *
      * @param \tx_cfcleague_models_Match $match
      * @param \tx_cfcleague_models_MatchNote $lastTicker
      */
     private function createMessageHalftime($match, $lastTicker)
     {
         $extraTime = 0;
-        if($lastTicker && $lastTicker->getMinute() > 45) {
-            $extraTime = ((int)$lastTicker->getProperty('extra_time')) + 1;
+        if ($lastTicker && $lastTicker->getMinute() > 45) {
+            $extraTime = ((int) $lastTicker->getProperty('extra_time')) + 1;
         }
         $this->createMessage($match, 45, 'Halbzeit', $extraTime);
     }
 
-
     /**
-     *
      * @param \tx_cfcleague_models_Match $match
      * @param \tx_cfcleague_models_MatchNote $lastTicker
      */
@@ -671,28 +702,26 @@ class Ticker
     {
         $baseMinute = $halftime ? 105 : 90;
         $extraTime = 0;
-        if($lastTicker && $lastTicker->getMinute() > $baseMinute) {
-            $extraTime = ((int)$lastTicker->getProperty('extra_time')) + 1;
+        if ($lastTicker && $lastTicker->getMinute() > $baseMinute) {
+            $extraTime = ((int) $lastTicker->getProperty('extra_time')) + 1;
         }
         $this->createMessage($match, $baseMinute, $halftime ? 'Halbzeit der Verlängerung' : 'Verlängerung', $extraTime);
     }
 
     /**
-     *
      * @param \tx_cfcleague_models_Match $match
      * @param \tx_cfcleague_models_MatchNote $lastTicker
      */
     private function createMessagePenalties($match, $lastTicker)
     {
         $minute = 120;
-        if($lastTicker && $lastTicker->getMinute() > $minute) {
+        if ($lastTicker && $lastTicker->getMinute() > $minute) {
             $minute = $lastTicker->getMinute() + 1;
         }
         $this->createMessage($match, $minute, 'Elfmeterschießen!');
     }
 
     /**
-     *
      * @param \tx_cfcleague_models_Match $match
      * @param \tx_cfcleague_models_MatchNote $lastTicker
      */
@@ -705,10 +734,9 @@ class Ticker
             if ($lastTicker && $lastTicker->getMinute() > $minute) {
                 $minute = $lastTicker->getMinute() + 1;
             }
-        }
-        else {
-            if($lastTicker && $lastTicker->getMinute() > $minute) {
-                $extraTime = ((int)$lastTicker->getProperty('extra_time')) + 1;
+        } else {
+            if ($lastTicker && $lastTicker->getMinute() > $minute) {
+                $extraTime = ((int) $lastTicker->getProperty('extra_time')) + 1;
             }
         }
         $this->createMessage($match, $minute, 'Das Spiel ist beendet', $extraTime);
@@ -730,9 +758,9 @@ class Ticker
     }
 
     /**
-     *
      * @param \tx_cfcleague_models_Match $match
      * @param $repo \Tx_Cfcleague_Model_Repository_MatchNote
+     *
      * @return \tx_cfcleague_models_MatchNote
      */
     protected function createNewMatchNote($match, $repo)
@@ -740,14 +768,15 @@ class Ticker
         $record = [
             'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
             'game' => $match->getUid(),
-            'pid' => $match->getProperty('pid')
+            'pid' => $match->getProperty('pid'),
         ];
+
         return $repo->createNewModel($record);
     }
 
     /**
-     *
      * @param \tx_cfcleague_models_Match $match
+     *
      * @return string
      */
     private function getMatchPartFinal($match)
@@ -755,10 +784,10 @@ class Ticker
         $part = '2';
         if ($match->isPenalty()) {
             $part = 'ap';
-        }
-        elseif ($match->isExtraTime()) {
+        } elseif ($match->isExtraTime()) {
             $part = 'et';
         }
+
         return $part;
     }
 }

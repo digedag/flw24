@@ -1,4 +1,5 @@
 <?php
+
 namespace System25\Flw24\Utility;
 
 /***************************************************************
@@ -24,11 +25,8 @@ namespace System25\Flw24\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
-/**
- */
-class Errors {
-	const CODE_NOT_LOGGED_IN = 1000;
-	const CODE_NOT_ALLOWED = 1010;
-
+class Errors
+{
+    public const CODE_NOT_LOGGED_IN = 1000;
+    public const CODE_NOT_ALLOWED = 1010;
 }

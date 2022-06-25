@@ -1,9 +1,10 @@
 <?php
+
 namespace System25\Flw24\Form;
 
 /**
  * *************************************************************
- * Copyright notice
+ * Copyright notice.
  *
  * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
  * All rights reserved
@@ -27,26 +28,28 @@ namespace System25\Flw24\Form;
  */
 class LineUp
 {
-
-    const MODALBOX_LINEUP_HOME = 'editbox_lineup_home';
-    const MODALBOX_LINEUP_GUEST = 'editbox_lineup_guest';
+    public const MODALBOX_LINEUP_HOME = 'editbox_lineup_home';
+    public const MODALBOX_LINEUP_GUEST = 'editbox_lineup_guest';
 
     /**
-     * Show modal box to edit team member home
+     * Show modal box to edit team member home.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbEditHome($params, $form)
     {
         return $this->editLineup($params, $form, true);
     }
+
     /**
-     * Show modal box to edit team member home
+     * Show modal box to edit team member home.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbEditSubstHome($params, $form)
@@ -55,10 +58,11 @@ class LineUp
     }
 
     /**
-     * Show modal box to edit team member home
+     * Show modal box to edit team member home.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbEditGuest($params, $form)
@@ -67,16 +71,18 @@ class LineUp
     }
 
     /**
-     * Show modal box to edit substitutes member home
+     * Show modal box to edit substitutes member home.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbEditSubstGuest($params, $form)
     {
         return $this->editLineup($params, $form, false, true);
     }
+
     protected function editLineup($params, $form, $isHome, $isSubst = false)
     {
         $uid = $form->getDataHandler()->getStoredData('uid');
@@ -108,6 +114,7 @@ class LineUp
         // close the box
         return $form->getWidget(self::MODALBOX_LINEUP_HOME)->majixCloseBox();
     }
+
     public function cbBtnCloseGuest($params, $form)
     {
         // close the box
@@ -119,7 +126,7 @@ class LineUp
         /* @var $match \tx_cfcleague_models_Match */
         $uid = $form->getDataHandler()->getStoredData('uid');
         $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
-        $isHome = $params['team'] == 'home';
+        $isHome = 'home' == $params['team'];
         $data = $form->getWidget($this->getLineUpWidget($isHome))->getValue();
         $isSubst = (bool) $data['subst'];
         $team = $isHome ? $match->getHome() : $match->getGuest();
@@ -129,9 +136,9 @@ class LineUp
         $ignore = $ignore ? \Tx_Rnbase_Utility_Strings::intExplode(',', $ignore) : [];
 
         $items = [];
-        foreach ($team->getPlayers() As $profile) {
+        foreach ($team->getPlayers() as $profile) {
             /* @var $profile \tx_cfcleague_models_Profile */
-            if(in_array($profile->getUid(), $ignore)) {
+            if (in_array($profile->getUid(), $ignore)) {
                 continue;
             }
             $items[] = [
@@ -140,31 +147,34 @@ class LineUp
             ];
         }
         usort($items, [LineUp::class, 'sortByCaption']);
+
         return $items;
     }
 
     public static function sortByCaption($a, $b)
     {
-        $s1 = mb_strtolower( $a['caption'] );
-        $s2 = mb_strtolower( $b['caption'] );
+        $s1 = mb_strtolower($a['caption']);
+        $s2 = mb_strtolower($b['caption']);
+
         return strnatcasecmp($s1, $s2);
     }
 
     /**
-     * Save new lineup
+     * Save new lineup.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbUpdateLineup($params, $form)
     {
         $isHome = isset($params[self::MODALBOX_LINEUP_HOME.'__uid']);
-        $prefix = $this->getLineUpWidget($isHome) . '__';
+        $prefix = $this->getLineUpWidget($isHome).'__';
         $matchUid = $params[$prefix.'uid'];
         /* @var $match \tx_cfcleague_models_Match */
         $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchUid);
-        if($match->isValid()) {
+        if ($match->isValid()) {
             $isSubst = $params[$prefix.'subst'];
             $what = $isSubst ? 'substitutes' : 'players';
             // init the modalbox/childs with this record
@@ -176,9 +186,10 @@ class LineUp
 
         $ret = [];
         $ret[] = $isHome ? $this->cbBtnCloseHome($params, $form) : $this->cbBtnCloseGuest($params, $form);
-        $ret[] = $form->getWidget( $isHome ? 'player_home' : 'player_guest')->majixRepaint();
-        $ret[] = $form->getWidget( $isHome ? 'player_home_changeout' : 'player_guest_changeout')->majixRepaint();
-        $ret[] = $form->getWidget( $isHome ? 'player_home_changein' : 'player_guest_changein')->majixRepaint();
+        $ret[] = $form->getWidget($isHome ? 'player_home' : 'player_guest')->majixRepaint();
+        $ret[] = $form->getWidget($isHome ? 'player_home_changeout' : 'player_guest_changeout')->majixRepaint();
+        $ret[] = $form->getWidget($isHome ? 'player_home_changein' : 'player_guest_changein')->majixRepaint();
+
         return $ret;
     }
 }

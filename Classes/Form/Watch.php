@@ -1,9 +1,10 @@
 <?php
+
 namespace System25\Flw24\Form;
 
 /**
  * *************************************************************
- * Copyright notice
+ * Copyright notice.
  *
  * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
  * All rights reserved
@@ -27,40 +28,39 @@ namespace System25\Flw24\Form;
  */
 
 /**
- * Steuerung der Spieluhr
+ * Steuerung der Spieluhr.
  */
 class Watch
 {
+    /**
+     * Enthält die aktuelle Client-Zeit.
+     */
+    public const FIELD_TICKER_LOCALTIME = 'watch_localtime';
 
     /**
-     * Enthält die aktuelle Client-Zeit
+     * Enthält den Zeitpunkt des Start-Klicks.
      */
-    const FIELD_TICKER_LOCALTIME = 'watch_localtime';
+    public const FIELD_TICKER_STARTTIME = 'watch_starttime';
 
     /**
-     * Enthält den Zeitpunkt des Start-Klicks
+     * Enthält den Zeitpunkt des Pause-Klicks.
      */
-    const FIELD_TICKER_STARTTIME = 'watch_starttime';
+    public const FIELD_TICKER_PAUSETIME = 'watch_pausetime';
 
     /**
-     * Enthält den Zeitpunkt des Pause-Klicks
+     * boolean. Wenn 1 ist das Spiel unterbrochen.
      */
-    const FIELD_TICKER_PAUSETIME = 'watch_pausetime';
+    public const FIELD_TICKER_PAUSED = 'watch_paused';
 
     /**
-     * boolean. Wenn 1 ist das Spiel unterbrochen
+     * Enhält einen optionalen Offset.
      */
-    const FIELD_TICKER_PAUSED = 'watch_paused';
+    public const FIELD_TICKER_OFFSET = 'watch_offset';
 
     /**
-     * Enhält einen optionalen Offset
+     * Enhält den aktuellen Spielabschnitt als Spielminute 0,45,90,105 oder 121 (Elfmeterschießen).
      */
-    const FIELD_TICKER_OFFSET = 'watch_offset';
-
-    /**
-     * Enhält den aktuellen Spielabschnitt als Spielminute 0,45,90,105 oder 121 (Elfmeterschießen)
-     */
-    const FIELD_TICKER_MATCHPART = 'watch_matchpart';
+    public const FIELD_TICKER_MATCHPART = 'watch_matchpart';
 
     private $buttons = [
         'btn_watch_start',
@@ -76,10 +76,11 @@ class Watch
     ];
 
     /**
-     * Startet die Uhr, egal ob initial oder aus der Pause
+     * Startet die Uhr, egal ob initial oder aus der Pause.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchStartClick($params, $form)
@@ -94,20 +95,17 @@ class Watch
         $this->pauseOff($ret, $form);
 
         $ret[] = $form->getWidget('btn_watch_start')->majixDisplayNone();
-        if ($matchpart == 0) { // HZ 1
+        if (0 == $matchpart) { // HZ 1
             $ret[] = $form->getWidget('btn_watch_stop')->majixDisplayNone();
             $ret[] = $form->getWidget('btn_watch_halftime')->majixDisplayDefault();
-        }
-        elseif ($matchpart == 45) { // HZ 2
+        } elseif (45 == $matchpart) { // HZ 2
             $ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
             // TODO: Pokal prüfen
             $ret[] = $form->getWidget('btn_watch_extratime')->majixDisplayDefault();
             $ret[] = $form->getWidget('btn_watch_halftime')->majixDisplayNone();
-        }
-        elseif ($matchpart == 90) { // Verl HZ 1
+        } elseif (90 == $matchpart) { // Verl HZ 1
             $ret[] = $form->getWidget('btn_watch_extratime_ht')->majixDisplayDefault();
-        }
-        elseif ($matchpart == 105) { // Verl HZ 2
+        } elseif (105 == $matchpart) { // Verl HZ 2
             $ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
         } else {
             $ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
@@ -124,9 +122,9 @@ class Watch
     }
 
     /**
-     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchHalftimeClick($params, $form)
@@ -142,7 +140,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_start')->majixDisplayNone();
         $ret[] = $form->getWidget('btn_watch_pause')->majixDisplayNone();
         $ret[] = $form->getWidget(self::FIELD_TICKER_OFFSET)->majixSetValue('0');
-        $ret[] = $form->getWidget('watch')->majixSetHtml($halftime . ':00');
+        $ret[] = $form->getWidget('watch')->majixSetHtml($halftime.':00');
 
         // Pause starten
         $this->pauseOn($ret, $form);
@@ -165,9 +163,9 @@ class Watch
     }
 
     /**
-     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchSecondHTClick($params, $form)
@@ -195,9 +193,11 @@ class Watch
     }
 
     /**
-     * Verlängerung aktivieren
+     * Verlängerung aktivieren.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchExtraTimeClick($params, $form)
@@ -213,7 +213,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_start')->majixDisplayNone();
         $ret[] = $form->getWidget('btn_watch_pause')->majixDisplayNone();
         $ret[] = $form->getWidget(self::FIELD_TICKER_OFFSET)->majixSetValue('0');
-        $ret[] = $form->getWidget('watch')->majixSetHtml($starttime . ':00');
+        $ret[] = $form->getWidget('watch')->majixSetHtml($starttime.':00');
 
         // Pause starten
         $this->pauseOn($ret, $form);
@@ -237,9 +237,11 @@ class Watch
     }
 
     /**
-     * Verlängerung HZ 1 starten
+     * Verlängerung HZ 1 starten.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchExtraTimeFirstHTClick($params, $form)
@@ -264,9 +266,11 @@ class Watch
     }
 
     /**
-     * Halbzeit Verlängerung
+     * Halbzeit Verlängerung.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchExtraTimeHalftimeClick($params, $form)
@@ -282,7 +286,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_start')->majixDisplayNone();
         $ret[] = $form->getWidget('btn_watch_pause')->majixDisplayNone();
         $ret[] = $form->getWidget(self::FIELD_TICKER_OFFSET)->majixSetValue('0');
-        $ret[] = $form->getWidget('watch')->majixSetHtml($starttime . ':00');
+        $ret[] = $form->getWidget('watch')->majixSetHtml($starttime.':00');
 
         // Pause starten
         $this->pauseOn($ret, $form);
@@ -306,9 +310,11 @@ class Watch
     }
 
     /**
-     * Verlängerung HZ 2 starten
+     * Verlängerung HZ 2 starten.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchExtraTimeSecondHTClick($params, $form)
@@ -334,9 +340,11 @@ class Watch
     }
 
     /**
-     * Elfmeterschießen
+     * Elfmeterschießen.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchPenaltiesClick($params, $form)
@@ -351,7 +359,7 @@ class Watch
         // Pause und Start ausblenden
         $this->hideAllButtons($ret, $form);
         $ret[] = $form->getWidget(self::FIELD_TICKER_OFFSET)->majixSetValue('0');
-        $ret[] = $form->getWidget('watch')->majixSetHtml($starttime . ':00');
+        $ret[] = $form->getWidget('watch')->majixSetHtml($starttime.':00');
 
         // Pause starten
         $this->pauseOn($ret, $form);
@@ -374,8 +382,10 @@ class Watch
 
     /**
      * Klick auf Spielende.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchStopClick($params, $form)
@@ -406,13 +416,16 @@ class Watch
         $ret = array_merge($ret, $ticker->onMatchFinished($form));
 
         $GLOBALS['TSFE']->storeSessionData();
+
         return $ret;
     }
 
     /**
-     * Uhr anhalten wegen Spielunterbrechung
+     * Uhr anhalten wegen Spielunterbrechung.
+     *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchPauseClick($params, $form)
@@ -431,10 +444,11 @@ class Watch
 
     private function hideAllButtons(array &$ret, $form)
     {
-        array_map(function($btnName) use (&$ret, $form) {
+        array_map(function ($btnName) use (&$ret, $form) {
             $ret[] = $form->getWidget($btnName)->majixDisplayNone();
         }, $this->buttons);
     }
+
     private function pauseOn(&$ret, $form)
     {
         // Zeitpunkt der Pause merken
@@ -459,19 +473,20 @@ class Watch
     }
 
     /**
-     * Offset wurde geändert und muss gespeichert werden
+     * Offset wurde geändert und muss gespeichert werden.
      *
      * @param array $params
      * @param \tx_mkforms_forms_Base $form
+     *
      * @return []
      */
     public function cbWatchOffset($params, $form)
     {
         $offset = $form->getWidget(self::FIELD_TICKER_OFFSET)->getValue();
-        ;
+
         \tx_t3users_util_ServiceRegistry::getFeUserService()->setSessionValue(self::FIELD_TICKER_OFFSET, $offset, 'flw24');
         $GLOBALS['TSFE']->storeSessionData();
+
         return [];
     }
-
 }

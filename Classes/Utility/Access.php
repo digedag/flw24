@@ -23,33 +23,32 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-/**
- */
 class Tx_Flw24_Utility_Access
 {
-	const CODE_NOT_LOGGED_IN = 1000;
+    public const CODE_NOT_LOGGED_IN = 1000;
 
-	public static function isTickerAllowed(\tx_t3users_models_feuser $feuser, $matchUid)
-	{
-	    $fields = [
-	        'TEAM1FEUSER.UID_FOREIGN' => [OP_EQ_INT => $feuser->getUid()],
-	        'MATCH.UID' => [OP_EQ_INT => $matchUid]
-	    ];
-	    $options = [
-	        'count' => 1,
-	    ];
-	    $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
-	    $home = $cnt > 0;
+    public static function isTickerAllowed(tx_t3users_models_feuser $feuser, $matchUid)
+    {
+        $fields = [
+            'TEAM1FEUSER.UID_FOREIGN' => [OP_EQ_INT => $feuser->getUid()],
+            'MATCH.UID' => [OP_EQ_INT => $matchUid],
+        ];
+        $options = [
+            'count' => 1,
+        ];
+        $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
+        $home = $cnt > 0;
 
-	    $fields = [
-	        'TEAM2FEUSER.UID_FOREIGN' => [OP_EQ_INT => $feuser->getUid()],
-	        'MATCH.UID' => [OP_EQ_INT => $matchUid]
-	    ];
-	    $options = [
-	        'count' => 1,
-	    ];
-	    $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
-	    $guest = $cnt > 0;
-	    return $home || $guest;
-	}
+        $fields = [
+            'TEAM2FEUSER.UID_FOREIGN' => [OP_EQ_INT => $feuser->getUid()],
+            'MATCH.UID' => [OP_EQ_INT => $matchUid],
+        ];
+        $options = [
+            'count' => 1,
+        ];
+        $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
+        $guest = $cnt > 0;
+
+        return $home || $guest;
+    }
 }

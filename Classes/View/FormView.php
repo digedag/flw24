@@ -1,4 +1,5 @@
 <?php
+
 namespace System25\Flw24\View;
 
 /***************************************************************
@@ -24,29 +25,32 @@ namespace System25\Flw24\View;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+class FormView extends \tx_mkforms_view_Form
+{
+    public function createOutput($template, &$viewData, &$configurations, &$formatter, $redirectToLogin = false)
+    {
+        $template = parent::createOutput($template, $viewData, $configurations, $formatter, $redirectToLogin);
+        $items = $viewData->offsetGet('items');
+        $confId = $this->getController()->getConfId();
 
-class FormView extends \tx_mkforms_view_Form {
+        $out = $this->parseItems($items, $confId, $formatter, $template, $viewData);
 
-	public function createOutput($template, &$viewData, &$configurations, &$formatter, $redirectToLogin = false) {
-		$template = parent::createOutput($template, $viewData, $configurations, $formatter, $redirectToLogin);
-		$items = $viewData->offsetGet('items');
-		$confId = $this->getController()->getConfId();
+        return $out;
+    }
 
-		$out = $this->parseItems($items, $confId, $formatter, $template, $viewData);
-		return $out;
-	}
+    protected function parseItems($items, $confId, $formatter, $template, $viewdata)
+    {
+        if (is_array($items)) {
+            foreach ($items as $key => $item) {
+                $markerClass = 'tx_rnbase_util_SimpleMarker';
+                if ($item instanceof \tx_cfcleague_models_Match) {
+                    $markerClass = 'tx_cfcleaguefe_util_MatchMarker';
+                }
+                $marker = \tx_rnbase::makeInstance($markerClass);
+                $template = $marker->parseTemplate($template, $item, $formatter, $confId.$key.'.', strtoupper($key));
+            }
+        }
 
-	protected function parseItems($items, $confId, $formatter, $template, $viewdata) {
-	    if(is_array($items)) {
-			foreach ($items As $key => $item) {
-				$markerClass = 'tx_rnbase_util_SimpleMarker';
-				if($item instanceof \tx_cfcleague_models_Match) {
-					$markerClass = 'tx_cfcleaguefe_util_MatchMarker';
-				}
-				$marker = \tx_rnbase::makeInstance($markerClass);
-				$template = $marker->parseTemplate($template, $item, $formatter, $confId.$key.'.', strtoupper($key));
-			}
-	    }
-		return $template;
-	}
+        return $template;
+    }
 }

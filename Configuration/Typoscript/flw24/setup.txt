@@ -58,7 +58,8 @@ plugin.tx_flw24_form {
 	}
 	lastgoal {
 		template.file = {$plugin.tx_flw24_base.lastgoalTemplate}
-		template.markerclass = tx_cfcleaguefe_util_MatchNoteMarker
+		template.markerclass = System25\T3sports\Frontend\Marker\MatchNoteMarker
+		template.subpart = ###LASTGOAL###
 
 		filter {
 		  class = tx_cfcleaguefe_filter_MatchNote

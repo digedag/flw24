@@ -1,9 +1,16 @@
 <?php
+
 namespace System25\Flw24\Action;
+
+use Sys25\RnBase\Frontend\Controller\AbstractAction;
+use Sys25\RnBase\Frontend\Filter\BaseFilter;
+use Sys25\RnBase\Frontend\Request\RequestInterface;
+use Sys25\RnBase\Frontend\View\Marker\ListView;
+use System25\T3sports\Utility\ServiceRegistry;
 
 /**
  * *************************************************************
- * Copyright notice
+ * Copyright notice.
  *
  * (c) 2018-2022 Rene Nitzsche (rene@system25.de)
  * All rights reserved
@@ -26,47 +33,44 @@ namespace System25\Flw24\Action;
  * *************************************************************
  */
 
-
 /**
- * Show last tickered goals
+ * Show last tickered goals.
  */
-class LastGoal extends \tx_rnbase_action_BaseIOC
+class LastGoal extends AbstractAction
 {
-
     /**
-     * handle request
+     * handle request.
      *
-     * @param \ArrayObject $parameters
-     * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
-     * @param \ArrayObject $viewData
+     * @param RequestInterface $request
+     *
      * @return string
      */
-    public function handleRequest(&$parameters, &$configurations, &$viewData)
+    public function handleRequest(RequestInterface $request)
     {
-
-        $filter = \tx_rnbase_filter_BaseFilter::createFilter($parameters, $configurations, $viewData, $this->getConfId().'filter.');
+        $filter = BaseFilter::createFilter($request, $this->getConfId().'filter.');
 
         $fields = $options = [];
         $filter->init($fields, $options);
-        /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
-        $matchSrv = \tx_cfcleague_util_ServiceRegistry::getMatchService();
+        $matchSrv = ServiceRegistry::getMatchService();
         $notes = $matchSrv->searchMatchNotes($fields, $options);
-        $items = $this->buildItems($notes->toArray());
+//        $items = $this->buildItems($notes->toArray());
+        $items = $notes->toArray();
 
-        $viewData->offsetSet('items', $items);
+        $request->getViewContext()->offsetSet('items', $items);
 
         return '';
     }
 
     /**
-     *
      * @param array[\tx_cfcleague_models_MatchNote] $notes
+     *
      * @return array[\tx_cfcleaguefe_models_match_note]
      */
     protected function buildItems(array $notes)
     {
         $items = [];
         foreach ($notes as $note) {
+            // Fixme: Die MatchNote kennt das Spiel nicht mehr.
             $item = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_match_note', $note->getProperty());
             $matchUid = $note->getProperty('game');
             if ($matchUid) {
@@ -75,11 +79,8 @@ class LastGoal extends \tx_rnbase_action_BaseIOC
             }
             $items[] = $item;
         }
+
         return $items;
-    }
-    public function getConfId()
-    {
-        return $this->getTemplateName() . '.';
     }
 
     public function getTemplateName()
@@ -89,6 +90,6 @@ class LastGoal extends \tx_rnbase_action_BaseIOC
 
     public function getViewClassName()
     {
-        return 'tx_rnbase_view_List';
+        return ListView::class;
     }
 }

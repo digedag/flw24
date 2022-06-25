@@ -1,4 +1,5 @@
 <?php
+
 namespace System25\Flw24\Filter;
 
 /***************************************************************
@@ -24,32 +25,33 @@ namespace System25\Flw24\Filter;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+class MatchByUser extends \tx_cfcleaguefe_filter_Match
+{
+    /**
+     * Abgeleitete Filter können diese Methode überschreiben und zusätzliche Filter setzen.
+     *
+     * @param array $fields
+     * @param array $options
+     * @param \tx_rnbase_IParameters $parameters
+     * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
+     * @param string $confId
+     */
+    protected function initFilter(&$fields, &$options, &$parameters, &$configurations, $confId)
+    {
+        parent::initFilter($fields, $options, $parameters, $configurations, $confId);
+        $configurations->convertToUserInt();
 
-class MatchByUser extends \tx_cfcleaguefe_filter_Match {
+        $feuser = \tx_t3users_models_feuser::getCurrent();
+        if ($feuser->isValid()) {
+            // 			$fields['TEAM1FEUSER.UID_FOREIGN'][OP_GT_INT] = 0;
+            // 			$fields['TEAM2FEUSER.UID_FOREIGN'][OP_GT_INT] = 0;
+            $fields[SEARCH_FIELD_JOINED][] = [
+                'value' => $feuser->getUid(),
+                'cols' => ['TEAM1FEUSER.UID_FOREIGN', 'TEAM2FEUSER.UID_FOREIGN'],
+                'operator' => OP_IN_INT,
+            ];
+        }
 
-	/**
-	 * Abgeleitete Filter können diese Methode überschreiben und zusätzliche Filter setzen
-	 *
-	 * @param array $fields
-	 * @param array $options
-	 * @param \tx_rnbase_IParameters $parameters
-	 * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
-	 * @param string $confId
-	 */
-	protected function initFilter(&$fields, &$options, &$parameters, &$configurations, $confId) {
-		parent::initFilter($fields, $options, $parameters, $configurations, $confId);
-		$configurations->convertToUserInt();
-
-		$feuser = \tx_t3users_models_feuser::getCurrent();
-		if($feuser->isValid()) {
-// 			$fields['TEAM1FEUSER.UID_FOREIGN'][OP_GT_INT] = 0;
-// 			$fields['TEAM2FEUSER.UID_FOREIGN'][OP_GT_INT] = 0;
-			$fields[SEARCH_FIELD_JOINED][] = [
-			    'value' => $feuser->getUid(),
-			    'cols' => ['TEAM1FEUSER.UID_FOREIGN', 'TEAM2FEUSER.UID_FOREIGN'],
-			    'operator' => OP_IN_INT,
-			];
-		}
-		return true;
-	}
+        return true;
+    }
 }

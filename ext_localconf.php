@@ -1,7 +1,8 @@
 <?php
-if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-
+if (!defined('TYPO3_MODE')) {
+    exit('Access denied.');
+}
 
 // -------------------------
 // ------- HOOKS -----------
@@ -13,7 +14,6 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getTableMa
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getJoins_hook'][] = 'System25\Flw24\Hook\Search->getJoinsMatch';
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getTableMapping_hook'][] = 'System25\Flw24\Hook\Search->getTableMappingMatch';
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getJoins_hook'][] = 'System25\Flw24\Hook\Search->getJoinsMatch';
-
 
 \tx_cfcleague_util_Misc::removeMatchNote('11');
 \tx_cfcleague_util_Misc::removeMatchNote('12');

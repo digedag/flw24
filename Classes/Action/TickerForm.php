@@ -1,4 +1,5 @@
 <?php
+
 namespace System25\Flw24\Action;
 
 use System25\Flw24\Utility\Errors;
@@ -26,61 +27,72 @@ use System25\Flw24\Utility\Errors;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+class TickerForm extends \tx_mkforms_action_FormBase
+{
+    private $item;
 
-class TickerForm extends \tx_mkforms_action_FormBase {
-	private $item;
+    /**
+     * handle request.
+     *
+     * @param \arrayobject $parameters
+     * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
+     * @param \arrayobject $viewData
+     *
+     * @return string
+     */
+    public function handleRequest(&$parameters, &$configurations, &$viewData)
+    {
+        $matchId = intval($parameters->offsetGet('matchId'));
+        if (0 == $matchId) {
+            return 'No matchId found!';
+        }
 
-	/**
-	 * handle request
-	 *
-	 * @param \arrayobject $parameters
-	 * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
-	 * @param \arrayobject $viewData
-	 * @return string
-	 */
-	public function handleRequest(&$parameters, &$configurations, &$viewData) {
-		$matchId = intval($parameters->offsetGet('matchId'));
-		if($matchId == 0) {
-			return 'No matchId found!';
-		}
+        $feuser = \tx_t3users_models_feuser::getCurrent();
+        if (!$feuser || !$feuser->isValid()) {
+            throw new \Exception('Login please!', Errors::CODE_NOT_LOGGED_IN);
+        }
+        // Ist der Zugriff erlaubt?
+        if (!\Tx_Flw24_Utility_Access::isTickerAllowed($feuser, $matchId)) {
+            throw new \Exception('You are not allowed to ticker this match!', Errors::CODE_NOT_ALLOWED);
+        }
 
-		$feuser = \tx_t3users_models_feuser::getCurrent();
-		if(!$feuser || !$feuser->isValid()) {
-			throw new \Exception("Login please!", Errors::CODE_NOT_LOGGED_IN);
-		}
-		// Ist der Zugriff erlaubt?
-		if (!\Tx_Flw24_Utility_Access::isTickerAllowed($feuser, $matchId)) {
-		    throw new \Exception("You are not allowed to ticker this match!", Errors::CODE_NOT_ALLOWED);
-		}
+        // Das Spiel laden
+        $item = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchId);
+        $viewData->offsetSet('item', $item);
+        //		$matchReport = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_matchreport', $matchId, $configurations);
+        //		$viewData->offsetSet('matchReport', $matchReport); // Den Spielreport für den View bereitstellen
 
-		// Das Spiel laden
-		$item = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchId);
-		$viewData->offsetSet('item', $item);
-//		$matchReport = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_matchreport', $matchId, $configurations);
-//		$viewData->offsetSet('matchReport', $matchReport); // Den Spielreport für den View bereitstellen
+        $this->item = $item;
 
-		$this->item = $item;
+        $items = [];
+        $items['match'] = $item;
+        $viewData->offsetSet('items', $items);
+        $data = ['item' => $item->getProperty()];
+        $viewData->offsetSet('formData', $data);
 
-		$items = [];
-		$items['match'] = $item;
-		$viewData->offsetSet('items', $items);
-		$data = array('item' => $item->getProperty());
-		$viewData->offsetSet('formData', $data);
-		return parent::handleRequest($parameters, $configurations, $viewData);
+        return parent::handleRequest($parameters, $configurations, $viewData);
+    }
 
-	}
-	/**
-	 *
-	 * @return \tx_cfcleague_models_Match
-	 */
-	public function getItem() {
-		return $this->item;
-	}
+    /**
+     * @return \tx_cfcleague_models_Match
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
 
-	public function getConfId() {
-		return $this->getTemplateName().'.';
-	}
-	public function getTemplateName() {return 'tickerform';}
+    public function getConfId()
+    {
+        return $this->getTemplateName().'.';
+    }
 
-	public function getViewClassName() { return 'System25\Flw24\View\TickerForm'; }
+    public function getTemplateName()
+    {
+        return 'tickerform';
+    }
+
+    public function getViewClassName()
+    {
+        return 'System25\Flw24\View\TickerForm';
+    }
 }

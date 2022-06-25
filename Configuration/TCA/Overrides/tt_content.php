@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3_MODE') or die();
+defined('TYPO3_MODE') or exit();
 
 call_user_func(function () {
     $extKey = 'flw24';
@@ -10,10 +10,10 @@ call_user_func(function () {
     ////////////////////////////////
 
     // Einige Felder ausblenden
-    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['tx_flw24_form']='layout,select_key,pages';
+    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['tx_flw24_form'] = 'layout,select_key,pages';
 
     // Das tt_content-Feld pi_flexform einblenden
-    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['tx_flw24_form']='pi_flexform';
+    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['tx_flw24_form'] = 'pi_flexform';
 
     $GLOBALS['TCA']['tt_content']['ctrl']['requestUpdate'] .= ',scope.betgame';
 
@@ -24,7 +24,7 @@ call_user_func(function () {
 
     tx_rnbase_util_Extensions::addPlugin([
             'LLL:EXT:'.$extKey.'/Resources/Private/Language/locallang_db.php:plugin.flw24_form.label',
-            'tx_flw24_form'
+            'tx_flw24_form',
         ],
         'list_type',
         $extKey
