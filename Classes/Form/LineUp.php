@@ -2,11 +2,16 @@
 
 namespace System25\Flw24\Form;
 
+use Sys25\RnBase\Utility\Strings;
+use System25\T3sports\Model\Match;
+use System25\T3sports\Model\Repository\MatchRepository;
+use tx_rnbase;
+
 /**
  * *************************************************************
  * Copyright notice.
  *
- * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2022 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -30,6 +35,13 @@ class LineUp
 {
     public const MODALBOX_LINEUP_HOME = 'editbox_lineup_home';
     public const MODALBOX_LINEUP_GUEST = 'editbox_lineup_guest';
+
+    private $matchRepo;
+
+    public function __construct(MatchRepository $matchRepo = null)
+    {
+        $this->matchRepo = $matchRepo ?: new MatchRepository();
+    }
 
     /**
      * Show modal box to edit team member home.
@@ -87,12 +99,12 @@ class LineUp
     {
         $uid = $form->getDataHandler()->getStoredData('uid');
         /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        $match = tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
 
         // init the modalbox/childs with this record
         $what = $isSubst ? 'substitutes' : 'players';
         $players = $match->getProperty($isHome ? $what.'_home' : $what.'_guest');
-        $players = $players ? \Tx_Rnbase_Utility_Strings::intExplode(',', $players) : [];
+        $players = $players ? Strings::intExplode(',', $players) : [];
         $record = [
             'uid' => $match->getUid(),
             'players' => $players,
@@ -125,7 +137,7 @@ class LineUp
     {
         /* @var $match \tx_cfcleague_models_Match */
         $uid = $form->getDataHandler()->getStoredData('uid');
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        $match = tx_rnbase::makeInstance(Match::class, $uid);
         $isHome = 'home' == $params['team'];
         $data = $form->getWidget($this->getLineUpWidget($isHome))->getValue();
         $isSubst = (bool) $data['subst'];
@@ -133,7 +145,7 @@ class LineUp
         // die schon aufgestellten Spieler entfernen
         $what = $isSubst ? 'players' : 'substitutes';
         $ignore = $match->getProperty($isHome ? $what.'_home' : $what.'_guest');
-        $ignore = $ignore ? \Tx_Rnbase_Utility_Strings::intExplode(',', $ignore) : [];
+        $ignore = $ignore ? Strings::intExplode(',', $ignore) : [];
 
         $items = [];
         foreach ($team->getPlayers() as $profile) {
@@ -173,7 +185,7 @@ class LineUp
         $prefix = $this->getLineUpWidget($isHome).'__';
         $matchUid = $params[$prefix.'uid'];
         /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchUid);
+        $match = tx_rnbase::makeInstance(Match::class, $matchUid);
         if ($match->isValid()) {
             $isSubst = $params[$prefix.'subst'];
             $what = $isSubst ? 'substitutes' : 'players';
@@ -181,7 +193,7 @@ class LineUp
             $players = $params[$prefix.'players'];
             $players = is_array($players) && !empty($players) ? implode(',', $players) : '';
             $match->setProperty($isHome ? $what.'_home' : $what.'_guest', $players);
-            \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+            $this->matchRepo->persist($match);
         }
 
         $ret = [];

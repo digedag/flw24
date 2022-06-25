@@ -2,6 +2,9 @@
 
 namespace System25\Flw24\Filter;
 
+use Sys25\RnBase\Frontend\Request\RequestInterface;
+use System25\T3sports\Filter\MatchFilter;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -25,7 +28,7 @@ namespace System25\Flw24\Filter;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class MatchByUser extends \tx_cfcleaguefe_filter_Match
+class MatchByUser extends MatchFilter
 {
     /**
      * Abgeleitete Filter können diese Methode überschreiben und zusätzliche Filter setzen.
@@ -36,9 +39,10 @@ class MatchByUser extends \tx_cfcleaguefe_filter_Match
      * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
      * @param string $confId
      */
-    protected function initFilter(&$fields, &$options, &$parameters, &$configurations, $confId)
+    protected function initFilter(&$fields, &$options, RequestInterface $request)
     {
-        parent::initFilter($fields, $options, $parameters, $configurations, $confId);
+        $configurations = $request->getConfigurations();
+        parent::initFilter($fields, $options, $request);
         $configurations->convertToUserInt();
 
         $feuser = \tx_t3users_models_feuser::getCurrent();

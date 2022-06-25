@@ -7,7 +7,7 @@ if (!defined('TYPO3_MODE')) {
 // -------------------------
 // ------- HOOKS -----------
 // -------------------------
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['matchMarker_initRecord'][] = 'Tx_Flw24_Hook_MatchMarker->addNewsRecords';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['matchMarker_initRecord'][] = 'System25\Flw24\Hook\Flw24MatchMarkerHook->addNewsRecords';
 
 // Hook for match search
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getTableMapping_hook'][] = 'System25\Flw24\Hook\Search->getTableMappingMatch';
@@ -15,13 +15,13 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getJoins_h
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getTableMapping_hook'][] = 'System25\Flw24\Hook\Search->getTableMappingMatch';
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getJoins_hook'][] = 'System25\Flw24\Hook\Search->getJoinsMatch';
 
-\tx_cfcleague_util_Misc::removeMatchNote('11');
-\tx_cfcleague_util_Misc::removeMatchNote('12');
-\tx_cfcleague_util_Misc::removeMatchNote('13');
-\tx_cfcleague_util_Misc::removeMatchNote('31');
-\tx_cfcleague_util_Misc::removeMatchNote('32');
-\tx_cfcleague_util_Misc::removeMatchNote('33');
-\tx_cfcleague_util_Misc::removeMatchNote('200');
+System25\T3sports\Utility\Misc::removeMatchNote('11');
+System25\T3sports\Utility\Misc::removeMatchNote('12');
+System25\T3sports\Utility\Misc::removeMatchNote('13');
+System25\T3sports\Utility\Misc::removeMatchNote('31');
+System25\T3sports\Utility\Misc::removeMatchNote('32');
+System25\T3sports\Utility\Misc::removeMatchNote('33');
+System25\T3sports\Utility\Misc::removeMatchNote('200');
 
 //\tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_matchend','1000');
 // \tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_prereport','1010');

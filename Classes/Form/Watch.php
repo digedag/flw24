@@ -2,11 +2,13 @@
 
 namespace System25\Flw24\Form;
 
+use tx_rnbase;
+
 /**
  * *************************************************************
  * Copyright notice.
  *
- * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2022 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -113,7 +115,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_pause')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchStarted($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -154,7 +156,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_secondht')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = \tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchHalftime($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -184,7 +186,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_extratime')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchHalftime2($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -228,7 +230,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_extratime_1')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = \tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchExtraTime($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -257,7 +259,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_extratime_ht')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchExtraTimeHT1($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -301,7 +303,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_extratime_2')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchExtraTimeHT($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -331,7 +333,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchExtraTimeHT2($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -372,7 +374,7 @@ class Watch
         $ret[] = $form->getWidget('btn_watch_stop')->majixDisplayDefault();
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchPenalties($form));
 
         $GLOBALS['TSFE']->storeSessionData();
@@ -412,7 +414,7 @@ class Watch
         $ret[] = $form->getWidget(self::FIELD_TICKER_PAUSETIME)->majixSetValue($starttime);
 
         /* @var $ticker \System25\Flw24\Form\Ticker */
-        $ticker = \tx_rnbase::makeInstance('System25\Flw24\Form\Ticker');
+        $ticker = tx_rnbase::makeInstance(\System25\Flw24\Form\Ticker::class);
         $ret = array_merge($ret, $ticker->onMatchFinished($form));
 
         $GLOBALS['TSFE']->storeSessionData();

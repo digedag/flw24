@@ -2,10 +2,20 @@
 
 namespace System25\Flw24\Form;
 
+use Sys25\RnBase\Configuration\Processor;
+use Sys25\RnBase\Database\Connection;
+use Sys25\RnBase\Utility\Strings;
+use System25\T3sports\Model\Match;
+use System25\T3sports\Model\Profile;
+use System25\T3sports\Model\Repository\ProfileRepository;
+use System25\T3sports\Model\Repository\TeamRepository;
+use System25\T3sports\Model\Team as TeamModel;
+use tx_rnbase;
+
 /***************************************************************
  * Copyright notice
  *
- * (c) 2017-2018 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2022 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,6 +39,15 @@ class Team
 {
     public const MODALBOX_TEAMMEMBER_HOME = 'editbox_teammember_home';
     public const MODALBOX_TEAMMEMBER_GUEST = 'editbox_teammember_guest';
+
+    private $teamRepo;
+    private $profileRepo;
+
+    public function __construct(TeamRepository $teamRepo = null, ProfileRepository $profileRepo = null)
+    {
+        $this->teamRepo = $teamRepo ?: new TeamRepository();
+        $this->profileRepo = $profileRepo ?: new ProfileRepository();
+    }
 
     /**
      * Show modal box to edit team member home.
@@ -60,7 +79,7 @@ class Team
     {
         $uid = $form->getDataHandler()->getStoredData('uid');
         /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        $match = tx_rnbase::makeInstance(Match::class, $uid);
         $team = $isHome ? $match->getHome() : $match->getGuest();
 
         // init the modalbox/childs with this record
@@ -102,7 +121,7 @@ class Team
     {
         $uid = (int) $form->getDataHandler()->getStoredData('uid');
         /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        $match = tx_rnbase::makeInstance(Match::class, $uid);
 
         $team = $isHome ? $match->getHome() : $match->getGuest();
         $options = [
@@ -116,7 +135,7 @@ class Team
             $options['where'] = '1=2';
         }
 
-        return \Tx_Rnbase_Database_Connection::getInstance()->
+        return Connection::getInstance()->
             doSelect(sprintf('uid,first_name,last_name,%d As team, \'%s\' As side',
                 $team->getUid(),
                 $isHome ? 'home' : 'guest'
@@ -136,15 +155,15 @@ class Team
         $prefix = $this->getTeamMemberWidget($isHome).'__';
         $teamUid = (int) $params[$prefix.'uid'];
         /* @var $team \tx_cfcleague_models_Team */
-        $team = \tx_rnbase::makeInstance('tx_cfcleague_models_Team', $teamUid);
+        $team = tx_rnbase::makeInstance(TeamModel::class, $teamUid);
 
         $profile = $this->createProfile($form, $prefix);
         // In Team aufnehmen
         $players = $team->getProperty('players');
-        $players = $players ? \Tx_Rnbase_Utility_Strings::intExplode(',', $players) : [];
+        $players = $players ? Strings::intExplode(',', $players) : [];
         $players[] = $profile->getUid();
         $team->setProperty('players', implode(',', $players));
-        \tx_cfcleague_util_ServiceRegistry::getTeamService()->persist($team);
+        $this->teamRepo->persist($team);
 
         $ret = [];
         $ret[] = $form->getWidget($prefix.'players')->majixRepaint();
@@ -163,7 +182,7 @@ class Team
     {
         \tx_rnbase::load('tx_t3users_models_feuser');
         $record = [
-            'pid' => \tx_rnbase_configurations::getExtensionCfgValue('cfc_league', 'profileRootPageId'),
+            'pid' => Processor::getExtensionCfgValue('cfc_league', 'profileRootPageId'),
             'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
         ];
         $fields = [
@@ -173,9 +192,9 @@ class Team
         foreach ($fields as $fieldName) {
             $record[$fieldName] = $form->getWidget($prefix.$fieldName)->getValue();
         }
-        $profile = \tx_rnbase::makeInstance('tx_cfcleague_models_Profile', $record);
+        $profile = tx_rnbase::makeInstance(Profile::class, $record);
 
-        \tx_cfcleague_util_ServiceRegistry::getProfileService()->persist($profile);
+        $this->profileRepo->persist($profile);
 
         return $profile;
     }
@@ -189,7 +208,7 @@ class Team
     public function cbRemoveProfile($params, $form)
     {
         /* @var $profile \tx_cfcleague_models_Profile */
-        $profile = \tx_rnbase::makeInstance('tx_cfcleague_models_Profile', $params['uid']);
+        $profile = tx_rnbase::makeInstance(Profile::class, $params['uid']);
         if (!$profile->isValid()) {
             return [];
         }
@@ -197,14 +216,14 @@ class Team
         $prefix = $this->getTeamMemberWidget($isHome).'__';
 
         /* @var $match \tx_cfcleague_models_Team */
-        $team = \tx_rnbase::makeInstance('tx_cfcleague_models_Team', $params['team']);
+        $team = tx_rnbase::makeInstance(TeamModel::class, $params['team']);
         $players = $team->getProperty('players');
-        $players = $players ? \Tx_Rnbase_Utility_Strings::intExplode(',', $players) : [];
+        $players = $players ? Strings::intExplode(',', $players) : [];
         $idx = array_search($profile->getUid(), $players);
         if (false !== $idx) {
             unset($players[$idx]);
             $team->setProperty('players', implode(',', $players));
-            \tx_cfcleague_util_ServiceRegistry::getTeamService()->persist($team);
+            $this->teamRepo->persist($team);
         }
 
         $ret = [];

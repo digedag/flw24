@@ -2,12 +2,16 @@
 
 namespace System25\Flw24\Action;
 
+use System25\Flw24\Utility\Access;
 use System25\Flw24\Utility\Errors;
+use System25\Flw24\View\FormView;
+use System25\T3sports\Model\Match;
+use tx_rnbase;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 Rene Nitzsche (rene@system25.de)
+ *  (c) 2017-2022 Rene Nitzsche (rene@system25.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -52,12 +56,12 @@ class TickerForm extends \tx_mkforms_action_FormBase
             throw new \Exception('Login please!', Errors::CODE_NOT_LOGGED_IN);
         }
         // Ist der Zugriff erlaubt?
-        if (!\Tx_Flw24_Utility_Access::isTickerAllowed($feuser, $matchId)) {
+        if (!Access::isTickerAllowed($feuser, $matchId)) {
             throw new \Exception('You are not allowed to ticker this match!', Errors::CODE_NOT_ALLOWED);
         }
 
         // Das Spiel laden
-        $item = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchId);
+        $item = tx_rnbase::makeInstance(Match::class, $matchId);
         $viewData->offsetSet('item', $item);
         //		$matchReport = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_matchreport', $matchId, $configurations);
         //		$viewData->offsetSet('matchReport', $matchReport); // Den Spielreport für den View bereitstellen
@@ -93,6 +97,6 @@ class TickerForm extends \tx_mkforms_action_FormBase
 
     public function getViewClassName()
     {
-        return 'System25\Flw24\View\TickerForm';
+        return FormView::class;
     }
 }

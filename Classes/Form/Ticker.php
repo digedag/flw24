@@ -2,11 +2,21 @@
 
 namespace System25\Flw24\Form;
 
+use Sys25\RnBase\Database\Connection;
+use Sys25\RnBase\Utility\Dates;
+use System25\T3sports\Model\Match;
+use System25\T3sports\Model\MatchNote;
+use System25\T3sports\Model\Repository\MatchNoteRepository;
+use System25\T3sports\Model\Repository\MatchRepository;
+use System25\T3sports\Utility\MatchTicker;
+use System25\T3sports\Utility\ServiceRegistry;
+use tx_rnbase;
+
 /*
  * *************************************************************
  * Copyright notice
  *
- * (c) 2017-2019 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2022 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,14 +37,21 @@ namespace System25\Flw24\Form;
  * *************************************************************
  */
 
-\tx_rnbase::load('tx_cfcleague_models_MatchNote');
-
 class Ticker
 {
     private $playerNames = [];
 
     /** In dieser Box werden vorhandene Notes bearbeitet */
     public const MODALBOX_TICKER = 'editbox_ticker';
+
+    private $mnRepo;
+    private $matchRepo;
+
+    public function __construct(MatchNoteRepository $mnRepo = null, MatchRepository $matchRepo = null)
+    {
+        $this->mnRepo = $mnRepo ?: new MatchNoteRepository();
+        $this->matchRepo = $matchRepo ?: new MatchRepository();
+    }
 
     /**
      * @param \tx_mkforms_forms_IForm $form
@@ -46,7 +63,7 @@ class Ticker
         // Die Match-UID wird im DataHandler persistiert
         $uid = $form->getDataHandler()->getStoredData('uid');
         /* @var $match \tx_cfcleague_models_Match */
-        return \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        return tx_rnbase::makeInstance(Match::class, $uid);
     }
 
     /**
@@ -59,7 +76,6 @@ class Ticker
      */
     public function cbTickerSubmitClick($params, $form)
     {
-        \tx_rnbase::load('tx_t3users_models_feuser');
         $match = $this->getCurrentMatch($form);
         $feuser = \tx_t3users_models_feuser::getCurrent();
         if (!$feuser) {
@@ -86,13 +102,11 @@ class Ticker
             $record[$fieldName] = $form->getWidget($fieldName)->getValue();
         }
 
-        /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
-        $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
-        $model = $repo->createNewModel($record);
-        if (\tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT == $record['type']) {
-            $this->handleChange($form, $model, $repo);
+        $model = $this->mnRepo->createNewModel($record);
+        if (MatchNote::TYPE_CHANGEOUT == $record['type']) {
+            $this->handleChange($form, $model, $this->mnRepo);
         }
-        $repo->persist($model);
+        $this->mnRepo->persist($model);
 
         $ret = [
             $form->getWidget('box_base')->majixClearValue(),
@@ -113,10 +127,10 @@ class Ticker
      * Sonderbehandlung für Spielerwechsel. Es muss ein zweite Note angelegt werden.
      *
      * @param \tx_mkforms_forms_Base $form
-     * @param \tx_cfcleague_model_MatchNote $model
-     * @param \Tx_Cfcleague_Model_Repository_MatchNote $repo
+     * @param MatchNote $model
+     * @param MatchNoteRepository $repo
      */
-    protected function handleChange(\tx_mkforms_forms_Base $form, \tx_cfcleague_models_MatchNote $model, $repo)
+    protected function handleChange(\tx_mkforms_forms_Base $form, MatchNote $model, $repo)
     {
         $team = 'home';
         $playerOut = $form->getWidget('player_home_changeout')->getValue();
@@ -138,8 +152,8 @@ class Ticker
     }
 
     /**
-     * @param tx_cfcleague_models_MatchNote $ticker
-     * @param tx_cfcleague_models_Match $match
+     * @param MatchNote $ticker
+     * @param Match $match
      * @param \tx_mkforms_forms_Base $form
      */
     protected function ensureStatus($ticker, $match, \tx_mkforms_forms_Base $form)
@@ -149,14 +163,14 @@ class Ticker
         }
 
         $match->setProperty('status', 2);
-        \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+        $this->matchRepo->persist($match);
 
         return true;
     }
 
     /**
-     * @param tx_cfcleague_models_MatchNote $ticker
-     * @param tx_cfcleague_models_Match $match
+     * @param MatchNote $ticker
+     * @param Match $match
      * @param \tx_mkforms_forms_Base $form
      *
      * @return bool
@@ -173,22 +187,22 @@ class Ticker
     }
 
     /**
-     * @param tx_cfcleague_models_Match $match
+     * @param Match $match
      * @param string $part
      *
      * @return \tx_cfcleague_models_MatchNote|null
      */
     protected function persistScore($match, $part = '2')
     {
-        \tx_rnbase::load('tx_cfcleaguefe_util_MatchTicker');
-        $tickerArr = \tx_cfcleaguefe_util_MatchTicker::getTicker4Match($match);
+        $matchTicker = new MatchTicker();
+        $tickerArr = $matchTicker->getTicker4Match($match);
         // im letzten Eintrag steht der aktuelle Spielstand
         /* @var $lastTicker \tx_cfcleague_models_MatchNote */
         $lastTicker = end($tickerArr);
         if ($lastTicker) {
             $match->setProperty('goals_home_'.$part, $lastTicker->getProperty('goals_home'));
             $match->setProperty('goals_guest_'.$part, $lastTicker->getProperty('goals_guest'));
-            \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+            $this->matchRepo->persist($match);
 
             return $lastTicker;
         }
@@ -199,25 +213,24 @@ class Ticker
     /**
      * Spiel- und Tickerstatus automatisch setzen.
      *
-     * @param tx_cfcleague_models_Match $match
+     * @param Match $match
      */
     protected function ensureTickerActive($match, \tx_mkforms_forms_Base $form, $minute)
     {
-        \tx_rnbase::load('tx_rnbase_util_Dates');
         if (($match->isTicker() && $match->isRunning()) || $match->isFinished()) {
             return false;
         }
         // Liegt das Spiel in der Vergangenheit
         $kickoff = \tx_rnbase_util_Dates::date_tstamp2mysql($match->getDate());
         $kickoff = \tx_rnbase_util_Dates::date_mysql2int($match->getDate());
-        if (\tx_rnbase_util_Dates::getTodayDateString() > $kickoff) {
+        if (Dates::getTodayDateString() > $kickoff) {
             return false;
         }
         $match->setProperty('link_ticker', 1);
         if (((int) $minute) > 0) {
-            $match->setProperty('status', \tx_cfcleague_models_Match::MATCH_STATUS_RUNNING);
+            $match->setProperty('status', Match::MATCH_STATUS_RUNNING);
         }
-        \tx_cfcleague_util_ServiceRegistry::getMatchService()->persist($match);
+        $this->matchRepo->persist($match);
 
         return true;
     }
@@ -233,7 +246,7 @@ class Ticker
     public function cbEditMatchNote($params, $form)
     {
         /* @var $matchNote \tx_cfcleague_models_MatchNote */
-        $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
+        $matchNote = tx_rnbase::makeInstance(MatchNote::class, $params['uid']);
         if (!$matchNote->isValid()) {
             return [];
         }
@@ -263,7 +276,7 @@ class Ticker
     public function cbUpdateMatchNote($params, $form)
     {
         /* @var $matchNote \tx_cfcleague_models_MatchNote */
-        $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params[self::MODALBOX_TICKER.'__uid']);
+        $matchNote = tx_rnbase::makeInstance(MatchNote::class, $params[self::MODALBOX_TICKER.'__uid']);
         if (!$matchNote->isValid()) {
             return $this->cbBtnCancelTicker($params, $form);
         }
@@ -282,9 +295,7 @@ class Ticker
             }
         }
 
-        /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
-        $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
-        $repo->persist($matchNote);
+        $this->mnRepo->persist($matchNote);
 
         $ret = [
             $form->getWidget('matchnotes')->majixRepaint(),
@@ -292,7 +303,7 @@ class Ticker
         ];
 
         /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchNote->getProperty('game'));
+        $match = tx_rnbase::makeInstance(Match::class, $matchNote->getProperty('game'));
         $this->ensureScore($matchNote, $match, $form);
 
         return $ret;
@@ -307,18 +318,20 @@ class Ticker
     public function cbDeleteMatchNote($params, $form)
     {
         /* @var $matchNote \tx_cfcleague_models_MatchNote */
-        $matchNote = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $params['uid']);
+        $matchNote = tx_rnbase::makeInstance(MatchNote::class, $params['uid']);
         if (!$matchNote->isValid()) {
             return [];
         }
 
         /* @var $match \tx_cfcleague_models_Match */
-        $match = \tx_rnbase::makeInstance('tx_cfcleague_models_Match', $matchNote->getProperty('game'));
-        $matchNoteClone = \tx_rnbase::makeInstance('tx_cfcleague_models_MatchNote', $matchNote->getProperty());
+        $match = tx_rnbase::makeInstance(Match::class, $matchNote->getProperty('game'));
+        $matchNoteClone = tx_rnbase::makeInstance(MatchNote::class, $matchNote->getProperty());
 
+        // FIXME: es gibt kein DELETE im Repo.
         /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
-        $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
+        $repo = tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
         $repo->handleDelete($matchNote, '', 1);
+//        $this->mnRepo->persist($model);
 
         $ret = [
             $form->getWidget('matchnotes')->majixRepaint(),
@@ -339,7 +352,7 @@ class Ticker
             // 'orderby' => 'minute desc, extra_time desc',
         ];
 
-        return \Tx_Rnbase_Database_Connection::getInstance()->doSelect('*', 'tx_cfcleague_match_notes', $options);
+        return Connection::getInstance()->doSelect('*', 'tx_cfcleague_match_notes', $options);
     }
 
     /**
@@ -355,7 +368,7 @@ class Ticker
             // Hier ist der Spieler egal
             return true;
         }
-        if (\tx_cfcleague_models_MatchNote::TYPE_CHANGEOUT == $type) {
+        if (MatchNote::TYPE_CHANGEOUT == $type) {
             // Bei Auswechslungen werden zwei Spieler benötigt
             if (
                 !(
@@ -501,7 +514,7 @@ class Ticker
     }
 
     /**
-     * @param tx_cfcleague_models_Match $match
+     * @param Match $match
      * @param string $team
      */
     protected function getPlayerNames($match, $team, \tx_mkforms_forms_IForm $form)
@@ -510,7 +523,7 @@ class Ticker
             return $this->playerNames[$team];
         }
 
-        $profileSrv = \tx_cfcleague_util_ServiceRegistry::getProfileService();
+        $profileSrv = ServiceRegistry::getProfileService();
         if ('home' == $team) {
             $players = $profileSrv->loadProfiles($match->getPlayersHome(true));
         } else {
@@ -555,7 +568,7 @@ class Ticker
 
     protected function loadTickerTypes()
     {
-        $srv = \tx_cfcleague_util_ServiceRegistry::getMatchService();
+        $srv = ServiceRegistry::getMatchService();
 
         return $srv->getMatchNoteTypes4TCA();
     }
@@ -671,7 +684,7 @@ class Ticker
     {
         $ret = [];
         $match = $this->getCurrentMatch($form);
-        $match->setProperty('status', \tx_cfcleague_models_Match::MATCH_STATUS_FINISHED);
+        $match->setProperty('status', Match::MATCH_STATUS_FINISHED);
         $match->setProperty('link_report', 1);
         // Zur Sicherheit den Spielstand nochmal übernehmen
         $lastTicker = $this->persistScore($match, $this->getMatchPartFinal($match));
@@ -742,10 +755,8 @@ class Ticker
         $this->createMessage($match, $minute, 'Das Spiel ist beendet', $extraTime);
     }
 
-    private function createMessage($match, $minute, $comment, $extraTime = 0, $type = \tx_cfcleague_models_MatchNote::TYPE_TICKER)
+    private function createMessage($match, $minute, $comment, $extraTime = 0, $type = MatchNote::TYPE_TICKER)
     {
-        /* @var $repo \Tx_Cfcleague_Model_Repository_MatchNote */
-        $repo = \tx_rnbase::makeInstance('Tx_Cfcleague_Model_Repository_MatchNote');
         $model = $this->createNewMatchNote($match, $repo);
         $model->setProperty('type', $type);
         $model->setProperty('minute', $minute);
@@ -754,7 +765,7 @@ class Ticker
             $model->setProperty('extra_time', $extraTime);
         }
 
-        $repo->persist($model);
+        $this->mnRepo->persist($model);
     }
 
     /**

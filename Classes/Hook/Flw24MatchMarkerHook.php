@@ -1,11 +1,14 @@
 <?php
 
+namespace System25\Flw24\Hook;
+
 use Sys25\More4T3sports\Hook\MatchMarkerHook;
+use System25\Flw24\Utility\Access;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Rene Nitzsche (rene@system25.de)
+ *  (c) 2015-2022 Rene Nitzsche (rene@system25.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,13 +28,13 @@ use Sys25\More4T3sports\Hook\MatchMarkerHook;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class Tx_Flw24_Hook_MatchMarker extends MatchMarkerHook
+class Flw24MatchMarkerHook extends MatchMarkerHook
 {
     /**
      * Integrates output of preview and matchreport fields to matches.
      *
      * @param array $params
-     * @param tx_cfcleaguefe_util_MatchMarker $parent
+     * @param Flw24MatchMarkerHook $parent
      */
     public function addNewsRecords($params, $parent)
     {
@@ -57,11 +60,11 @@ class Tx_Flw24_Hook_MatchMarker extends MatchMarkerHook
         if (!isset($matchData['uid']) || !$matchData['uid']) {
             return true;
         }
-        $feuser = tx_t3users_models_feuser::getCurrent();
+        $feuser = \tx_t3users_models_feuser::getCurrent();
         if (!$feuser) {
             return true;
         }
 
-        return !Tx_Flw24_Utility_Access::isTickerAllowed($feuser, $matchData['uid']);
+        return !Access::isTickerAllowed($feuser, $matchData['uid']);
     }
 }
