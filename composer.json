@@ -28,6 +28,7 @@
 		"dmk/mkforms" : ">=9.5.4"
 	},
 	"autoload" : {
+        "psr-4": {"System25\\Flw24\\" : "Classes"},
 		"classmap" : [
 			"Classes/"
 		]
