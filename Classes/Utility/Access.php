@@ -1,6 +1,8 @@
 <?php
 
 namespace System25\Flw24\Utility;
+use Sys25\RnBase\Domain\Model\FeUser;
+use System25\T3sports\Utility\ServiceRegistry;
 
 /***************************************************************
 *  Copyright notice
@@ -29,7 +31,7 @@ class Access
 {
     public const CODE_NOT_LOGGED_IN = 1000;
 
-    public static function isTickerAllowed(tx_t3users_models_feuser $feuser, $matchUid)
+    public static function isTickerAllowed(FeUser $feuser, $matchUid)
     {
         $fields = [
             'TEAM1FEUSER.UID_FOREIGN' => [OP_EQ_INT => $feuser->getUid()],
@@ -38,7 +40,7 @@ class Access
         $options = [
             'count' => 1,
         ];
-        $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
+        $cnt = ServiceRegistry::getMatchService()->search($fields, $options);
         $home = $cnt > 0;
 
         $fields = [
@@ -48,7 +50,7 @@ class Access
         $options = [
             'count' => 1,
         ];
-        $cnt = \tx_cfcleague_util_ServiceRegistry::getMatchService()->search($fields, $options);
+        $cnt = ServiceRegistry::getMatchService()->search($fields, $options);
         $guest = $cnt > 0;
 
         return $home || $guest;

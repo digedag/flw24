@@ -3,7 +3,8 @@
 namespace System25\Flw24\Form;
 
 use Sys25\RnBase\Utility\Strings;
-use System25\T3sports\Model\Match;
+use System25\T3sports\Model\Fixture;
+use System25\T3sports\Model\Profile;
 use System25\T3sports\Model\Repository\MatchRepository;
 use tx_rnbase;
 
@@ -11,7 +12,7 @@ use tx_rnbase;
  * *************************************************************
  * Copyright notice.
  *
- * (c) 2017-2022 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2023 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -98,8 +99,8 @@ class LineUp
     protected function editLineup($params, $form, $isHome, $isSubst = false)
     {
         $uid = $form->getDataHandler()->getStoredData('uid');
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = tx_rnbase::makeInstance('tx_cfcleague_models_Match', $uid);
+        /** @var Fixture $match */
+        $match = tx_rnbase::makeInstance(Fixture::class, $uid);
 
         // init the modalbox/childs with this record
         $what = $isSubst ? 'substitutes' : 'players';
@@ -135,9 +136,9 @@ class LineUp
 
     public function getPlayers($params, \tx_mkforms_forms_IForm $form)
     {
-        /* @var $match \tx_cfcleague_models_Match */
+        /* @var $match Fixture */
         $uid = $form->getDataHandler()->getStoredData('uid');
-        $match = tx_rnbase::makeInstance(Match::class, $uid);
+        $match = tx_rnbase::makeInstance(Fixture::class, $uid);
         $isHome = 'home' == $params['team'];
         $data = $form->getWidget($this->getLineUpWidget($isHome))->getValue();
         $isSubst = (bool) $data['subst'];
@@ -149,7 +150,7 @@ class LineUp
 
         $items = [];
         foreach ($team->getPlayers() as $profile) {
-            /* @var $profile \tx_cfcleague_models_Profile */
+            /** @var Profile $profile */
             if (in_array($profile->getUid(), $ignore)) {
                 continue;
             }
@@ -184,8 +185,8 @@ class LineUp
         $isHome = isset($params[self::MODALBOX_LINEUP_HOME.'__uid']);
         $prefix = $this->getLineUpWidget($isHome).'__';
         $matchUid = $params[$prefix.'uid'];
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = tx_rnbase::makeInstance(Match::class, $matchUid);
+        /** @var Fixture $match */
+        $match = tx_rnbase::makeInstance(Fixture::class, $matchUid);
         if ($match->isValid()) {
             $isSubst = $params[$prefix.'subst'];
             $what = $isSubst ? 'substitutes' : 'players';

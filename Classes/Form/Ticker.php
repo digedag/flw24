@@ -4,7 +4,7 @@ namespace System25\Flw24\Form;
 
 use Sys25\RnBase\Database\Connection;
 use Sys25\RnBase\Utility\Dates;
-use System25\T3sports\Model\Match;
+use System25\T3sports\Model\Fixture;
 use System25\T3sports\Model\MatchNote;
 use System25\T3sports\Model\Repository\MatchNoteRepository;
 use System25\T3sports\Model\Repository\MatchRepository;
@@ -16,7 +16,7 @@ use tx_rnbase;
  * *************************************************************
  * Copyright notice
  *
- * (c) 2017-2022 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2023 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -56,14 +56,14 @@ class Ticker
     /**
      * @param \tx_mkforms_forms_IForm $form
      *
-     * @return \tx_cfcleague_models_Match
+     * @return Fixture
      */
     protected function getCurrentMatch(\tx_mkforms_forms_IForm $form)
     {
         // Die Match-UID wird im DataHandler persistiert
         $uid = $form->getDataHandler()->getStoredData('uid');
-        /* @var $match \tx_cfcleague_models_Match */
-        return tx_rnbase::makeInstance(Match::class, $uid);
+        /** @var Fixture $match */
+        return tx_rnbase::makeInstance(Fixture::class, $uid);
     }
 
     /**
@@ -147,13 +147,13 @@ class Ticker
         $model2 = clone $model;
         $model2->setProperty($record);
         $model2->setProperty('player_'.$team, $playerIn);
-        $model2->setProperty('type', \tx_cfcleague_models_MatchNote::TYPE_CHANGEIN);
+        $model2->setProperty('type', MatchNote::TYPE_CHANGEIN);
         $repo->persist($model2);
     }
 
     /**
      * @param MatchNote $ticker
-     * @param Match $match
+     * @param Fixture $match
      * @param \tx_mkforms_forms_Base $form
      */
     protected function ensureStatus($ticker, $match, \tx_mkforms_forms_Base $form)
@@ -170,7 +170,7 @@ class Ticker
 
     /**
      * @param MatchNote $ticker
-     * @param Match $match
+     * @param Fixture $match
      * @param \tx_mkforms_forms_Base $form
      *
      * @return bool
@@ -187,17 +187,17 @@ class Ticker
     }
 
     /**
-     * @param Match $match
+     * @param Fixture $match
      * @param string $part
      *
-     * @return \tx_cfcleague_models_MatchNote|null
+     * @return MatchNote|null
      */
     protected function persistScore($match, $part = '2')
     {
         $matchTicker = new MatchTicker();
         $tickerArr = $matchTicker->getTicker4Match($match);
         // im letzten Eintrag steht der aktuelle Spielstand
-        /* @var $lastTicker \tx_cfcleague_models_MatchNote */
+        /* @var $lastTicker MatchNote */
         $lastTicker = end($tickerArr);
         if ($lastTicker) {
             $match->setProperty('goals_home_'.$part, $lastTicker->getProperty('goals_home'));
@@ -213,7 +213,7 @@ class Ticker
     /**
      * Spiel- und Tickerstatus automatisch setzen.
      *
-     * @param Match $match
+     * @param Fixture $match
      */
     protected function ensureTickerActive($match, \tx_mkforms_forms_Base $form, $minute)
     {
@@ -228,7 +228,7 @@ class Ticker
         }
         $match->setProperty('link_ticker', 1);
         if (((int) $minute) > 0) {
-            $match->setProperty('status', Match::MATCH_STATUS_RUNNING);
+            $match->setProperty('status', Fixture::MATCH_STATUS_RUNNING);
         }
         $this->matchRepo->persist($match);
 
@@ -302,8 +302,8 @@ class Ticker
             $form->getWidget(self::MODALBOX_TICKER)->majixCloseBox(),
         ];
 
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = tx_rnbase::makeInstance(Match::class, $matchNote->getProperty('game'));
+        /** @var Fixture $match */
+        $match = tx_rnbase::makeInstance(Fixture::class, $matchNote->getProperty('game'));
         $this->ensureScore($matchNote, $match, $form);
 
         return $ret;
@@ -317,14 +317,14 @@ class Ticker
      */
     public function cbDeleteMatchNote($params, $form)
     {
-        /* @var $matchNote \tx_cfcleague_models_MatchNote */
+        /* @var $matchNote MatchNote */
         $matchNote = tx_rnbase::makeInstance(MatchNote::class, $params['uid']);
         if (!$matchNote->isValid()) {
             return [];
         }
 
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = tx_rnbase::makeInstance(Match::class, $matchNote->getProperty('game'));
+        /** @var Fixture $match */
+        $match = tx_rnbase::makeInstance(Fixture::class, $matchNote->getProperty('game'));
         $matchNoteClone = tx_rnbase::makeInstance(MatchNote::class, $matchNote->getProperty());
 
         // FIXME: es gibt kein DELETE im Repo.
@@ -352,7 +352,7 @@ class Ticker
             // 'orderby' => 'minute desc, extra_time desc',
         ];
 
-        return Connection::getInstance()->doSelect('*', 'tx_cfcleague_match_notes', $options);
+        return Connection::getInstance()->doSelect('*', MatchNote::class, $options);
     }
 
     /**
@@ -505,7 +505,7 @@ class Ticker
      */
     public function getPlayers($params, \tx_mkforms_forms_IForm $form)
     {
-        /* @var $match \tx_cfcleague_models_Match */
+        /** @var Fixture $match */
         $match = $this->getCurrentMatch($form);
 
         $data = $this->getPlayerNames($match, $params['team'], $form);
@@ -514,7 +514,7 @@ class Ticker
     }
 
     /**
-     * @param Match $match
+     * @param Fixture $match
      * @param string $team
      */
     protected function getPlayerNames($match, $team, \tx_mkforms_forms_IForm $form)
@@ -684,7 +684,7 @@ class Ticker
     {
         $ret = [];
         $match = $this->getCurrentMatch($form);
-        $match->setProperty('status', Match::MATCH_STATUS_FINISHED);
+        $match->setProperty('status', Fixture::MATCH_STATUS_FINISHED);
         $match->setProperty('link_report', 1);
         // Zur Sicherheit den Spielstand nochmal übernehmen
         $lastTicker = $this->persistScore($match, $this->getMatchPartFinal($match));
@@ -695,8 +695,8 @@ class Ticker
     }
 
     /**
-     * @param \tx_cfcleague_models_Match $match
-     * @param \tx_cfcleague_models_MatchNote $lastTicker
+     * @param Fixture $match
+     * @param MatchNote $lastTicker
      */
     private function createMessageHalftime($match, $lastTicker)
     {
@@ -708,8 +708,8 @@ class Ticker
     }
 
     /**
-     * @param \tx_cfcleague_models_Match $match
-     * @param \tx_cfcleague_models_MatchNote $lastTicker
+     * @param Fixture $match
+     * @param MatchNote $lastTicker
      */
     private function createMessageExtraTime($match, $lastTicker, $halftime = false)
     {
@@ -722,8 +722,8 @@ class Ticker
     }
 
     /**
-     * @param \tx_cfcleague_models_Match $match
-     * @param \tx_cfcleague_models_MatchNote $lastTicker
+     * @param Fixture $match
+     * @param MatchNote $lastTicker
      */
     private function createMessagePenalties($match, $lastTicker)
     {
@@ -735,8 +735,8 @@ class Ticker
     }
 
     /**
-     * @param \tx_cfcleague_models_Match $match
-     * @param \tx_cfcleague_models_MatchNote $lastTicker
+     * @param Fixture $match
+     * @param MatchNote $lastTicker
      */
     private function createMessageFinished($match, $lastTicker)
     {
@@ -757,7 +757,7 @@ class Ticker
 
     private function createMessage($match, $minute, $comment, $extraTime = 0, $type = MatchNote::TYPE_TICKER)
     {
-        $model = $this->createNewMatchNote($match, $repo);
+        $model = $this->createNewMatchNote($match, $this->mnRepo);
         $model->setProperty('type', $type);
         $model->setProperty('minute', $minute);
         $model->setProperty('comment', $comment);
@@ -769,10 +769,10 @@ class Ticker
     }
 
     /**
-     * @param \tx_cfcleague_models_Match $match
-     * @param $repo \Tx_Cfcleague_Model_Repository_MatchNote
+     * @param Fixture $match
+     * @param $repo MatchNote
      *
-     * @return \tx_cfcleague_models_MatchNote
+     * @return MatchNote
      */
     protected function createNewMatchNote($match, $repo)
     {
@@ -786,7 +786,7 @@ class Ticker
     }
 
     /**
-     * @param \tx_cfcleague_models_Match $match
+     * @param Fixture $match
      *
      * @return string
      */

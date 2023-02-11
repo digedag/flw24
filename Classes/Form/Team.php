@@ -4,8 +4,9 @@ namespace System25\Flw24\Form;
 
 use Sys25\RnBase\Configuration\Processor;
 use Sys25\RnBase\Database\Connection;
+use Sys25\RnBase\Domain\Repository\FeUserRepository;
 use Sys25\RnBase\Utility\Strings;
-use System25\T3sports\Model\Match;
+use System25\T3sports\Model\Fixture;
 use System25\T3sports\Model\Profile;
 use System25\T3sports\Model\Repository\ProfileRepository;
 use System25\T3sports\Model\Repository\TeamRepository;
@@ -15,7 +16,7 @@ use tx_rnbase;
 /***************************************************************
  * Copyright notice
  *
- * (c) 2017-2022 Rene Nitzsche (rene@system25.de)
+ * (c) 2017-2023 Rene Nitzsche (rene@system25.de)
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -42,11 +43,13 @@ class Team
 
     private $teamRepo;
     private $profileRepo;
+    private $feUserRepo;
 
-    public function __construct(TeamRepository $teamRepo = null, ProfileRepository $profileRepo = null)
+    public function __construct(TeamRepository $teamRepo = null, ProfileRepository $profileRepo = null, FeUserRepository $feUserRepo)
     {
         $this->teamRepo = $teamRepo ?: new TeamRepository();
         $this->profileRepo = $profileRepo ?: new ProfileRepository();
+        $this->feUserRepo = $feUserRepo ?: new FeUserRepository();
     }
 
     /**
@@ -78,13 +81,12 @@ class Team
     protected function editTeamMember($params, $form, $isHome)
     {
         $uid = $form->getDataHandler()->getStoredData('uid');
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = tx_rnbase::makeInstance(Match::class, $uid);
+        /** @var Fixture $match */
+        $match = tx_rnbase::makeInstance(Fixture::class, $uid);
         $team = $isHome ? $match->getHome() : $match->getGuest();
 
         // init the modalbox/childs with this record
         $form->getWidget($this->getTeamMemberWidget($isHome))->setValue($team->getProperty());
-//        \tx_mkforms_util_Div::debug4ajax($team->getProperty());
 
         // open the box
         return $form->getWidget($this->getTeamMemberWidget($isHome))->majixShowBox();
@@ -120,8 +122,8 @@ class Team
     protected function getPlayersSql($params, $form, $isHome)
     {
         $uid = (int) $form->getDataHandler()->getStoredData('uid');
-        /* @var $match \tx_cfcleague_models_Match */
-        $match = tx_rnbase::makeInstance(Match::class, $uid);
+        /** @var Fixture $match */
+        $match = tx_rnbase::makeInstance(Fixture::class, $uid);
 
         $team = $isHome ? $match->getHome() : $match->getGuest();
         $options = [
@@ -154,7 +156,7 @@ class Team
         $isHome = isset($params[self::MODALBOX_TEAMMEMBER_HOME.'__uid']);
         $prefix = $this->getTeamMemberWidget($isHome).'__';
         $teamUid = (int) $params[$prefix.'uid'];
-        /* @var $team \tx_cfcleague_models_Team */
+        /** @var TeamModel */
         $team = tx_rnbase::makeInstance(TeamModel::class, $teamUid);
 
         $profile = $this->createProfile($form, $prefix);
@@ -176,14 +178,14 @@ class Team
     /**
      * @param \tx_mkforms_forms_Base $form
      *
-     * @return \tx_cfcleague_models_Profile
+     * @return Profile
      */
     protected function createProfile($form, $prefix)
     {
-        \tx_rnbase::load('tx_t3users_models_feuser');
+        $feUser = $this->feUserRepo->getCurrent();
         $record = [
             'pid' => Processor::getExtensionCfgValue('cfc_league', 'profileRootPageId'),
-            'crfeuser' => \tx_t3users_models_feuser::getCurrent()->getUid(),
+            'crfeuser' => $feUser ? $feUser->getUid() : '',
         ];
         $fields = [
             'first_name',
@@ -207,7 +209,7 @@ class Team
      */
     public function cbRemoveProfile($params, $form)
     {
-        /* @var $profile \tx_cfcleague_models_Profile */
+        /** @var Profile $profile */
         $profile = tx_rnbase::makeInstance(Profile::class, $params['uid']);
         if (!$profile->isValid()) {
             return [];
@@ -215,7 +217,7 @@ class Team
         $isHome = 'home' == $params['side'];
         $prefix = $this->getTeamMemberWidget($isHome).'__';
 
-        /* @var $match \tx_cfcleague_models_Team */
+        /** @var TeamModel $match */
         $team = tx_rnbase::makeInstance(TeamModel::class, $params['team']);
         $players = $team->getProperty('players');
         $players = $players ? Strings::intExplode(',', $players) : [];

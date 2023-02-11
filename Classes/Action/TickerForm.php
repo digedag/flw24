@@ -2,10 +2,11 @@
 
 namespace System25\Flw24\Action;
 
+use Sys25\RnBase\Domain\Repository\FeUserRepository;
 use System25\Flw24\Utility\Access;
 use System25\Flw24\Utility\Errors;
 use System25\Flw24\View\FormView;
-use System25\T3sports\Model\Match;
+use System25\T3sports\Model\Fixture;
 use tx_rnbase;
 
 /***************************************************************
@@ -39,7 +40,7 @@ class TickerForm extends \tx_mkforms_action_FormBase
      * handle request.
      *
      * @param \arrayobject $parameters
-     * @param \Tx_Rnbase_Configuration_ProcessorInterface $configurations
+     * @param \Sys25\RnBase\Configuration\ConfigurationInterface $configurations
      * @param \arrayobject $viewData
      *
      * @return string
@@ -50,8 +51,9 @@ class TickerForm extends \tx_mkforms_action_FormBase
         if (0 == $matchId) {
             return 'No matchId found!';
         }
+        $feUserRepo = new FeUserRepository();
 
-        $feuser = \tx_t3users_models_feuser::getCurrent();
+        $feuser = $feUserRepo->getCurrent();
         if (!$feuser || !$feuser->isValid()) {
             throw new \Exception('Login please!', Errors::CODE_NOT_LOGGED_IN);
         }
@@ -61,7 +63,7 @@ class TickerForm extends \tx_mkforms_action_FormBase
         }
 
         // Das Spiel laden
-        $item = tx_rnbase::makeInstance(Match::class, $matchId);
+        $item = tx_rnbase::makeInstance(Fixture::class, $matchId);
         $viewData->offsetSet('item', $item);
         //		$matchReport = \tx_rnbase::makeInstance('tx_cfcleaguefe_models_matchreport', $matchId, $configurations);
         //		$viewData->offsetSet('matchReport', $matchReport); // Den Spielreport für den View bereitstellen
@@ -78,7 +80,7 @@ class TickerForm extends \tx_mkforms_action_FormBase
     }
 
     /**
-     * @return \tx_cfcleague_models_Match
+     * @return Fixture
      */
     public function getItem()
     {

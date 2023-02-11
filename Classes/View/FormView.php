@@ -4,13 +4,13 @@ namespace System25\Flw24\View;
 
 use Sys25\RnBase\Frontend\Marker\SimpleMarker;
 use System25\T3sports\Frontend\Marker\MatchMarker;
-use System25\T3sports\Model\Match;
+use System25\T3sports\Model\Fixture;
 use tx_rnbase;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017-2022 Rene Nitzsche (rene@system25.de)
+ *  (c) 2017-2023 Rene Nitzsche (rene@system25.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -48,7 +48,7 @@ class FormView extends \tx_mkforms_view_Form
         if (is_array($items)) {
             foreach ($items as $key => $item) {
                 $markerClass = SimpleMarker::class;
-                if ($item instanceof Match) {
+                if ($item instanceof Fixture) {
                     $markerClass = MatchMarker::class;
                 }
                 $marker = tx_rnbase::makeInstance($markerClass);
