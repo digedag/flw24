@@ -1,6 +1,8 @@
 <?php
 
-defined('TYPO3_MODE') or exit();
+if (!(defined('TYPO3') || defined('TYPO3_MODE'))) {
+    exit('Access denied.');
+}
 
 call_user_func(function () {
     $extKey = 'flw24';
@@ -15,15 +17,15 @@ call_user_func(function () {
     // Das tt_content-Feld pi_flexform einblenden
     $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['tx_flw24_form'] = 'pi_flexform';
 
-    $GLOBALS['TCA']['tt_content']['ctrl']['requestUpdate'] .= ',scope.betgame';
+//    $GLOBALS['TCA']['tt_content']['ctrl']['requestUpdate'] .= ',scope.betgame';
 
-    tx_rnbase_util_Extensions::addPiFlexFormValue(
+    \Sys25\RnBase\Utility\Extensions::addPiFlexFormValue(
         'tx_flw24_form',
         'FILE:EXT:'.$extKey.'/Configuration/Flexform/plugin_form.xml'
     );
 
-    tx_rnbase_util_Extensions::addPlugin([
-            'LLL:EXT:'.$extKey.'/Resources/Private/Language/locallang_db.php:plugin.flw24_form.label',
+    \Sys25\RnBase\Utility\Extensions::addPlugin([
+            'LLL:EXT:'.$extKey.'/Resources/Private/Language/locallang_db.xlf:plugin.flw24_form.label',
             'tx_flw24_form',
         ],
         'list_type',

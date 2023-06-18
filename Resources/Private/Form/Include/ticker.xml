@@ -14,7 +14,7 @@
 							<validator:STANDARD>
 								<required>
 									<value>true</value>
-									<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_minute_required
+									<message>LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_msg_minute_required
 									</message>
 								</required>
 							</validator:STANDARD>
@@ -28,7 +28,7 @@
 						<validators>
 							<validator:STANDARD>
 								<custom
-									message="LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set">
+									message="LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_msg_player_not_set">
 									<userobj extension="System25\Flw24\Form\Ticker" method="validatePlayerModal"/>
 								</custom>
 							</validator:STANDARD>

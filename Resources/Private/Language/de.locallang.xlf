@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" data="2023-06-18T13-45-38" product-name="zsb">
+		<header/>
+		<body>
+			<trans-unit id="label_flw24_watch" xml:space="preserve">
+				<source>Watch</source>
+				<target>Spielzeit</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_watch_offset" xml:space="preserve">
+				<source>Offset</source>
+				<target>Korrektur</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_watch_matchpart" xml:space="preserve">
+				<source>Match part</source>
+				<target>Spielabschnitt</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_watch_matchpart_1" xml:space="preserve">
+				<source>1. Half</source>
+				<target>1. HZ</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_watch_matchpart_2" xml:space="preserve">
+				<source>2. Half</source>
+				<target>2. HZ</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_watch_matchpart_3" xml:space="preserve">
+				<source>Extra 1. Half</source>
+				<target>Verl. 1. HZ</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_watch_matchpart_4" xml:space="preserve">
+				<source>Extra 2. Half</source>
+				<target>Verl. 2. HZ</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_type" xml:space="preserve">
+				<source>Type</source>
+				<target>Typ</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_minute" xml:space="preserve">
+				<source>Minute</source>
+				<target>Minute</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_comment" xml:space="preserve">
+				<source>Comment</source>
+				<target>Kommentar</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_player_unknown" xml:space="preserve">
+				<source>Unknown player</source>
+				<target>Unbekannter Spieler</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_playerHome" xml:space="preserve">
+				<source>Player Home</source>
+				<target>Spieler Heim</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_playerGuest" xml:space="preserve">
+				<source>Player Guest</source>
+				<target>Spieler Gast</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_playerHomeChangeIn" xml:space="preserve">
+				<source>Changed in</source>
+				<target>Eingewechselt</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_playerGuestChangeIn" xml:space="preserve">
+				<source>Changed in</source>
+				<target>Eingewechselt</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_playerHomeChangeOut" xml:space="preserve">
+				<source>Changed out</source>
+				<target>Ausgewechselt</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_ticker_playerGuestChangeOut" xml:space="preserve">
+				<source>Changed out</source>
+				<target>Ausgewechselt</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_event_matchend" xml:space="preserve">
+				<source>Match end</source>
+				<target>Spielende</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_event_prereport" xml:space="preserve">
+				<source>Preliminary report</source>
+				<target>Vorbericht</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_event_midreport" xml:space="preserve">
+				<source>Halftime report</source>
+				<target>Halbzeitfazit</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_event_endreport" xml:space="preserve">
+				<source>Final report</source>
+				<target>Fazit</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_status" xml:space="preserve">
+				<source>Status</source>
+				<target>Status</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_status_scheduled" xml:space="preserve">
+				<source>Scheduled</source>
+				<target>Angesetzt</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_status_running" xml:space="preserve">
+				<source>Running</source>
+				<target>Spiel läuft</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_status_finished" xml:space="preserve">
+				<source>Finished</source>
+				<target>Beendet</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_visitors" xml:space="preserve">
+				<source>Visitors</source>
+				<target>Zuschauer</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_result" xml:space="preserve">
+				<source>Score</source>
+				<target>Endstand</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_result1" xml:space="preserve">
+				<source>Halftime</source>
+				<target>Halbzeit</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_match_linkticker" xml:space="preserve">
+				<source>Liveticker active</source>
+				<target>Liveticker aktiv</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_profile_firstname" xml:space="preserve">
+				<source>Vorname</source>
+				<target>Vorname</target>
+			</trans-unit>
+			<trans-unit id="label_flw24_profile_lastname" xml:space="preserve">
+				<source>Nachname</source>
+				<target>Nachname</target>
+			</trans-unit>
+			<trans-unit id="label_btn_save" xml:space="preserve">
+				<source>Save</source>
+				<target>Speichern</target>
+			</trans-unit>
+			<trans-unit id="label_btn_edit" xml:space="preserve">
+				<source>Edit</source>
+				<target>Bearbeiten</target>
+			</trans-unit>
+			<trans-unit id="label_btn_delete" xml:space="preserve">
+				<source>Delete</source>
+				<target>Löschen</target>
+			</trans-unit>
+			<trans-unit id="label_btn_submit" xml:space="preserve">
+				<source>Submit</source>
+				<target>Absenden</target>
+			</trans-unit>
+			<trans-unit id="label_btn_cancel" xml:space="preserve">
+				<source>Cancel</source>
+				<target>Abbruch</target>
+			</trans-unit>
+			<trans-unit id="label_btn_close" xml:space="preserve">
+				<source>Close</source>
+				<target>Schließen</target>
+			</trans-unit>
+			<trans-unit id="label_btn_remove" xml:space="preserve">
+				<source>Entfernen</source>
+				<target>Entfernen</target>
+			</trans-unit>
+			<trans-unit id="label_btn_edit_teammember_home" xml:space="preserve">
+				<source>Edit Team Home</source>
+				<target>Spieler Heim</target>
+			</trans-unit>
+			<trans-unit id="label_btn_edit_teammember_guest" xml:space="preserve">
+				<source>Edit Team Guest</source>
+				<target>Spieler Gast</target>
+			</trans-unit>
+			<trans-unit id="label_btn_edit_lineup_home" xml:space="preserve">
+				<source>Edit lineup home</source>
+				<target>Aufstellung Heim</target>
+			</trans-unit>
+			<trans-unit id="label_btn_edit_lineup_guest" xml:space="preserve">
+				<source>Edit lineup guest</source>
+				<target>Aufstellung Gast</target>
+			</trans-unit>
+			<trans-unit id="label_btn_edit_subst_home" xml:space="preserve">
+				<source>Substitutes home</source>
+				<target>Bank Heim</target>
+			</trans-unit>
+			<trans-unit id="label_btn_edit_subst_guest" xml:space="preserve">
+				<source>Substitutes guest</source>
+				<target>Bank Gast</target>
+			</trans-unit>
+			<trans-unit id="label_msg_minute_required" xml:space="preserve">
+				<source>Minute is required</source>
+				<target>Es muss eine Spielminute angegeben werden</target>
+			</trans-unit>
+			<trans-unit id="label_msg_player_not_set" xml:space="preserve">
+				<source>Set one player for this message type</source>
+				<target>Für diese Tickermeldung muss genau ein Spieler angegeben werden.</target>
+			</trans-unit>
+			<trans-unit id="ERROR_1010" xml:space="preserve">
+				<source>You are not allowed to ticker this match!</source>
+				<target>Ihnen fehlt die Erlaubnis, für dieses Spiel den Ticker zu schreiben!</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

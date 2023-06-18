@@ -1,15 +1,13 @@
 <?php
 
-if (!defined('TYPO3_MODE')) {
+if (!(defined('TYPO3') || defined('TYPO3_MODE'))) {
     exit('Access denied.');
 }
-
-tx_rnbase::load('tx_rnbase_util_Extensions');
 
 $columns = [
     'crfeuser' => [
         'exclude' => 1,
-        'label' => 'LLL:EXT:flw24/Resources/Private/Language/locallang_db.xml:tx_cfcleague_matchnote_crfeuser',
+        'label' => 'LLL:EXT:flw24/Resources/Private/Language/locallang_db.xlf:tx_cfcleague_matchnote_crfeuser',
         'config' => [
             'type' => 'group',
             'internal_type' => 'db',
@@ -21,5 +19,5 @@ $columns = [
     ],
 ];
 
-tx_rnbase_util_Extensions::addTCAcolumns('tx_cfcleague_match_notes', $columns, 1);
-tx_rnbase_util_Extensions::addToAllTCAtypes('tx_cfcleague_match_notes', 'crfeuser', '', 'after:comment');
+\Sys25\RnBase\Utility\Extensions::addTCAcolumns('tx_cfcleague_match_notes', $columns, 1);
+\Sys25\RnBase\Utility\Extensions::addToAllTCAtypes('tx_cfcleague_match_notes', 'crfeuser', '', 'after:comment');

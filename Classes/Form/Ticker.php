@@ -384,7 +384,7 @@ class Ticker
             // Jetzt muss genau ein Spieler gesetzt sein
             if (0 != $home && 0 != $guest || 0 == $home && 0 == $guest) {
                 return false;
-                // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set";
+                // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_msg_player_not_set";
             }
         }
 
@@ -416,7 +416,7 @@ class Ticker
         // Jetzt muss genau ein Spieler gesetzt sein
         if (0 != $home && 0 != $guest || 0 == $home && 0 == $guest) {
             return false;
-            // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_msg_player_not_set";
+            // return "LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_msg_player_not_set";
         }
 
         return true;

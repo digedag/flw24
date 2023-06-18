@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" data="2023-06-18T13-44-21" product-name="zsb">
+		<header/>
+		<body>
+			<trans-unit id="plugin.flw24_form.label" xml:space="preserve">
+				<source>FLW 24</source>
+				<target>FLW 24</target>
+			</trans-unit>
+			<trans-unit id="tx_cfcleague_games_newspreview2" xml:space="preserve">
+				<source>Match preview 2</source>
+				<target>Vorbericht 2</target>
+			</trans-unit>
+			<trans-unit id="tx_cfcleague_games_newsreport2" xml:space="preserve">
+				<source>Match report 2</source>
+				<target>Spielbericht 2</target>
+			</trans-unit>
+			<trans-unit id="tx_cfcleague_club_feusers" xml:space="preserve">
+				<source>FE Users</source>
+				<target>FE Users</target>
+			</trans-unit>
+			<trans-unit id="tx_cfcleague_matchnote_crfeuser" xml:space="preserve">
+				<source>FE User</source>
+				<target/>
+			</trans-unit>
+			<trans-unit id="tx_cfcleague_profile_crfeuser" xml:space="preserve">
+				<source>FE User</source>
+				<target/>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

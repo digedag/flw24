@@ -9,11 +9,11 @@ lib.t3sports.match {
 		tickerform.removeIfDisabled = 1
 	}
 
-	newsreport2 =< lib.t3sports.ttnews
+	newsreport2 =< lib.t3sports.news
 	newsreport2 {
 		_template.subpartName = ###NEWSREPORT2###
 	}
-	newspreview2 =< lib.t3sports.ttnews
+	newspreview2 =< lib.t3sports.news
 	newspreview2 {
 		_template.subpartName = ###NEWSPREVIEW2###
 	}
@@ -27,12 +27,12 @@ plugin.tx_flw24_form.defaultAction  = System25\Flw24\Action\TickerForm
 plugin.tx_flw24_form.qualifier      = cfc_league_fe
 plugin.tx_flw24_form.extensionKey   = flw24
 plugin.tx_flw24_form.templatePath   = EXT:flw24/Resources/Private/Templates
-plugin.tx_flw24_form.locallangFilename = EXT:flw24/Resources/Private/Language/locallang.xml
+plugin.tx_flw24_form.locallangFilename = EXT:flw24/Resources/Private/Language/locallang.xlf
 
 tt_content.list.20.tx_flw24_form    =< plugin.tx_flw24_form
 
 plugin.tx_flw24_form {
-#	locallangFilename.100 = EXT:flw24/Resources/Private/Language/locallang.xml
+#	locallangFilename.100 = EXT:flw24/Resources/Private/Language/locallang.xlf
 	tickerformTemplate = {$plugin.tx_flw24_base.tickerformTemplate}
 
 	tickerform =< lib.mkforms.formbase

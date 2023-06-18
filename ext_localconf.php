@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('TYPO3_MODE')) {
+if (!(defined('TYPO3') || defined('TYPO3_MODE'))) {
     exit('Access denied.');
 }
 
@@ -23,7 +23,7 @@ System25\T3sports\Utility\Misc::removeMatchNote('32');
 System25\T3sports\Utility\Misc::removeMatchNote('33');
 System25\T3sports\Utility\Misc::removeMatchNote('200');
 
-//\tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_matchend','1000');
-// \tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_prereport','1010');
-// \tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_midreport','1011');
-// \tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xml:label_flw24_event_endreport','1012');
+//\tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_flw24_event_matchend','1000');
+// \tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_flw24_event_prereport','1010');
+// \tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_flw24_event_midreport','1011');
+// \tx_cfcleague_util_Misc::registerMatchNote('LLL:EXT:flw24/Resources/Private/Language/locallang.xlf:label_flw24_event_endreport','1012');
