@@ -22,13 +22,15 @@
 		"issues" : "https://github.com/digedag/flw24/issues"
 	},
 	"require" : {
-		"typo3/cms-core": "^8.7 || ^9.5 || ^10.4 || ^11.5",
-		"digedag/cfc-league" : "^1.10.0",
-		"digedag/rn-base": "^1.16.0",
+		"typo3/cms-core": "^8.7 || ^9.5 || ^10.4 || ^11.5 || ^12.4",
+		"digedag/cfc-league" : "~1.11.4",
+		"digedag/rn-base": "^1.18.0"
+	},
+	"suggest": {
 		"dmk/mkforms" : ">=9.5.4"
 	},
 	"autoload" : {
-        "psr-4": {"System25\\Flw24\\" : "Classes"},
+		"psr-4": {"System25\\Flw24\\" : "Classes"},
 		"classmap" : [
 			"Classes/"
 		]
