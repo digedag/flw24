@@ -7,13 +7,13 @@ if (!(defined('TYPO3') || defined('TYPO3_MODE'))) {
 // -------------------------
 // ------- HOOKS -----------
 // -------------------------
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['matchMarker_initRecord'][] = 'System25\Flw24\Hook\Flw24MatchMarkerHook->addNewsRecords';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['matchMarker_initRecord'][] = System25\Flw24\Hook\Flw24MatchMarkerHook::class.'->addNewsRecords';
 
 // Hook for match search
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getTableMapping_hook'][] = 'System25\Flw24\Hook\Search->getTableMappingMatch';
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getJoins_hook'][] = 'System25\Flw24\Hook\Search->getJoinsMatch';
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getTableMapping_hook'][] = 'System25\Flw24\Hook\Search->getTableMappingMatch';
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getJoins_hook'][] = 'System25\Flw24\Hook\Search->getJoinsMatch';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getTableMapping_hook'][] = System25\Flw24\Hook\Search::class.'->getTableMappingMatch';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league_fe']['search_Match_getJoins_hook'][] = System25\Flw24\Hook\Search::class.'->getJoinsMatch';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getTableMapping_hook'][] = System25\Flw24\Hook\Search::class.'->getTableMappingMatch';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cfc_league']['search_Match_getJoins_hook'][] = System25\Flw24\Hook\Search::class.'->getJoinsMatch';
 
 System25\T3sports\Utility\Misc::removeMatchNote('11');
 System25\T3sports\Utility\Misc::removeMatchNote('12');
